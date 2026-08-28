@@ -29,7 +29,6 @@
             line-height: 1.5;
         }
 
-        /* Topo / Header */
         header {
             background-color: var(--card-bg);
             border-bottom: 3px solid var(--primary-pink);
@@ -40,44 +39,43 @@
 
         header h1 {
             color: var(--accent-color);
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: 5px;
-            letter-spacing: 0.5px;
         }
 
         header p {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
         }
 
-        /* Menu de Navegação */
         nav {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             background-color: var(--primary-pink);
             padding: 12px;
             flex-wrap: wrap;
         }
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
+        nav button, nav a {
             background-color: rgba(255, 255, 255, 0.3);
-            padding: 6px 14px;
+            color: white;
+            border: none;
+            padding: 8px 16px;
             border-radius: 20px;
-            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
         }
 
-        nav a:hover {
+        nav button:hover, nav a:hover, nav button.active {
             background-color: white;
             color: var(--accent-color);
         }
 
-        /* Layout Principal em Grid (Estilo 3xyaoi) */
         .container {
             max-width: 1100px;
             margin: 30px auto;
@@ -89,25 +87,25 @@
             border-bottom: 2px dashed var(--primary-pink);
             padding-bottom: 8px;
             margin-bottom: 25px;
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 700;
         }
 
         .manga-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
 
         .manga-card {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             box-shadow: var(--shadow);
             border: 2px solid #ffe4e9;
-            transition: transform 0.2s ease, border-color 0.2s ease;
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s;
         }
 
         .manga-card:hover {
@@ -120,7 +118,6 @@
             height: 280px;
             background-color: #ffd1dc;
             object-fit: cover;
-            display: block;
         }
 
         .manga-info {
@@ -133,33 +130,67 @@
 
         .manga-info h3 {
             color: var(--accent-color);
-            font-size: 1rem;
-            margin-bottom: 6px;
-            line-height: 1.3;
+            font-size: 1.05rem;
+            margin-bottom: 5px;
         }
 
         .manga-info p {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-bottom: 12px;
         }
 
-        .btn-capitulo {
-            display: block;
-            text-align: center;
-            background-color: var(--dark-pink);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: bold;
-            transition: background-color 0.2s;
-            cursor: pointer;
+        .card-actions {
+            display: flex;
+            gap: 8px;
         }
 
-        .btn-capitulo:hover {
+        .btn-ler, .btn-fav {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-ler {
+            background-color: var(--dark-pink);
+            color: white;
+            flex-grow: 1;
+        }
+
+        .btn-ler:hover {
             background-color: var(--accent-color);
+        }
+
+        .btn-fav {
+            background-color: #fff0f5;
+            color: var(--dark-pink);
+            border: 1px solid var(--primary-pink);
+        }
+
+        .btn-fav:hover {
+            background-color: var(--primary-pink);
+            color: white;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .painel-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 2px solid #ffe4e9;
         }
     </style>
 </head>
@@ -171,43 +202,133 @@
     </header>
 
     <nav>
-        <a href="#">Início</a>
-        <a href="#">Romance</a>
-        <a href="#">Stalker</a>
-        <a href="#">Drama</a>
-        <a href="#">Projetos</a>
+        <button onclick="mudarAba('inicio', this)" class="active">Início</button>
+        <button onclick="mudarAba('favoritos', this)">⭐ Favoritos (<span id="fav-count">0</span>)</button>
+        <button onclick="mudarAba('painel', this)">👤 Painel</button>
     </nav>
 
     <div class="container">
-        <h2 class="section-title">✨ Últimos Lançamentos</h2>
-
-        <div class="manga-grid">
-            <!-- Card 1 -->
-            <div class="manga-card">
-                <!-- Insira o link da imagem da capa no src abaixo -->
-                <img src="https://via.placeholder.com/210x280/ffb6c1/ffffff?text=Capa" alt="Capa da Obra" class="manga-capa">
-                <div class="manga-info">
-                    <div>
-                        <h3>Meu vizinho está sempre me observando</h3>
-                        <p>Capítulo 01</p>
+        <div id="inicio" class="view-section active">
+            <h2 class="section-title">✨ Últimos Lançamentos</h2>
+            <div class="manga-grid">
+                
+                <div class="manga-card" data-id="1" data-titulo="Meu vizinho está sempre me observando" data-cap="Capítulo 01">
+                    <img src="https://via.placeholder.com/220x280/ffb6c1/ffffff?text=Vizinho" alt="Capa" class="manga-capa">
+                    <div class="manga-info">
+                        <div>
+                            <h3>Meu vizinho está sempre me observando</h3>
+                            <p>Capítulo 01</p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-ler">Ler</a>
+                            <button class="btn-fav" onclick="toggleFavorito(1, this)">⭐</button>
+                        </div>
                     </div>
-                    <a href="#" class="btn-capitulo">Ler Capítulo</a>
                 </div>
+
+                <div class="manga-card" data-id="2" data-titulo="O amor chega numa noite de luar" data-cap="Capítulo 05">
+                    <img src="https://via.placeholder.com/220x280/ffb6c1/ffffff?text=Noite+de+Luar" alt="Capa" class="manga-capa">
+                    <div class="manga-info">
+                        <div>
+                            <h3>O amor chega numa noite de luar</h3>
+                            <p>Capítulo 05</p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn-ler">Ler</a>
+                            <button class="btn-fav" onclick="toggleFavorito(2, this)">⭐</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        </div>
 
-            <!-- Card 2 -->
-            <div class="manga-card">
-                <img src="https://via.placeholder.com/210x280/ffb6c1/ffffff?text=Capa" alt="Capa da Obra" class="manga-capa">
-                <div class="manga-info">
-                    <div>
-                        <h3>O amor chega numa noite de luar</h3>
-                        <p>Capítulo 05</p>
-                    </div>
-                    <a href="#" class="btn-capitulo">Ler Capítulo</a>
-                </div>
+        <div id="favoritos" class="view-section">
+            <h2 class="section-title">⭐ Suas Obras Favoritas</h2>
+            <div id="lista-favoritos" class="manga-grid">
+                <p style="color: var(--text-muted);">Você ainda não adicionou nenhum favorito. Clique na estrelinha ⭐ nos cards para salvar aqui!</p>
+            </div>
+        </div>
+
+        <div id="painel" class="view-section">
+            <h2 class="section-title">👤 Painel do Leitor</h2>
+            <div class="painel-box">
+                <h3 style="color: var(--accent-color); margin-bottom: 10px;">Bem-vinda de volta, flor! 🌸</h3>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">Aqui você gerencia suas preferências e acompanha suas leituras na Flowers Nenascan.</p>
+                <p><strong>Status da Scan:</strong> Ativa 🚀</p>
+                <p><strong>Tema Atual:</strong> Rosa Fofo 💖</p>
             </div>
         </div>
     </div>
 
+    <script>
+        let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
+
+        function mudarAba(idAba, elementoBtn) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(idAba).classList.add('active');
+            elementoBtn.classList.add('active');
+
+            if (idAba === 'favoritos') {
+                renderizarFavoritos();
+            }
+        }
+
+        function toggleFavorito(id, btnElement) {
+            const card = btnElement.closest('.manga-card');
+            const obra = {
+                id: id,
+                titulo: card.dataset.titulo,
+                cap: card.dataset.cap,
+                img: card.querySelector('.manga-capa').src
+            };
+
+            const index = favoritos.findIndex(f => f.id === id);
+            if (index > -1) {
+                favoritos.splice(index, 1);
+                btnElement.style.background = '#fff0f5';
+            } else {
+                favoritos.push(obra);
+                btnElement.style.background = 'var(--primary-pink)';
+            }
+
+            localStorage.setItem('flowers_favs', JSON.stringify(favoritos));
+            atualizarContadorFavs();
+        }
+
+        function renderizarFavoritos() {
+            const container = document.getElementById('lista-favoritos');
+            if (favoritos.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">Você ainda não adicionou nenhum favorito. Clique na estrelinha ⭐ nos cards para salvar aqui!</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            favoritos.forEach(fav => {
+                container.innerHTML += `
+                    <div class="manga-card">
+                        <img src="${fav.img}" alt="Capa" class="manga-capa">
+                        <div class="manga-info">
+                            <div>
+                                <h3>${fav.titulo}</h3>
+                                <p>${fav.cap}</p>
+                            </div>
+                            <a href="#" class="btn-ler">Ler</a>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function atualizarContadorFavs() {
+            document.getElementById('fav-count').innerText = favoritos.length;
+        }
+
+        atualizarContadorFavs();
+    </script>
 </body>
 </html>
+
+    
