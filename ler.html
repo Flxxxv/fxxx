@@ -3,139 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leitura - Flowers Nenascan 🌸</title>
+    <title>Leitor - Flower's Nenasscan</title>
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .topo-leitor {
-            width: 100%;
-            background-color: #111;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #ff69b4;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .topo-leitor a {
-            color: #ffb6c1;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: 0.2s;
-        }
-
-        .topo-leitor a:hover {
-            color: #ff1493;
-        }
-
-        .titulo-capitulo {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .leitor-container {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 80vh;
-            padding: 20px 0;
-        }
-
-        .leitor-container img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: 0;
-            padding: 0;
-            object-fit: contain;
-        }
-
-        .mensagem-erro {
-            margin-top: 50px;
-            text-align: center;
-            padding: 20px;
-            color: #ffb6c1;
-        }
+        body { background: #111; color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        .leitor-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
+        .leitor-container img { width: 100%; height: auto; display: block; margin: 0; padding: 0; }
+        .voltar { position: fixed; top: 10px; left: 10px; background: #ff69b4; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; z-index: 100; }
     </style>
 </head>
 <body>
-
-    <div class="topo-leitor">
-        <a href="index.html">← Voltar ao Início</a>
-        <div id="info-topo" class="titulo-capitulo">Carregando capítulo...</div>
-        <a href="index.html">Início 🌸</a>
-    </div>
-
-    <div class="leitor-container" id="painel-imagens">
-        <p class="mensagem-erro">Preparando as páginas para você...</p>
-    </div>
+    <a href="index.html" class="voltar">← Voltar</a>
+    <div class="leitor-container" id="painel-imagens"></div>
 
     <script>
-        // Pega os dados que vieram no link (ex: ?obra=meu-vizinho&cap=1)
         const urlParams = new URLSearchParams(window.location.search);
-        const nomeObra = urlParams.get('obra');
-        const numCap = urlParams.get('cap');
+        const obra = urlParams.get('obra');
+        const cap = urlParams.get('cap');
+        const container = document.getElementById('painel-imagens');
 
-        const painelImagens = document.getElementById('painel-imagens');
-        const infoTopo = document.getElementById('info-topo');
-
-        if (!nomeObra || !numCap) {
-            painelImagens.innerHTML = '<div class="mensagem-erro"><h2>Ops!</h2><p>Capítulo ou obra não encontrados no link.</p></div>';
-            infoTopo.innerText = "Erro";
-        } else {
-            infoTopo.innerText = `Obra: ${nomeObra} | Cap ${numCap}`;
-            
-            // Aqui o leitor vai tentar carregar as imagens sequenciais da pasta
-            // Exemplo: nome-da-obra/cap-1/1.jpg, 2.jpg, 3.jpg ... até a imagem falhar (fim do capítulo)
-            painelImagens.innerHTML = '';
-            
-            let paginaAtual = 1;
-            let imagensCarregadas = 0;
-
-            function carregarProximaPagina() {
-                const img = new Image();
-                // Caminho da pasta: nomeObra / cap-numCap / paginaAtual.jpg
-                img.src = `${nomeObra}/cap-${numCap}/${paginaAtual}.jpg`;
-                img.alt = `Página ${paginaAtual}`;
-
-                img.onload = function() {
-                    painelImagens.appendChild(img);
-                    imagensCarregadas++;
-                    paginaAtual++;
-                    carregarProximaPagina(); // Tenta carregar a próxima
-                };
-
+        if (obra && cap) {
+            // Como tu sabes que o cap-1 tem de 1 até 9 imagens (ou mais), ele vai buscar automaticamente
+            for (let i = 1; i <= 50; i++) {
+                let img = document.createElement('img');
+                let caminho = `${obra}/cap-${cap}/${i}.jpg`;
+                img.src = caminho;
+                
+                // Se a imagem não existir (passou do limite do capítulo), ela some para não quebrar a tela
                 img.onerror = function() {
-                    if (imagensCarregadas === 0) {
-                        painelImagens.innerHTML = `
-                            <div class="mensagem-erro">
-                                <h2>Ainda não há páginas aqui! 🌸</h2>
-                                <p>Não encontramos imagens na pasta: <code>${nomeObra}/cap-${numCap}/</code></p>
-                                <p style="font-size: 0.85rem; color: #aaa; margin-top: 10px;">Certifique-se de que a pasta existe e a primeira imagem se chama <strong>1.jpg</strong>.</p>
-                            </div>`;
-                    }
+                    this.remove();
                 };
+                
+                container.appendChild(img);
             }
-
-            carregarProximaPagina();
+        } else {
+            container.innerHTML = '<h2>Erro: Obra ou capítulo não encontrados.</h2>';
         }
     </script>
 </body>
 </html>
+                
