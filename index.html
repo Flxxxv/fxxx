@@ -115,7 +115,6 @@
             border-color: var(--primary-pink);
         }
 
-        /* Capa sem ficar embaçada / mantendo proporção bonita */
         .manga-capa-container {
             width: 100%;
             height: 290px;
@@ -211,7 +210,6 @@
             display: block;
         }
 
-        /* Estilo da Página de Detalhes da Obra */
         .detalhe-box {
             background: white;
             padding: 30px;
@@ -352,7 +350,7 @@
             </div>
         </div>
 
-        <!-- TELA DE DETALHES DA OBRA (Abre ao clicar na capa ou título) -->
+        <!-- TELA DE DETALHES DA OBRA -->
         <div id="detalhes-obra" class="view-section">
             <button class="btn-voltar" onclick="mudarAba('inicio', document.querySelector('nav button'))">← Voltar para os lançamentos</button>
             <div id="conteudo-detalhes"></div>
@@ -382,13 +380,18 @@
         let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
         let listaObras = [];
 
-        fetch('obras.json')
-            .then(response => response.json())
+        // Linha com quebra de cache para o obras.json atualizar de vez
+        fetch('obras.json?v=' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error('Erro de rede');
+                return response.json();
+            })
             .then(data => {
                 listaObras = data;
                 renderizarLancamentos();
             })
             .catch(error => {
+                console.error(error);
                 document.getElementById('grid-lancamentos').innerHTML = '<p style="color: var(--text-muted);">Erro ao carregar o arquivo obras.json. Verifique se ele está na raiz do repositório.</p>';
             });
 
@@ -562,5 +565,3 @@
     </script>
 </body>
 </html>
-          
-
