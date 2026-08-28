@@ -2,12 +2,10 @@
   {
     "id": "meu-vizinho",
     "titulo": "Meu vizinho está sempre me observando",
-    "generos": ["Stalker", "Romance"],
-    "status": "Em Andamento",
-    "sinopse": "Um resumo curto da história de teste.",
     "capa": "cover.jpg",
+    "generos": ["Romance", "Drama"],
+    "sinopse": "Uma história incrível de mistério e romance.",
     "capitulos": [
-      
       { "numero": "Capítulo 01", "link": "ler.html?obra=meu-vizinho&cap=1" }
     ]
   }
