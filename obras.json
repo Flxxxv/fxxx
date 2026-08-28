@@ -1,0 +1,13 @@
+[
+  {
+    "id": "meu-vizinho",
+    "titulo": "Meu vizinho está sempre me observando",
+    "generos": ["Stalker", "Romance"],
+    "status": "Em Andamento",
+    "sinopse": "Um resumo curto da história de teste.",
+    "capa": "https://via.placeholder.com/210x290/ffb6c1/ffffff?text=Capa",
+    "capitulos": [
+      { "numero": "Capítulo 01", "link": "#" }
+    ]
+  }
+]
