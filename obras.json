@@ -6,8 +6,7 @@
     "generos": ["Romance", "Drama"],
     "sinopse": "Uma história incrível de mistério e romance.",
     "capitulos": [
-      { "numero": "Capítulo 01", "link": "ler.html?obra=meu-vizinho&cap=1" },
-      { "numero": "Capítulo 02", "link": "ler.html?obra=meu-vizinho&cap=2" }, 
+      { "numero": "Capítulo 01", "link": "ler.html?obra=meu-vizinho&cap=1" }
     ]
   }
 ]
