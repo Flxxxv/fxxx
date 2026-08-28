@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowers Nenascan</title>
+    <style>
+        :root {
+            --bg-color: #fff0f5;
+            --card-bg: #ffffff;
+            --primary-pink: #ffb6c1;
+            --dark-pink: #ff69b4;
+            --text-color: #4a4a4a;
+            --accent-color: #ff1493;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 3px solid var(--primary-pink);
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--primary-pink);
+            padding: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background-color: white;
+            color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .section-title {
+            color: var(--dark-pink);
+            border-bottom: 2px dashed var(--primary-pink);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .projeto-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(255, 182, 193, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .projeto-info h3 {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .projeto-info p {
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .btn-ler {
+            background-color: var(--dark-pink);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .btn-ler:hover {
+            background-color: var(--accent-color);
+        }
+
+        .leitor-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            background-color: black;
+            min-height: 100vh;
+        }
+
+        .pagina-manhwa {
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 0;
+            padding: 0;
+            border: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌸 Flowers Nenascan</h1>
+        <p>Traduções de Manhwas com muito amor e carinho 💖</p>
+    </header>
+
+    <nav>
+        <a href="#">Início</a>
+        <a href="#">Romance</a>
+        <a href="#">Stalker</a>
+        <a href="#">Drama</a>
+        <a href="#">Projetos</a>
+    </nav>
+
+    <div class="container">
+        <h2 class="section-title">✨ Últimos Lançamentos</h2>
+
+        <div class="projeto-card">
+            <div class="projeto-info">
+                <h3>Meu vizinho está sempre me observando</h3>
+                <p>Capítulo 01 - Completo</p>
+            </div>
+            <a href="#" class="btn-ler">Ler Capítulo</a>
+        </div>
+
+        <div class="projeto-card">
+            <div class="projeto-info">
+                <h3>O amor chega numa noite de luar</h3>
+                <p>Capítulo 05 - Lançamento</p>
+            </div>
+            <a href="#" class="btn-ler">Ler Capítulo</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', event => {
+            if (event.ctrlKey && (event.key === 's' || event.key === 'u' || event.key === 'i')) {
+                event.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+</html>
