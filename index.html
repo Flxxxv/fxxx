@@ -35,6 +35,7 @@
             padding: 30px 20px;
             text-align: center;
             box-shadow: var(--shadow);
+            cursor: pointer;
         }
 
         header h1 {
@@ -114,11 +115,27 @@
             border-color: var(--primary-pink);
         }
 
-        .manga-capa {
+        /* Capa sem ficar embaçada / mantendo proporção bonita */
+        .manga-capa-container {
             width: 100%;
             height: 290px;
             background-color: #ffd1dc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .manga-capa {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .manga-card:hover .manga-capa {
+            transform: scale(1.03);
         }
 
         .manga-info {
@@ -134,6 +151,11 @@
             font-size: 1rem;
             margin-bottom: 6px;
             font-weight: 700;
+            cursor: pointer;
+        }
+
+        .manga-info h3:hover {
+            text-decoration: underline;
         }
 
         .manga-info p {
@@ -189,6 +211,116 @@
             display: block;
         }
 
+        /* Estilo da Página de Detalhes da Obra */
+        .detalhe-box {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            border: 2px solid #ffe4e9;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        @media(min-width: 768px) {
+            .detalhe-topo {
+                display: flex;
+                gap: 30px;
+            }
+        }
+
+        .detalhe-capa {
+            width: 220px;
+            height: 310px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            flex-shrink: 0;
+            margin: 0 auto 20px auto;
+            display: block;
+        }
+
+        .detalhe-info h2 {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .detalhe-info .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background-color: #fff0f5;
+            color: var(--dark-pink);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid var(--primary-pink);
+        }
+
+        .detalhe-info p {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .lista-capitulos-container {
+            margin-top: 10px;
+            border-top: 2px dashed #ffe4e9;
+            padding-top: 20px;
+        }
+
+        .lista-capitulos-container h3 {
+            color: var(--dark-pink);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .capitulo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff9fb;
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ffe4e9;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .capitulo-item:hover {
+            background-color: var(--primary-pink);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .btn-voltar {
+            background: none;
+            border: none;
+            color: var(--dark-pink);
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-voltar:hover {
+            color: var(--accent-color);
+        }
+
         .painel-box {
             background: white;
             padding: 30px;
@@ -200,7 +332,7 @@
 </head>
 <body>
 
-    <header>
+    <header onclick="mudarAba('inicio', document.querySelector('nav button'))">
         <h1>🌸 Flowers Nenascan</h1>
         <p>Traduções de Manhwas com muito amor e carinho 💖</p>
     </header>
@@ -218,6 +350,12 @@
             <div id="grid-lancamentos" class="manga-grid">
                 <p style="color: var(--text-muted);">Carregando obras...</p>
             </div>
+        </div>
+
+        <!-- TELA DE DETALHES DA OBRA (Abre ao clicar na capa ou título) -->
+        <div id="detalhes-obra" class="view-section">
+            <button class="btn-voltar" onclick="mudarAba('inicio', document.querySelector('nav button'))">← Voltar para os lançamentos</button>
+            <div id="conteudo-detalhes"></div>
         </div>
 
         <!-- FAVORITOS -->
@@ -244,7 +382,6 @@
         let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
         let listaObras = [];
 
-        // Puxa automaticamente o arquivo obras.json que você criou
         fetch('obras.json')
             .then(response => response.json())
             .then(data => {
@@ -268,11 +405,13 @@
                 const nomeCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
 
                 container.innerHTML += `
-                    <div class="manga-card" data-id="${obra.id}" data-titulo="${obra.titulo}" data-cap="${nomeCap}">
-                        <img src="${obra.capa}" alt="Capa" class="manga-capa">
+                    <div class="manga-card" data-id="${obra.id}">
+                        <div class="manga-capa-container" onclick="abrirDetalhes('${obra.id}')">
+                            <img src="${obra.capa}" alt="Capa" class="manga-capa">
+                        </div>
                         <div class="manga-info">
                             <div>
-                                <h3>${obra.titulo}</h3>
+                                <h3 onclick="abrirDetalhes('${obra.id}')">${obra.titulo}</h3>
                                 <p>${nomeCap}</p>
                             </div>
                             <div class="card-actions">
@@ -286,16 +425,68 @@
             atualizarEstrelasFavoritosNaTela();
         }
 
+        function abrirDetalhes(id) {
+            const obra = listaObras.find(o => o.id === id);
+            if (!obra) return;
+
+            const containerDetalhes = document.getElementById('conteudo-detalhes');
+            
+            let tagsHtml = '';
+            if (obra.generos && Array.isArray(obra.generos)) {
+                obra.generos.forEach(g => { tagsHtml += `<span class="tag">${g}</span>`; });
+            }
+            if (obra.status) {
+                tagsHtml += `<span class="tag" style="background: var(--dark-pink); color: white;">${obra.status}</span>`;
+            }
+
+            let capitulosHtml = '';
+            if (obra.capitulos && obra.capitulos.length > 0) {
+                obra.capitulos.forEach(cap => {
+                    capitulosHtml += `
+                        <a href="${cap.link}" class="capitulo-item">
+                            <span>${cap.numero}</span>
+                            <span>Ler →</span>
+                        </a>
+                    `;
+                });
+            } else {
+                capitulosHtml = '<p style="color: var(--text-muted);">Nenhum capítulo lançado ainda.</p>';
+            }
+
+            containerDetalhes.innerHTML = `
+                <div class="detalhe-box">
+                    <div class="detalhe-topo">
+                        <img src="${obra.capa}" alt="Capa" class="detalhe-capa">
+                        <div class="detalhe-info">
+                            <h2>${obra.titulo}</h2>
+                            <div class="tags">${tagsHtml}</div>
+                            <p><strong>Sinopse:</strong><br>${obra.sinopse || 'Nenhuma sinopse informada.'}</p>
+                        </div>
+                    </div>
+                    <div class="lista-capitulos-container">
+                        <h3>📚 Lista de Capítulos</h3>
+                        ${capitulosHtml}
+                    </div>
+                </div>
+            `;
+
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('detalhes-obra').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function mudarAba(idAba, elementoBtn) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
             
             document.getElementById(idAba).classList.add('active');
-            elementoBtn.classList.add('active');
+            if (elementoBtn) elementoBtn.classList.add('active');
 
             if (idAba === 'favoritos') {
                 renderizarFavoritos();
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleFavorito(id, btnElement) {
@@ -348,10 +539,12 @@
             favoritos.forEach(fav => {
                 container.innerHTML += `
                     <div class="manga-card">
-                        <img src="${fav.img}" alt="Capa" class="manga-capa">
+                        <div class="manga-capa-container" onclick="abrirDetalhes('${fav.id}')">
+                            <img src="${fav.img}" alt="Capa" class="manga-capa">
+                        </div>
                         <div class="manga-info">
                             <div>
-                                <h3>${fav.titulo}</h3>
+                                <h3 onclick="abrirDetalhes('${fav.id}')">${fav.titulo}</h3>
                                 <p>${fav.cap}</p>
                             </div>
                             <a href="${fav.link}" class="btn-ler">Ler</a>
@@ -369,4 +562,5 @@
     </script>
 </body>
 </html>
+          
 
