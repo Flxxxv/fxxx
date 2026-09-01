@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Carregando Obra... - Flowers Nenascan 🌸</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg-color: #fff0f5;
+            --card-bg: #ffffff;
+            --primary-pink: #ffb6c1;
+            --dark-pink: #ff69b4;
+            --accent-color: #ff1493;
+            --text-main: #4a3b42;
+            --text-muted: #8c7b82;
+            --shadow: 0 4px 20px rgba(255, 105, 180, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; }
+        
+        header { background-color: var(--card-bg); border-bottom: 3px solid var(--primary-pink); padding: 25px 20px; text-align: center; box-shadow: var(--shadow); }
+        header h1 { color: var(--accent-color); font-size: 2rem; font-weight: 800; text-decoration: none; }
+        header a { text-decoration: none; }
+
+        .container { max-width: 900px; margin: 35px auto; padding: 0 20px; }
+        
+        .btn-voltar { background: none; border: none; color: var(--dark-pink); font-weight: bold; font-size: 0.95rem; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+        .btn-voltar:hover { color: var(--accent-color); }
+
+        .detalhe-box { background: white; padding: 30px; border-radius: 18px; box-shadow: var(--shadow); border: 2px solid #ffe4e9; display: flex; flex-direction: column; gap: 25px; }
+
+        @media(min-width: 768px) {
+            .detalhe-topo { display: flex; gap: 30px; }
+        }
+
+        .detalhe-capa { width: 220px; height: 310px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); flex-shrink: 0; margin: 0 auto 20px auto; display: block; background-color: #ffd1dc; }
+
+        .detalhe-info h2 { color: var(--accent-color); font-size: 1.8rem; margin-bottom: 10px; }
+        .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .tag { background-color: #fff0f5; color: var(--dark-pink); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; border: 1px solid var(--primary-pink); }
+        .detalhe-info p { color: var(--text-main); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.7; }
+
+        .lista-capitulos-container { margin-top: 10px; border-top: 2px dashed #ffe4e9; padding-top: 20px; }
+        .lista-capitulos-container h3 { color: var(--dark-pink); margin-bottom: 15px; font-size: 1.2rem; }
+
+        .capitulo-item { display: flex; justify-content: space-between; align-items: center; background-color: #fff9fb; padding: 12px 18px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ffe4e9; text-decoration: none; color: var(--text-main); font-weight: 600; transition: 0.2s; }
+        .capitulo-item:hover { background-color: var(--primary-pink); color: white; transform: translateX(5px); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../index.html">
+            <h1>🌸 Flowers Nenascan</h1>
+        </a>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="btn-voltar">← Voltar para os lançamentos</a>
+        
+        <div id="conteudo-detalhes">
+            <div class="detalhe-box">
+                <p style="color: var(--text-muted); text-align: center;">Carregando informações da obra...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://rjqmaheyuattvsqocvku.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcW1haGV5dWF0dHZzcW9jdmt1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTQ0MDIsImV4cCI6MjEwMzc5MDQwMn0.EGnNvkrxSTyXmW-OlZcx4iAElQBFqu67qyHXLr7BMo4';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Pega o ID da obra baseado no nome da pasta atual
+        const caminhoAtual = window.location.pathname;
+        const partes = caminhoAtual.split('/').filter(Boolean);
+        const obraId = partes[partes.length - 1] === 'index.html' ? partes[partes.length - 2] : partes[partes.length - 1];
+
+        async function registrarVisualizacao() {
+            try {
+                let slug = 'obra-' + obraId;
+                let { data } = await supabaseClient.from('views').select('count').eq('slug', slug).maybeSingle();
+                if (data) {
+                    await supabaseClient.from('views').update({ count: data.count + 1 }).eq('slug', slug);
+                } else {
+                    await supabaseClient.from('views').insert([{ slug: slug, count: 1 }]);
+                }
+            } catch (err) {
+                console.error('Erro ao registrar view:', err);
+            }
+        }
+
+        async function carregarDadosObra() {
+            try {
+                const resposta = await fetch('../obras.json?v=' + new Date().getTime());
+                const listaObras = await resposta.json();
+                
+                const obra = listaObras.find(o => o.id === obraId);
+                const container = document.getElementById('conteudo-detalhes');
+
+                if (!obra) {
+                    container.innerHTML = '<div class="detalhe-box"><p style="color: var(--text-muted);">Obra não encontrada.</p></div>';
+                    return;
+                }
+
+                document.title = obra.titulo + ' - Flowers Nenascan 🌸';
+                registrarVisualizacao();
+
+                let tagsHtml = '';
+                if (obra.generos && Array.isArray(obra.generos)) {
+                    obra.generos.forEach(g => { tagsHtml += `<span class="tag">${g}</span>`; });
+                }
+
+                let capitulosHtml = '';
+                if (obra.capitulos && obra.capitulos.length > 0) {
+                    obra.capitulos.forEach(cap => {
+                        capitulosHtml += `
+                            <a href="${cap.link}" class="capitulo-item" onclick="event.preventDefault(); registrarVisualizacaoCap('${cap.numero}', '${cap.link}')">
+                                <span>${cap.numero}</span>
+                                <span>Ler →</span>
+                            </a>
+                        `;
+                    });
+                } else {
+                    capitulosHtml = '<p style="color: var(--text-muted);">Nenhum capítulo lançado ainda.</p>';
+                }
+
+                container.innerHTML = `
+                    <div class="detalhe-box">
+                        <div class="detalhe-topo">
+                            <img src="${obra.capa}" alt="Capa" class="detalhe-capa">
+                            <div class="detalhe-info">
+                                <h2>${obra.titulo}</h2>
+                                <div class="tags">${tagsHtml}</div>
+                                <p><strong>Sinopse:</strong><br>${obra.sinopse || 'Nenhuma sinopse informada.'}</p>
+                            </div>
+                        </div>
+                        <div class="lista-capitulos-container">
+                            <h3>📚 Lista de Capítulos</h3>
+                            ${capitulosHtml}
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                console.error(e);
+                document.getElementById('conteudo-detalhes').innerHTML = '<div class="detalhe-box"><p style="color: var(--text-muted);">Erro ao carregar os dados da obra.</p></div>';
+            }
+        }
+
+        async function registrarVisualizacaoCap(numCap, linkDestino) {
+            try {
+                let slugCap = `capitulo-${obraId}-${numCap}`;
+                let { data } = await supabaseClient.from('views').select('count').eq('slug', slugCap).maybeSingle();
+                if (data) {
+                    await supabaseClient.from('views').update({ count: data.count + 1 }).eq('slug', slugCap);
+                } else {
+                    await supabaseClient.from('views').insert([{ slug: slugCap, count: 1 }]);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            window.location.href = linkDestino;
+        }
+
+        carregarDadosObra();
+    </script>
+</body>
+</html>
