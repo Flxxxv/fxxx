@@ -622,5 +622,20 @@
 
         atualizarContadorFavs();
     </script>
+    <script>
+    // Remove o selinho do Netlify caso ele tente aparecer
+    window.addEventListener('DOMContentLoaded', () => {
+        const netlifyBadge = document.getElementById('netlify-badge') || document.querySelector('div[id*="netlify-badge"]');
+        if (netlifyBadge) netlifyBadge.remove();
+        
+        // Remove também pelo texto caso o ID mude
+        document.querySelectorAll('*').forEach(el => {
+            if (el.innerText && el.innerText.includes('Powered by Netlify')) {
+                el.remove();
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
