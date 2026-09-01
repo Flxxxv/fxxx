@@ -398,34 +398,32 @@
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Função para registrar a visualização no banco de dados automaticamente
-        async function registrarVisualizacaoHome() {
-            const slugAtual = 'home-principal';
-
+        // Função genérica para registrar ou somar visualização no Supabase de forma única
+        async function registrarVisualizacaoNoBanco(slugIdentificador) {
             try {
                 let { data, error } = await supabaseClient
                     .from('views')
                     .select('count')
-                    .eq('slug', slugAtual)
+                    .eq('slug', slugIdentificador)
                     .maybeSingle();
 
                 if (data) {
                     await supabaseClient
                         .from('views')
                         .update({ count: data.count + 1 })
-                        .eq('slug', slugAtual);
+                        .eq('slug', slugIdentificador);
                 } else {
                     await supabaseClient
                         .from('views')
-                        .insert([{ slug: slugAtual, count: 1 }]);
+                        .insert([{ slug: slugIdentificador, count: 1 }]);
                 }
             } catch (err) {
                 console.error('Erro ao atualizar visualizações:', err);
             }
         }
 
-        // Executa a contagem ao carregar a página
-        registrarVisualizacaoHome();
+        // Registra a visualização da Home ao carregar a página
+        registrarVisualizacaoNoBanco('home-principal');
 
         let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
         let listaObras = [];
@@ -468,7 +466,7 @@
                                 <p>${nomeCap}</p>
                             </div>
                             <div class="card-actions">
-                                <a href="${primeiroCap}" class="btn-ler">Ler</a>
+                                <a href="${primeiroCap}" class="btn-ler" onclick="registrarVisualizacaoNoBanco('capitulo-${obra.id}-${nomeCap}')">Ler</a>
                                 <button class="btn-fav" onclick="toggleFavorito('${obra.id}', this)">⭐</button>
                             </div>
                         </div>
@@ -481,6 +479,9 @@
         function abrirDetalhes(id) {
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
+
+            // Registra a visualização específica desta obra no Supabase sem duplicar
+            registrarVisualizacaoNoBanco('obra-' + obra.id);
 
             const containerDetalhes = document.getElementById('conteudo-detalhes');
             
@@ -495,8 +496,9 @@
             let capitulosHtml = '';
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
+                    // Ao clicar em um capítulo específico, registra a contagem dele também
                     capitulosHtml += `
-                        <a href="${cap.link}" class="capitulo-item">
+                        <a href="${cap.link}" class="capitulo-item" onclick="registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}')">
                             <span>${cap.numero}</span>
                             <span>Ler →</span>
                         </a>
