@@ -392,13 +392,11 @@
     </div>
 
     <script>
-        // Configuração do Supabase
         const SUPABASE_URL = 'https://rjqmaheyuattvsqocvku.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcW1haGV5dWF0dHZzcW9jdmt1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTQ0MDIsImV4cCI6MjEwMzc5MDQwMn0.EGnNvkrxSTyXmW-OlZcx4iAElQBFqu67qyHXLr7BMo4';
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Função genérica para registrar ou somar visualização no Supabase de forma única
         async function registrarVisualizacaoNoBanco(slugIdentificador) {
             try {
                 let { data, error } = await supabaseClient
@@ -422,33 +420,26 @@
             }
         }
 
-        // Registra a visualização da Home ao carregar a página
+        // Registra a home ao carregar
         registrarVisualizacaoNoBanco('home-principal');
 
         let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
         let listaObras = [];
 
-        // Linha com quebra de cache para o obras.json atualizar de vez
         fetch('obras.json?v=' + new Date().getTime())
-            .then(response => {
-                if (!response.ok) throw new Error('Erro de rede');
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 listaObras = data;
                 renderizarLancamentos();
             })
             .catch(error => {
                 console.error(error);
-                document.getElementById('grid-lancamentos').innerHTML = '<p style="color: var(--text-muted);">Erro ao carregar o arquivo obras.json. Verifique se ele está na raiz do repositório.</p>';
+                document.getElementById('grid-lancamentos').innerHTML = '<p style="color: var(--text-muted);">Erro ao carregar o arquivo obras.json.</p>';
             });
 
         function renderizarLancamentos() {
             const container = document.getElementById('grid-lancamentos');
-            if (listaObras.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Nenhuma obra cadastrada ainda.</p>';
-                return;
-            }
+            if (listaObras.length === 0) return;
 
             container.innerHTML = '';
             listaObras.forEach(obra => {
@@ -480,7 +471,7 @@
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
 
-            // Registra a visualização específica desta obra no Supabase sem duplicar
+            // Envia o slug exato da obra para o Supabase
             registrarVisualizacaoNoBanco('obra-' + obra.id);
 
             const containerDetalhes = document.getElementById('conteudo-detalhes');
@@ -496,7 +487,6 @@
             let capitulosHtml = '';
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
-                    // Ao clicar em um capítulo específico, registra a contagem dele também
                     capitulosHtml += `
                         <a href="${cap.link}" class="capitulo-item" onclick="registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}')">
                             <span>${cap.numero}</span>
@@ -559,12 +549,8 @@
             const index = favoritos.findIndex(f => f.id === id);
             if (index > -1) {
                 favoritos.splice(index, 1);
-                btnElement.style.background = '#fff0f5';
-                btnElement.style.color = 'var(--dark-pink)';
             } else {
                 favoritos.push(dadosObra);
-                btnElement.style.background = 'var(--primary-pink)';
-                btnElement.style.color = 'white';
             }
 
             localStorage.setItem('flowers_favs', JSON.stringify(favoritos));
@@ -586,7 +572,7 @@
         function renderizarFavoritos() {
             const container = document.getElementById('lista-favoritos');
             if (favoritos.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Nenhuma obra salva nos favoritos ainda. Clique na estrelinha ⭐ nos cards para salvar aqui!</p>';
+                container.innerHTML = '<p style="color: var(--text-muted);">Nenhuma obra salva nos favoritos ainda.</p>';
                 return;
             }
 
@@ -609,11 +595,13 @@
             });
         }
 
-        function atualizarContadorFavs() {
-            document.getElementById('fav-count').innerText = favoritos.length;
+        function atualizarContadorFavs_Func() {
+            const el = document.getElementById('fav-count');
+            if(el) el.innerText = favoritos.length;
         }
+        function atualizarContadorFavs() { atualizarContadorFavs_Func(); }
 
-        atualizarContadorFavs();
+        atualizarContadorFavs_Func();
     </script>
 </body>
 </html>
