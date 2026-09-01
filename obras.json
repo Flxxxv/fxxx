@@ -11,3 +11,29 @@
     ]
   }
 ]
+
+[
+  {
+    "id": "meu-mestre-sadico",
+    "titulo": "Meu Mestre Sádico",
+    "capa": "link_da_imagem_da_capa.jpg",
+    "status": "Em Lançamento",
+    "generos": ["Romance", "Drama", "Josei"],
+    "sinopse": "Escreva a sinopse da obra aqui...",
+    "capitulos": [
+      { "numero": "Capítulo 02", "link": "https://link-do-seu-leitor-ou-capitulo-2" },
+      { "numero": "Capítulo 01", "link": "https://link-do-seu-leitor-ou-capitulo-1" }
+    ]
+  },
+  {
+    "id": "nome-da-outra-obra",
+    "titulo": "Outra Obra Maravilhosa",
+    "capa": "link_da_capa_2.jpg",
+    "status": "Em Lançamento",
+    "generos": ["Fantasia", "Ação"],
+    "sinopse": "Sinopse da segunda obra...",
+    "capitulos": [
+      { "numero": "Capítulo 01", "link": "https://link-do-capitulo-da-outra-obra" }
+    ]
+  }
+]
