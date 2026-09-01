@@ -345,15 +345,15 @@
 </head>
 <body>
 
-    <header onclick="mudarAba('inicio', document.querySelector('nav button'))">
+    <header onclick="voltarHome()">
         <h1>🌸 Flowers Nenascan</h1>
         <p>Traduções de Manhwas com muito amor e carinho 💖</p>
     </header>
 
     <nav>
-        <button onclick="mudarAba('inicio', this)" class="active">Início</button>
-        <button onclick="mudarAba('favoritos', this)">⭐ Favoritos (<span id="fav-count">0</span>)</button>
-        <button onclick="mudarAba('painel', this)">👤 Painel</button>
+        <button onclick="mudarAba('inicio', this)" class="active" id="btn-inicio">Início</button>
+        <button onclick="mudarAba('favoritos', this)" id="btn-favoritos">⭐ Favoritos (<span id="fav-count">0</span>)</button>
+        <button onclick="mudarAba('painel', this)" id="btn-painel">👤 Painel</button>
     </nav>
 
     <div class="container">
@@ -367,7 +367,7 @@
 
         <!-- TELA DE DETALHES DA OBRA -->
         <div id="detalhes-obra" class="view-section">
-            <button class="btn-voltar" onclick="mudarAba('inicio', document.querySelector('nav button'))">← Voltar para os lançamentos</button>
+            <button class="btn-voltar" onclick="voltarHome()">← Voltar para os lançamentos</button>
             <div id="conteudo-detalhes"></div>
         </div>
 
@@ -399,7 +399,7 @@
 
         async function registrarVisualizacaoNoBanco(slugIdentificador) {
             try {
-                let { data, error } = await supabaseClient
+                let { data } = await supabaseClient
                     .from('views')
                     .select('count')
                     .eq('slug', slugIdentificador)
@@ -420,9 +420,6 @@
             }
         }
 
-        // Registra a home ao carregar
-        registrarVisualizacaoNoBanco('home-principal');
-
         let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
         let listaObras = [];
 
@@ -431,6 +428,15 @@
             .then(data => {
                 listaObras = data;
                 renderizarLancamentos();
+
+                // Verifica se o usuário entrou direto por um link com ?obra=...
+                const urlParams = new URLSearchParams(window.location.search);
+                const obraParam = urlParams.get('obra');
+                if (obraParam) {
+                    abrirDetalhes(obraParam, false);
+                } else {
+                    registrarVisualizacaoNoBanco('home-principal');
+                }
             })
             .catch(error => {
                 console.error(error);
@@ -448,16 +454,16 @@
 
                 container.innerHTML += `
                     <div class="manga-card" data-id="${obra.id}">
-                        <div class="manga-capa-container" onclick="abrirDetalhes('${obra.id}')">
+                        <div class="manga-capa-container" onclick="abrirDetalhes('${obra.id}', true)">
                             <img src="${obra.capa}" alt="Capa" class="manga-capa">
                         </div>
                         <div class="manga-info">
                             <div>
-                                <h3 onclick="abrirDetalhes('${obra.id}')">${obra.titulo}</h3>
+                                <h3 onclick="abrirDetalhes('${obra.id}', true)">${obra.titulo}</h3>
                                 <p>${nomeCap}</p>
                             </div>
                             <div class="card-actions">
-                                <a href="${primeiroCap}" class="btn-ler" onclick="registrarVisualizacaoNoBanco('capitulo-${obra.id}-${nomeCap}')">Ler</a>
+                                <a href="${primeiroCap}" class="btn-ler" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${nomeCap}').then(() => { window.location.href = '${primeiroCap}'; });">Ler</a>
                                 <button class="btn-fav" onclick="toggleFavorito('${obra.id}', this)">⭐</button>
                             </div>
                         </div>
@@ -467,12 +473,15 @@
             atualizarEstrelasFavoritosNaTela();
         }
 
-        function abrirDetalhes(id) {
+        function abrirDetalhes(id, mudarUrl = true) {
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
 
-            // Envia o slug exato da obra para o Supabase
+            // Registra no Supabase e atualiza a URL do navegador para ?obra=...
             registrarVisualizacaoNoBanco('obra-' + obra.id);
+            if (mudarUrl) {
+                history.pushState({id: id}, "", "?obra=" + id);
+            }
 
             const containerDetalhes = document.getElementById('conteudo-detalhes');
             
@@ -488,7 +497,7 @@
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
                     capitulosHtml += `
-                        <a href="${cap.link}" class="capitulo-item" onclick="registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}')">
+                        <a href="${cap.link}" class="capitulo-item" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}').then(() => { window.location.href = '${cap.link}'; });">
                             <span>${cap.numero}</span>
                             <span>Ler →</span>
                         </a>
@@ -519,6 +528,12 @@
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
             document.getElementById('detalhes-obra').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function voltarHome() {
+            history.pushState({}, "", "index.html");
+            mudarAba('inicio', document.getElementById('btn-inicio'));
+            registrarVisualizacaoNoBanco('home-principal');
         }
 
         function mudarAba(idAba, elementoBtn) {
@@ -580,12 +595,12 @@
             favoritos.forEach(fav => {
                 container.innerHTML += `
                     <div class="manga-card">
-                        <div class="manga-capa-container" onclick="abrirDetalhes('${fav.id}')">
+                        <div class="manga-capa-container" onclick="abrirDetalhes('${fav.id}', true)">
                             <img src="${fav.img}" alt="Capa" class="manga-capa">
                         </div>
                         <div class="manga-info">
                             <div>
-                                <h3 onclick="abrirDetalhes('${fav.id}')">${fav.titulo}</h3>
+                                <h3 onclick="abrirDetalhes('${fav.id}', true)">${fav.titulo}</h3>
                                 <p>${fav.cap}</p>
                             </div>
                             <a href="${fav.link}" class="btn-ler">Ler</a>
@@ -595,13 +610,12 @@
             });
         }
 
-        function atualizarContadorFavs_Func() {
+        function atualizarContadorFavs() {
             const el = document.getElementById('fav-count');
             if(el) el.innerText = favoritos.length;
         }
-        function atualizarContadorFavs() { atualizarContadorFavs_Func(); }
 
-        atualizarContadorFavs_Func();
+        atualizarContadorFavs();
     </script>
 </body>
 </html>
