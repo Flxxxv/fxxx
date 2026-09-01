@@ -16,6 +16,9 @@
       gtag('config', 'G-5HHMHEDSD0');
     </script>
 
+    <!-- Importa a biblioteca do Supabase direto do CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --bg-color: #fff0f5;
@@ -389,6 +392,41 @@
     </div>
 
     <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://rjqmaheyuattvsqocvku.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcW1haGV5dWF0dHZzcW9jdmt1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTQ0MDIsImV4cCI6MjEwMzc5MDQwMn0.EGnNvkrxSTyXmW-OlZcx4iAElQBFqu67qyHXLr7BMo4';
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Função para registrar a visualização no banco de dados automaticamente
+        async function registrarVisualizacaoHome() {
+            const slugAtual = 'home-principal';
+
+            try {
+                let { data, error } = await supabaseClient
+                    .from('views')
+                    .select('count')
+                    .eq('slug', slugAtual)
+                    .maybeSingle();
+
+                if (data) {
+                    await supabaseClient
+                        .from('views')
+                        .update({ count: data.count + 1 })
+                        .eq('slug', slugAtual);
+                } else {
+                    await supabaseClient
+                        .from('views')
+                        .insert([{ slug: slugAtual, count: 1 }]);
+                }
+            } catch (err) {
+                console.error('Erro ao atualizar visualizações:', err);
+            }
+        }
+
+        // Executa a contagem ao carregar a página
+        registrarVisualizacaoHome();
+
         let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
         let listaObras = [];
 
