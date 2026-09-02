@@ -22,27 +22,23 @@
       { "numero": "Capítulo 02", "link": "https://link-do-seu-leitor-ou-capitulo-2" },
       { "numero": "Capítulo 01", "link": "https://link-do-seu-leitor-ou-capitulo-1" }
     ]
-  }, 
-]
-{
-  
-    {
-      "id": "nome-da-nova-obra",
-      "titulo": "Nome da Nova Obra",
-      "genero": "Ação, Fantasia",
-      "sinopse": "Escreva a sinopse da obra aqui...",
-      "capa": "https://files.catbox.moe/wyy3gm.png",
-      "capitulos": {
-        "1": [
+  },
+  {
+    "id": "nome-da-nova-obra",
+    "titulo": "Nome da Nova Obra",
+    "generos": ["Ação", "Fantasia"],
+    "sinopse": "Escreva a sinopse da obra aqui...",
+    "capa": "https://files.catbox.moe/wyy3gm.png",
+    "status": "Em Lançamento",
+    "capitulos": [
+      {
+        "numero": "Capítulo 01",
+        "paginas": [
           "https://files.catbox.moe/ae205i.png",
           "https://files.catbox.moe/7fbdln.png",
           "https://files.catbox.moe/llrh59.png"
-        ],
-        "2": [
-          "https://files.catbox.moe/link-cap2-pag1.jpg",
-          "https://files.catbox.moe/link-cap2-pag2.jpg"
         ]
       }
-    }
-  ]
-}
+    ]
+  }
+]
