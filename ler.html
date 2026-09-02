@@ -9,6 +9,7 @@
         .leitor-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
         .leitor-container img { width: 100%; height: auto; display: block; margin: 0; padding: 0; }
         .voltar { position: fixed; top: 10px; left: 10px; background: #ff69b4; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; z-index: 100; }
+        .erro { margin-top: 100px; text-align: center; color: #ffb6c1; }
     </style>
 </head>
 <body>
@@ -17,28 +18,53 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const obra = urlParams.get('obra');
-        const cap = urlParams.get('cap');
+        const obraId = urlParams.get('obra');
+        const capNum = urlParams.get('cap');
         const container = document.getElementById('painel-imagens');
 
-        if (obra && cap) {
-            // Como tu sabes que o cap-1 tem de 1 até 9 imagens (ou mais), ele vai buscar automaticamente
-            for (let i = 1; i <= 50; i++) {
-                let img = document.createElement('img');
-                let caminho = `${obra}/cap-${cap}/${i}.jpg`;
-                img.src = caminho;
-                
-                // Se a imagem não existir (passou do limite do capítulo), ela some para não quebrar a tela
-                img.onerror = function() {
-                    this.remove();
-                };
-                
-                container.appendChild(img);
+        async function carregarLeitor() {
+            if (!obraId || !capNum) {
+                container.innerHTML = '<h2 class="erro">Erro: Obra ou capítulo não encontrados.</h2>';
+                return;
             }
-        } else {
-            container.innerHTML = '<h2>Erro: Obra ou capítulo não encontrados.</h2>';
+
+            try {
+                // Busca o seu obras.json atualizado
+                const resposta = await fetch('obras.json');
+                const obras = await resposta.json();
+
+                // Encontra a obra certa pelo ID
+                const obra = obras.find(o => o.id === obraId);
+                if (!obra) {
+                    container.innerHTML = '<h2 class="erro">Obra não encontrada!</h2>';
+                    return;
+                }
+
+                // Encontra o capítulo correspondente na lista
+                // Como o capNum vem como "1", "2", etc., procuramos o capítulo que tenha o número correspondente
+                const capitulo = obra.capitulos.find(c => c.numero.includes(capNum));
+                
+                if (!capitulo || !capitulo.paginas || capitulo.paginas.length === 0) {
+                    container.innerHTML = '<h2 class="erro">Este capítulo ainda não possui páginas cadastradas!</h2>';
+                    return;
+                }
+
+                // Coloca cada link do Catbox na tela em ordem
+                capitulo.paginas.forEach((urlImg, index) => {
+                    let img = document.createElement('img');
+                    img.src = urlImg;
+                    img.alt = `Página ${index + 1}`;
+                    img.loading = 'lazy'; // Otimiza o carregamento
+                    container.appendChild(img);
+                });
+
+            } catch (erro) {
+                console.error(erro);
+                container.innerHTML = '<h2 class="erro">Erro ao carregar os dados do capítulo.</h2>';
+            }
         }
+
+        carregarLeitor();
     </script>
 </body>
 </html>
-                
