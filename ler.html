@@ -56,12 +56,12 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const obraId = urlParams.get('obra');
+        const nomeObra = decodeURIComponent(urlParams.get('obra') || '').trim();
         const capNum = decodeURIComponent(urlParams.get('cap') || '').trim();
         const container = document.getElementById('painel-imagens');
 
         async function carregarLeitor() {
-            if (!obraId || !capNum) {
+            if (!nomeObra || !capNum) {
                 container.innerHTML = '<h2 class="erro">Erro: Obra ou capítulo não encontrados na URL.</h2>';
                 return;
             }
@@ -70,7 +70,12 @@
                 const resposta = await fetch('obras.json?v=' + new Date().getTime());
                 const obras = await resposta.json();
 
-                const obra = obras.find(o => String(o.id).trim() === String(obraId).trim());
+                // Procura a obra comparando o Título ou o ID de forma flexível (ignorando maiúsculas/minúsculas)
+                const obra = obras.find(o => 
+                    String(o.titulo).trim().toLowerCase() === nomeObra.toLowerCase() || 
+                    String(o.id).trim().toLowerCase() === nomeObra.toLowerCase()
+                );
+
                 if (!obra) {
                     container.innerHTML = '<h2 class="erro">Obra não encontrada no sistema!</h2>';
                     return;
@@ -81,7 +86,7 @@
                     return;
                 }
 
-                // Procura o capítulo de forma flexível (suporta objeto ou string, e compara ignorando maiúsculas/minúsculas)
+                // Procura o capítulo de forma flexível
                 const capitulo = obra.capitulos.find(c => {
                     const numeroCadastrado = typeof c === 'object' ? String(c.numero).trim() : String(c).trim();
                     return numeroCadastrado.toLowerCase() === capNum.toLowerCase();
@@ -92,7 +97,6 @@
                     return;
                 }
 
-                // Pega as páginas de qualquer propriedade provável (link, paginas ou pages)
                 const dadosLink = capitulo.link || capitulo.paginas || capitulo.pages;
 
                 if (!dadosLink) {
