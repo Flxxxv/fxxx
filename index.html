@@ -24,7 +24,7 @@
         :root {
             --bg-color: #0b0b0e;
             --card-bg: #14141a;
-            --primary-pink: #FF99DD; /* Tom exato confirmado (#FF99DD) */
+            --primary-pink: #FF99DD; 
             --neon-glow: 0 0 12px rgba(255, 153, 221, 0.7), 0 0 25px rgba(255, 153, 221, 0.35);
             --text-main: #FF99DD;
             --text-muted: #e69ac5;
@@ -44,13 +44,11 @@
             padding-bottom: 85px;
         }
 
-        /* Textos gerais com a cor exata e brilho neon */
         p, span, a, h1, h2, h3, h4, div, button {
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
         }
 
-        /* Topo */
         header {
             display: flex;
             justify-content: space-between;
@@ -110,7 +108,6 @@
             box-shadow: 0 0 15px var(--primary-pink);
         }
 
-        /* Barra de Pesquisa */
         #search-container {
             display: none;
             padding: 12px 18px;
@@ -136,7 +133,6 @@
             text-shadow: none;
         }
 
-        /* Menu Lateral */
         #sidebar-menu {
             position: fixed;
             top: 0;
@@ -227,7 +223,6 @@
             transform: translateX(5px);
         }
 
-        /* Carrossel de Destaque */
         .hero-carousel {
             position: relative;
             width: 100%;
@@ -290,7 +285,6 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* Seções */
         .section-container {
             padding: 20px 15px;
             max-width: 1100px;
@@ -320,7 +314,6 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* Grade 2 colunas com Capas Maiores */
         .manga-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -400,7 +393,6 @@
             text-decoration: underline;
         }
 
-        /* Selo Novo Pulsando */
         .selo-novo {
             background-color: var(--primary-pink);
             color: #0b0b0e;
@@ -419,7 +411,6 @@
             100% { opacity: 0.7; transform: scale(0.95); }
         }
 
-        /* Barra Inferior Fixa */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -489,11 +480,9 @@
         </a>
         
         <div class="top-actions">
-            <!-- Lupa -->
             <button class="icon-btn" onclick="togglePesquisa()" title="Pesquisar">
                 <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             </button>
-            <!-- Botão de Flor para abrir o Menu -->
             <button class="icon-btn" onclick="toggleMenu()" title="Menu Flor">🌸</button>
         </div>
     </header>
@@ -715,7 +704,14 @@
             const grid = document.getElementById('grid-todas-obras');
             grid.innerHTML = '';
             listaObras.forEach(obra => {
-                const ultimoCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
+                let ultimoCapNum = 'Em breve';
+                let linkLeitor = '#';
+
+                if (obra.capitulos && obra.capitulos.length > 0) {
+                    ultimoCapNum = obra.capitulos[0].numero;
+                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                }
+
                 grid.innerHTML += `
                     <div class="manga-card">
                         <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')">
@@ -723,7 +719,9 @@
                         </div>
                         <div class="manga-info">
                             <div class="manga-titulo" title="${obra.titulo}" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
-                            <div class="capitulo-link" style="color:var(--text-muted);">${ultimoCap}</div>
+                            <div class="capitulo-recente-row">
+                                <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -797,11 +795,17 @@
             
             grid.innerHTML = '';
             filtradas.forEach(obra => {
+                let ultimoCapNum = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
+                let linkLeitor = obra.capitulos && obra.capitulos.length > 0 ? `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}` : '#';
+
                 grid.innerHTML += `
                     <div class="manga-card">
                         <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')"><img src="${obra.capa}" class="manga-capa"></div>
                         <div class="manga-info">
                             <div class="manga-titulo" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <div class="capitulo-recente-row">
+                                <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
+                            </div>
                         </div>
                     </div>
                 `;
