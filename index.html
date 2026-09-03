@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Flowers Nenascan 🌸</title>
+    <title>Flower's Nenascan 🌸</title>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5HHMHEDSD0"></script>
@@ -12,631 +12,730 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-5HHMHEDSD0');
     </script>
 
-    <!-- Importa a biblioteca do Supabase direto do CDN -->
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* Esconde o selinho flutuante do Netlify */
-        #netlify-badge, div[id*="netlify-badge"] {
-            display: none !important;
-        }
+        #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
 
         :root {
-            --bg-color: #fff0f5;
-            --card-bg: #ffffff;
-            --primary-pink: #ffb6c1;
-            --dark-pink: #ff69b4;
-            --accent-color: #ff1493;
-            --text-main: #4a3b42;
-            --text-muted: #8c7b82;
-            --shadow: 0 4px 20px rgba(255, 105, 180, 0.1);
+            --bg-color: #0b0b0e;
+            --card-bg: #16161a;
+            --primary-pink: #ff69b4;
+            --accent-pink: #ff1493;
+            --text-main: #ffffff;
+            --text-muted: #a0a0ab;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.6;
+            padding-bottom: 90px; /* Espaço pra barra inferior */
         }
 
+        /* Topo */
         header {
-            background-color: var(--card-bg);
-            border-bottom: 3px solid var(--primary-pink);
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-        }
-
-        header h1 {
-            color: var(--accent-color);
-            font-size: 2.3rem;
-            margin-bottom: 5px;
-            font-weight: 800;
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        nav {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(11, 11, 14, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 105, 180, 0.2);
+        }
+
+        .logo-img {
+            height: 35px;
+            object-fit: contain;
+        }
+
+        .top-actions {
+            display: flex;
             gap: 12px;
-            background-color: var(--primary-pink);
-            padding: 12px;
-            flex-wrap: wrap;
+            align-items: center;
         }
 
-        nav button {
-            background-color: rgba(255, 255, 255, 0.35);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        nav button:hover, nav button.active {
-            background-color: white;
-            color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 35px auto;
-            padding: 0 20px;
-        }
-
-        .section-title {
-            color: var(--dark-pink);
-            border-bottom: 2px dashed var(--primary-pink);
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-            font-size: 1.35rem;
-            font-weight: 700;
-        }
-
-        .manga-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-            gap: 22px;
-        }
-
-        .manga-card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 2px solid #ffe4e9;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .manga-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-pink);
-        }
-
-        .manga-capa-container {
-            width: 100%;
-            height: 290px;
-            background-color: #ffd1dc;
+        .icon-btn {
+            background: #1a1a24;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            color: var(--primary-pink);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--primary-pink);
+            color: white;
+            box-shadow: 0 0 10px var(--primary-pink);
+        }
+
+        /* Barra de Pesquisa Oculta */
+        #search-container {
+            display: none;
+            padding: 10px 20px;
+            background: #14141c;
+            border-bottom: 1px solid #222;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--primary-pink);
+            background: #0b0b0e;
+            color: white;
+            outline: none;
+        }
+
+        /* Menu Lateral (Flor) */
+        #sidebar-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100%;
+            background: #14141c;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.8);
+            z-index: 1000;
+            transition: 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid var(--primary-pink);
+        }
+
+        #sidebar-menu.open {
+            right: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #252530;
+        }
+
+        .sidebar-header h2 {
+            color: var(--primary-pink);
+            font-size: 1.2rem;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+        }
+
+        .sidebar-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .sidebar-links a:hover {
+            background: rgba(255, 105, 180, 0.15);
+            color: var(--primary-pink);
+            transform: translateX(5px);
+        }
+
+        /* Carrossel de Destaque */
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .hero-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to top, rgba(11,11,14,0.95), transparent);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero-synopsis {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .badge-status {
+            display: inline-block;
+            border: 1px solid var(--primary-pink);
+            color: var(--primary-pink);
+            padding: 4px 14px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Seção Últimas Atualizações */
+        .section-container {
+            padding: 25px 15px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-bar {
+            width: 4px;
+            height: 22px;
+            background: var(--primary-pink);
+            border-radius: 2px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        /* Grade 2 colunas */
+        .manga-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .manga-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .manga-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 105, 180, 0.4);
+        }
+
+        .manga-capa-box {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            background: #222;
         }
 
         .manga-capa {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .manga-card:hover .manga-capa {
-            transform: scale(1.03);
         }
 
         .manga-info {
-            padding: 15px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
-            justify-content: space-between;
+            gap: 4px;
         }
 
-        .manga-info h3 {
-            color: var(--accent-color);
-            font-size: 1rem;
-            margin-bottom: 6px;
+        .manga-titulo {
+            font-size: 0.9rem;
             font-weight: 700;
-            cursor: pointer;
-        }
-
-        .manga-info h3:hover {
-            text-decoration: underline;
-        }
-
-        .manga-info p {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-ler, .btn-fav {
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            border: none;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .btn-ler {
-            background-color: var(--dark-pink);
             color: white;
-            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .btn-ler:hover {
-            background-color: var(--accent-color);
+        .capitulo-recente-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
         }
 
-        .btn-fav {
-            background-color: #fff0f5;
-            color: var(--dark-pink);
-            border: 1px solid var(--primary-pink);
+        .capitulo-texto {
+            font-size: 0.78rem;
+            color: var(--text-muted);
         }
 
-        .btn-fav:hover {
+        /* Selo Novo Pulsando */
+        .selo-novo {
             background-color: var(--primary-pink);
             color: white;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            animation: pulsar 1.5s infinite ease-in-out;
         }
 
-        .view-section {
-            display: none;
+        @keyframes pulsar {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); shadow: 0 0 8px var(--primary-pink); }
+            100% { opacity: 0.6; transform: scale(0.95); }
         }
 
-        .view-section.active {
-            display: block;
+        /* Barra Inferior Fixa */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #121218;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
         }
 
-        .detalhe-box {
-            background: white;
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow: var(--shadow);
-            border: 2px solid #ffe4e9;
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
             display: flex;
             flex-direction: column;
-            gap: 25px;
-        }
-
-        @media(min-width: 768px) {
-            .detalhe-topo {
-                display: flex;
-                gap: 30px;
-            }
-        }
-
-        .detalhe-capa {
-            width: 220px;
-            height: 310px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            flex-shrink: 0;
-            margin: 0 auto 20px auto;
-            display: block;
-        }
-
-        .detalhe-info h2 {
-            color: var(--accent-color);
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .detalhe-info .tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-
-        .tag {
-            background-color: #fff0f5;
-            color: var(--dark-pink);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border: 1px solid var(--primary-pink);
-        }
-
-        .detalhe-info p {
-            color: var(--text-main);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .lista-capitulos-container {
-            margin-top: 10px;
-            border-top: 2px dashed #ffe4e9;
-            padding-top: 20px;
-        }
-
-        .lista-capitulos-container h3 {
-            color: var(--dark-pink);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .capitulo-item {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            background-color: #fff9fb;
-            padding: 12px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ffe4e9;
-            text-decoration: none;
-            color: var(--text-main);
+            gap: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
             font-weight: 600;
+            text-decoration: none;
             transition: 0.2s;
         }
 
-        .capitulo-item:hover {
-            background-color: var(--primary-pink);
-            color: white;
-            transform: translateX(5px);
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
         }
 
+        .nav-item.active, .nav-item:hover {
+            color: var(--primary-pink);
+        }
+
+        /* Container de visualizações / seções */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Estilo da Tela de Detalhes da Obra */
+        .detalhe-box {
+            padding: 20px;
+        }
         .btn-voltar {
             background: none;
             border: none;
-            color: var(--dark-pink);
+            color: var(--primary-pink);
             font-weight: bold;
             font-size: 0.95rem;
             cursor: pointer;
             margin-bottom: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-voltar:hover {
-            color: var(--accent-color);
-        }
-
-        .painel-box {
-            background: white;
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow: var(--shadow);
-            border: 2px solid #ffe4e9;
         }
     </style>
 </head>
 <body>
 
-    <header onclick="voltarHome()">
-        <h1>🌸 Flowers Nenascan</h1>
-        <p>Traduções de Manhwas com muito amor e carinho 💖</p>
+    <!-- TOPO -->
+    <header>
+        <img src="https://i.imgur.com/exemplo.png" alt="Flower's Nenasscan" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <h1 style="display:none; font-size:1.1rem; color:var(--primary-pink);">🌸 Flower's Nenasscan</h1>
+        
+        <div class="top-actions">
+            <button class="icon-btn" onclick="togglePesquisa()" title="Pesquisar">
+                🔍
+            </button>
+            <button class="icon-btn" onclick="toggleMenu()" title="Menu Flor">
+                🌸
+            </button>
+        </div>
     </header>
 
-    <nav>
-        <button onclick="mudarAba('inicio', this)" class="active" id="btn-inicio">Início</button>
-        <button onclick="mudarAba('favoritos', this)" id="btn-favoritos">⭐ Favoritos (<span id="fav-count">0</span>)</button>
-        <button onclick="mudarAba('painel', this)" id="btn-painel">👤 Painel</button>
-    </nav>
+    <!-- BARRA DE PESQUISA -->
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Pesquisar obra..." oninput="filtrarObras(this.value)">
+    </div>
 
-    <div class="container">
-        <!-- INÍCIO / LANÇAMENTOS -->
-        <div id="inicio" class="view-section active">
-            <h2 class="section-title">✨ Últimos Lançamentos</h2>
-            <div id="grid-lancamentos" class="manga-grid">
-                <p style="color: var(--text-muted);">Carregando obras...</p>
-            </div>
+    <!-- MENU LATERAL (FLOR) -->
+    <div id="sidebar-menu">
+        <div class="sidebar-header">
+            <h2>🌸 Menu</h2>
+            <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
-
-        <!-- TELA DE DETALHES DA OBRA -->
-        <div id="detalhes-obra" class="view-section">
-            <button class="btn-voltar" onclick="voltarHome()">← Voltar para os lançamentos</button>
-            <div id="conteudo-detalhes"></div>
-        </div>
-
-        <!-- FAVORITOS -->
-        <div id="favoritos" class="view-section">
-            <h2 class="section-title">⭐ Suas Obras Favoritas</h2>
-            <div id="lista-favoritos" class="manga-grid">
-                <p style="color: var(--text-muted);">Nenhuma obra salva nos favoritos ainda. Clique na estrelinha ⭐ nos cards para salvar aqui!</p>
-            </div>
-        </div>
-
-        <!-- PAINEL -->
-        <div id="painel" class="view-section">
-            <h2 class="section-title">👤 Painel do Leitor</h2>
-            <div class="painel-box">
-                <h3 style="color: var(--accent-color); margin-bottom: 10px; font-size: 1.2rem;">Bem-vinda ao seu espaço, flor! 🌸</h3>
-                <p style="color: var(--text-muted); margin-bottom: 15px;">Gerenciamento do seu site de scan de forma limpa e organizada.</p>
-                <p style="margin-bottom: 8px;"><strong>Status do Projeto:</strong> Online e Ativo 🚀</p>
-                <p><strong>Estilo Visual:</strong> Rosa Fofo Moderno 💖</p>
-            </div>
+        <div class="sidebar-links">
+            <a href="#" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
+            <a href="#" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
+            <a href="#" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
+            <a href="#" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
+            <a href="#" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
+            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
+            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
         </div>
     </div>
 
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="container">
+
+        <!-- TELA INÍCIO -->
+        <div id="inicio" class="view-section active">
+            
+            <!-- CARROSSEL DE DESTAQUE (ALEATÓRIO) -->
+            <div class="hero-carousel" id="hero-carousel" onclick="abrirObraDoCarrossel()">
+                <div class="hero-slide active" style="background-image: url('https://files.catbox.moe/placeholder.jpg');">
+                    <div class="hero-content">
+                        <div class="hero-title">Carregando Destaques...</div>
+                        <div class="hero-synopsis">Aguarde um instante...</div>
+                        <span class="badge-status">MANHWA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEÇÃO ÚLTIMAS ATUALIZAÇÕES -->
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-bar"></div>
+                    <h2 class="section-title">ÚLTIMAS ATUALIZAÇÕES</h2>
+                </div>
+                
+                <div id="grid-atualizacoes" class="manga-grid">
+                    <p style="color: var(--text-muted); grid-column: span 2;">Carregando atualizações...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELA DE OBRAS (LISTA COMPLETA) -->
+        <div id="obras" class="view-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-bar"></div>
+                    <h2 class="section-title">TODAS AS OBRAS</h2>
+                </div>
+                <div id="grid-todas-obras" class="manga-grid"></div>
+            </div>
+        </div>
+
+        <!-- TELA BIBLIOTECA / FAVORITOS -->
+        <div id="favoritos" class="view-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-bar"></div>
+                    <h2 class="section-title">SUA BIBLIOTECA</h2>
+                </div>
+                <div id="lista-favoritos" class="manga-grid">
+                    <p style="color: var(--text-muted); grid-column: span 2;">Sua biblioteca está vazia.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- OUTRAS TELAS SIMPLES -->
+        <div id="avisos" class="view-section">
+            <div class="section-container">
+                <div class="section-header"><div class="section-bar"></div><h2 class="section-title">AVISOS</h2></div>
+                <p style="color: var(--text-muted); padding: 10px 0;">Nenhum aviso importante no momento. Bom proveito das leituras! 💖</p>
+            </div>
+        </div>
+
+        <div id="generos" class="view-section">
+            <div class="section-container">
+                <div class="section-header"><div class="section-bar"></div><h2 class="section-title">GÊNEROS</h2></div>
+                <p style="color: var(--text-muted); padding: 10px 0;">Filtros de gêneros em breve!</p>
+            </div>
+        </div>
+
+        <!-- TELA DE DETALHES DE UMA OBRA -->
+        <div id="detalhes-obra" class="view-section">
+            <div class="detalhe-box">
+                <button class="btn-voltar" onclick="mudarAba('inicio')">← Voltar</button>
+                <div id="conteudo-detalhes"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BARRA INFERIOR FIXA -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="mudarAba('inicio', this)">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Início
+        </button>
+        <button class="nav-item" onclick="mudarAba('obras', this)">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+            Obras
+        </button>
+        <button class="nav-item" onclick="mudarAba('favoritos', this)">
+            <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6  12V4z"/></svg>
+            Biblioteca
+        </button>
+        <button class="nav-item" onclick="mudarAba('avisos', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+            Avisos
+        </button>
+    </nav>
+
     <script>
-        const SUPABASE_URL = 'https://rjqmaheyuattvsqocvku.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcW1haGV5dWF0dHZzcW9jdmt1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTQ0MDIsImV4cCI6MjEwMzc5MDQwMn0.EGnNvkrxSTyXmW-OlZcx4iAElQBFqu67qyHXLr7BMo4';
+        let listaObras = [];
+        let obraCarrosselAtualId = '';
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Carrega o obras.json
+        fetch('obras.json?v=' + new Date().getTime())
+            .then(res => res.json())
+            .then(data => {
+                listaObras = data;
+                inicializarHome();
+            })
+            .catch(err => console.error("Erro ao carregar obras:", err));
 
-        async function registrarVisualizacaoNoBanco(slugIdentificador) {
-            try {
-                let { data } = await supabaseClient
-                    .from('views')
-                    .select('count')
-                    .eq('slug', slugIdentificador)
-                    .maybeSingle();
+        function inicializarHome() {
+            if (listaObras.length === 0) return;
+            renderizarCarrosselAleatorio();
+            renderizarAtualizacoes();
+            renderizarTodasObras();
+        }
 
-                if (data) {
-                    await supabaseClient
-                        .from('views')
-                        .update({ count: data.count + 1 })
-                        .eq('slug', slugIdentificador);
-                } else {
-                    await supabaseClient
-                        .from('views')
-                        .insert([{ slug: slugIdentificador, count: 1 }]);
-                }
-            } catch (err) {
-                console.error('Erro ao atualizar visualizações:', err);
+        // Carrossel com obras aleatórias
+        function renderizarCarrosselAleatorio() {
+            const copia = [...listaObras].sort(() => 0.5 - Math.random());
+            const destaques = copia.slice(0, 5); // Pega até 5 aleatórias
+            
+            const carousel = document.getElementById('hero-carousel');
+            carousel.innerHTML = '';
+
+            destaques.forEach((obra, index) => {
+                const ativa = index === 0 ? 'active' : '';
+                if (index === 0) obraCarrosselAtualId = obra.id;
+
+                carousel.innerHTML += `
+                    <div class="hero-slide ${ativa}" style="background-image: url('${obra.capa}');" data-id="${obra.id}">
+                        <div class="hero-content">
+                            <div class="hero-title">${obra.titulo}</div>
+                            <div class="hero-synopsis">${obra.sinopse || 'Sem sinopse informada.'}</div>
+                            <span class="badge-status">${obra.status || 'EM LANÇAMENTO'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Roda o carrossel a cada 4 segundos
+            let slideIndex = 0;
+            const slides = carousel.querySelectorAll('.hero-slide');
+            if (slides.length > 1) {
+                setInterval(() => {
+                    slides[slideIndex].classList.remove('active');
+                    slideIndex = (slideIndex + 1) % slides.length;
+                    slides[slideIndex].classList.add('active');
+                    obraCarrosselAtualId = slides[slideIndex].dataset.id;
+                }, 4000);
             }
         }
 
-        let favoritos = JSON.parse(localStorage.getItem('flowers_favs')) || [];
-        let listaObras = [];
+        function abrirObraDoCarrossel() {
+            if (obraCarrosselAtualId) {
+                abrirDetalhesObra(obraCarrosselAtualId);
+            }
+        }
 
-        fetch('obras.json?v=' + new Date().getTime())
-            .then(response => response.json())
-            .then(data => {
-                listaObras = data;
-                renderizarLancamentos();
+        // Renderiza as 10 obras em grade 2 colunas com o selo "NOVO" pulsando
+        function renderizarAtualizacoes() {
+            const grid = document.getElementById('grid-atualizacoes');
+            grid.innerHTML = '';
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const obraParam = urlParams.get('obra');
-                if (obraParam) {
-                    abrirDetalhes(obraParam, false);
-                } else {
-                    registrarVisualizacaoNoBanco('home-principal');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                document.getElementById('grid-lancamentos').innerHTML = '<p style="color: var(--text-muted);">Erro ao carregar o arquivo obras.json.</p>';
-            });
+            // Pega até 10 obras
+            const recentes = listaObras.slice(0, 10);
 
-        function renderizarLancamentos() {
-            const container = document.getElementById('grid-lancamentos');
-            if (listaObras.length === 0) return;
-
-            container.innerHTML = '';
-            listaObras.forEach(obra => {
-                const primeiroCapObj = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0] : null;
-                const nomeCap = primeiroCapObj ? primeiroCapObj.numero : 'Em breve';
-                const linkLeitor = primeiroCapObj ? `ler.html?obra=${obra.id}&cap=${encodeURIComponent(nomeCap)}` : '#';
-
-                container.innerHTML += `
-                    <div class="manga-card" data-id="${obra.id}">
-                        <div class="manga-capa-container" onclick="abrirDetalhes('${obra.id}', true)">
-                            <img src="${obra.capa}" alt="Capa" class="manga-capa">
+            recentes.forEach(obra => {
+                const ultimoCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
+                
+                grid.innerHTML += `
+                    <div class="manga-card" onclick="abrirDetalhesObra('${obra.id}')">
+                        <div class="manga-capa-box">
+                            <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                         </div>
                         <div class="manga-info">
-                            <div>
-                                <h3 onclick="abrirDetalhes('${obra.id}', true)">${obra.titulo}</h3>
-                                <p>${nomeCap}</p>
-                            </div>
-                            <div class="card-actions">
-                                <a href="${linkLeitor}" class="btn-ler" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${nomeCap}').then(() => { window.location.href = '${linkLeitor}'; });">Ler</a>
-                                <button class="btn-fav" onclick="toggleFavorito('${obra.id}', this)">⭐</button>
+                            <div class="manga-titulo" title="${obra.titulo}">${obra.titulo}</div>
+                            <div class="capitulo-recente-row">
+                                <span class="capitulo-texto">${ultimoCap}</span>
+                                <span class="selo-novo">NOVO</span>
                             </div>
                         </div>
                     </div>
                 `;
             });
-            atualizarEstrelasFavoritosNaTela();
         }
 
-        function abrirDetalhes(id, mudarUrl = true) {
+        function renderizarTodasObras() {
+            const grid = document.getElementById('grid-todas-obras');
+            grid.innerHTML = '';
+            listaObras.forEach(obra => {
+                const ultimoCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
+                grid.innerHTML += `
+                    <div class="manga-card" onclick="abrirDetalhesObra('${obra.id}')">
+                        <div class="manga-capa-box">
+                            <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
+                        </div>
+                        <div class="manga-info">
+                            <div class="manga-titulo" title="${obra.titulo}">${obra.titulo}</div>
+                            <div class="capitulo-texto">${ultimoCap}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Abrir Detalhes da Obra e Listar Capítulos
+        function abrirDetalhesObra(id) {
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
 
-            registrarVisualizacaoNoBanco('obra-' + obra.id);
-            if (mudarUrl) {
-                history.pushState({id: id}, "", "?obra=" + id);
-            }
+            const container = document.getElementById('conteudo-detalhes');
+            let capsHtml = '';
 
-            const containerDetalhes = document.getElementById('conteudo-detalhes');
-            
-            let tagsHtml = '';
-            if (obra.generos && Array.isArray(obra.generos)) {
-                obra.generos.forEach(g => { tagsHtml += `<span class="tag">${g}</span>`; });
-            }
-            if (obra.status) {
-                tagsHtml += `<span class="tag" style="background: var(--dark-pink); color: white;">${obra.status}</span>`;
-            }
-
-            let capitulosHtml = '';
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
-                    const linkLeitorCap = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
-                    capitulosHtml += `
-                        <a href="${linkLeitorCap}" class="capitulo-item" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}').then(() => { window.location.href = '${linkLeitorCap}'; });">
+                    const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
+                    capsHtml += `
+                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#16161a; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:white; text-decoration:none; border:1px solid #222;">
                             <span>${cap.numero}</span>
-                            <span>Ler →</span>
+                            <span style="color:var(--primary-pink)">Ler →</span>
                         </a>
                     `;
                 });
             } else {
-                capitulosHtml = '<p style="color: var(--text-muted);">Nenhum capítulo lançado ainda.</p>';
+                capsHtml = '<p style="color:var(--text-muted)">Nenhum capítulo cadastrado ainda.</p>';
             }
 
-            containerDetalhes.innerHTML = `
-                <div class="detalhe-box">
-                    <div class="detalhe-topo">
-                        <img src="${obra.capa}" alt="Capa" class="detalhe-capa">
-                        <div class="detalhe-info">
-                            <h2>${obra.titulo}</h2>
-                            <div class="tags">${tagsHtml}</div>
-                            <p><strong>Sinopse:</strong><br>${obra.sinopse || 'Nenhuma sinopse informada.'}</p>
-                        </div>
-                    </div>
-                    <div class="lista-capitulos-container">
-                        <h3>📚 Lista de Capítulos</h3>
-                        ${capitulosHtml}
+            container.innerHTML = `
+                <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+                    <img src="${obra.capa}" style="width:140px; height:200px; object-fit:cover; border-radius:10px;">
+                    <div style="flex:1;">
+                        <h2 style="color:var(--primary-pink); margin-bottom:8px;">${obra.titulo}</h2>
+                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">${obra.sinopse || 'Sem sinopse.'}</p>
                     </div>
                 </div>
+                <h3 style="margin-bottom:12px; font-size:1.1rem;">Capítulos</h3>
+                ${capsHtml}
             `;
 
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('detalhes-obra').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            mudarAba('detalhes-obra');
         }
 
-        function voltarHome() {
-            history.pushState({}, "", "index.html");
-            mudarAba('inicio', document.getElementById('btn-inicio'));
-            registrarVisualizacaoNoBanco('home-principal');
-        }
-
-        function mudarAba(idAba, elementoBtn) {
+        // Sistema de Abas
+        function mudarAba(idAba, btnElement) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(idAba).classList.add('active');
-            if (elementoBtn) elementoBtn.classList.add('active');
 
-            if (idAba === 'favoritos') {
-                renderizarFavoritos();
+            if(btnElement) {
+                document.querySelectorAll('.bottom-nav .nav-item').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function toggleFavorito(id, btnElement) {
-            const obra = listaObras.find(o => o.id === id);
-            if (!obra) return;
-
-            const primeiroCapObj = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0] : null;
-            const nomeCapFav = primeiroCapObj ? primeiroCapObj.numero : '';
-            const linkFav = primeiroCapObj ? `ler.html?obra=${obra.id}&cap=${encodeURIComponent(nomeCapFav)}` : '#';
-
-            const dadosObra = {
-                id: obra.id,
-                titulo: obra.titulo,
-                cap: nomeCapFav,
-                img: obra.capa,
-                link: linkFav
-            };
-
-            const index = favoritos.findIndex(f => f.id === id);
-            if (index > -1) {
-                favoritos.splice(index, 1);
-            } else {
-                favoritos.push(dadosObra);
-            }
-
-            localStorage.setItem('flowers_favs', JSON.stringify(favoritos));
-            atualizarContadorFavs();
-            atualizarEstrelasFavoritosNaTela();
+        // Controles de Menu e Pesquisa
+        function toggleMenu() {
+            document.getElementById('sidebar-menu').classList.toggle('open');
         }
 
-        function atualizarEstrelasFavoritosNaTela() {
-            document.querySelectorAll('.manga-card').forEach(card => {
-                const idCard = card.dataset.id;
-                const btnFav = card.querySelector('.btn-fav');
-                if (btnFav && favoritos.some(f => f.id === idCard)) {
-                    btnFav.style.background = 'var(--primary-pink)';
-                    btnFav.style.color = 'white';
-                }
-            });
+        function togglePesquisa() {
+            const searchBox = document.getElementById('search-container');
+            searchBox.style.display = searchBox.style.display === 'block' ? 'none' : 'block';
         }
 
-        function renderizarFavoritos() {
-            const container = document.getElementById('lista-favoritos');
-            if (favoritos.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Nenhuma obra salva nos favoritos ainda.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            favoritos.forEach(fav => {
-                container.innerHTML += `
-                    <div class="manga-card">
-                        <div class="manga-capa-container" onclick="abrirDetalhes('${fav.id}', true)">
-                            <img src="${fav.img}" alt="Capa" class="manga-capa">
-                        </div>
+        function filtrarObras(termo) {
+            const query = termo.toLowerCase();
+            const filtradas = listaObras.filter(o => o.titulo.toLowerCase().includes(query));
+            const grid = document.getElementById('grid-todas-obras');
+            mudarAba('obras');
+            
+            grid.innerHTML = '';
+            filtradas.forEach(obra => {
+                grid.innerHTML += `
+                    <div class="manga-card" onclick="abrirDetalhesObra('${obra.id}')">
+                        <div class="manga-capa-box"><img src="${obra.capa}" class="manga-capa"></div>
                         <div class="manga-info">
-                            <div>
-                                <h3 onclick="abrirDetalhes('${fav.id}', true)">${fav.titulo}</h3>
-                                <p>${fav.cap}</p>
-                            </div>
-                            <a href="${fav.link}" class="btn-ler">Ler</a>
+                            <div class="manga-titulo">${obra.titulo}</div>
                         </div>
                     </div>
                 `;
             });
         }
-
-        function atualizarContadorFavs() {
-            const el = document.getElementById('fav-count');
-            if(el) el.innerText = favoritos.length;
-        }
-
-        atualizarContadorFavs();
-    </script>
-    <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const netlifyBadge = document.getElementById('netlify-badge') || document.querySelector('div[id*="netlify-badge"]');
-        if (netlifyBadge) netlifyBadge.remove();
-        
-        document.querySelectorAll('*').forEach(el => {
-            if (el.innerText && el.innerText.includes('Powered by Netlify')) {
-                el.remove();
-            }
-        });
-    });
     </script>
 </body>
 </html>
