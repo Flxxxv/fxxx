@@ -44,13 +44,11 @@
             padding-bottom: 85px;
         }
 
-        /* Corrigido: Removido a tag 'a' daqui para não quebrar links e rotas */
         p, span, h1, h2, h3, h4, div, button {
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
         }
 
-        /* Topo */
         header {
             display: flex;
             justify-content: space-between;
@@ -110,7 +108,6 @@
             box-shadow: 0 0 12px var(--primary-pink);
         }
 
-        /* Barra de Pesquisa */
         #search-container {
             display: none;
             padding: 12px 18px;
@@ -136,7 +133,6 @@
             text-shadow: none;
         }
 
-        /* Menu Lateral */
         #sidebar-menu {
             position: fixed;
             top: 0;
@@ -227,7 +223,6 @@
             transform: translateX(5px);
         }
 
-        /* Carrossel de Destaque */
         .hero-carousel {
             position: relative;
             width: 100%;
@@ -290,7 +285,6 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* Seções */
         .section-container {
             padding: 20px 15px;
             max-width: 1100px;
@@ -320,7 +314,6 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* Grade 2 colunas com Capas Maiores */
         .manga-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -400,7 +393,6 @@
             text-decoration: underline;
         }
 
-        /* Selo Novo Pulsando */
         .selo-novo {
             background-color: var(--primary-pink);
             color: #000000;
@@ -419,7 +411,6 @@
             100% { opacity: 0.75; transform: scale(0.95); }
         }
 
-        /* Barra Inferior Fixa */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -483,7 +474,7 @@
 
     <!-- TOPO -->
     <header>
-        <a href="#" class="logo-img-container" onclick="mudarAba('inicio'); return false;">
+        <a class="logo-img-container" onclick="mudarAba('inicio')">
             <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
         </a>
         
@@ -509,13 +500,13 @@
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="#" onclick="mudarAba('inicio'); toggleMenu(); return false;">Início</a>
-            <a href="#" onclick="mudarAba('obras'); toggleMenu(); return false;">Obras</a>
-            <a href="#" onclick="mudarAba('favoritos'); toggleMenu(); return false;">Biblioteca</a>
-            <a href="#" onclick="mudarAba('avisos'); toggleMenu(); return false;">Avisos</a>
-            <a href="#" onclick="mudarAba('generos'); toggleMenu(); return false;">Gêneros</a>
-            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu(); return false;">Apoie a Scan</a>
-            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu(); return false;">Pedidos</a>
+            <a onclick="mudarAba('inicio'); toggleMenu();">Início</a>
+            <a onclick="mudarAba('obras'); toggleMenu();">Obras</a>
+            <a onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
+            <a onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
+            <a onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
+            <a onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
+            <a onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
         </div>
     </div>
 
@@ -788,17 +779,19 @@
 
         function filtrarObras(termo) {
             const query = termo.toLowerCase();
-            const filtradas = listaObras.fileter(o => o.titulo.toLowerCase().includes(query));
+            const filtradas = listaObras.filter(o => o.titulo.toLowerCase().includes(query));
             const grid = document.getElementById('grid-todas-obras');
             mudarAba('obras');
             
             grid.innerHTML = '';
             filtradas.forEach(obra => {
+                const ultimoCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
                 grid.innerHTML += `
                     <div class="manga-card">
                         <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')"><img src="${obra.capa}" class="manga-capa"></div>
                         <div class="manga-info">
                             <div class="manga-titulo" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <div class="capitulo-link" style="color:var(--text-muted);">${ultimoCap}</div>
                         </div>
                     </div>
                 `;
