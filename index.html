@@ -24,10 +24,10 @@
         :root {
             --bg-color: #0b0b0e;
             --card-bg: #14141a;
-            --primary-pink: #ff85c0; /* Um tiquinho mais claro e brilhante */
-            --accent-pink: #ff52b0;
-            --text-main: #ffffff;
-            --text-muted: #b0b0bc;
+            --primary-pink: #ff85c0; /* Tom rosa exato da sua imagem */
+            --neon-glow: 0 0 10px rgba(255, 133, 192, 0.6), 0 0 20px rgba(255, 133, 192, 0.3);
+            --text-main: #ff85c0;
+            --text-muted: #e0a3c7;
             --shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
         }
 
@@ -44,6 +44,12 @@
             padding-bottom: 85px;
         }
 
+        /* Todos os textos do site com a cor rosa e brilho neon suave */
+        p, span, a, h1, h2, h3, h4, div, button {
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+        }
+
         /* Topo */
         header {
             display: flex;
@@ -54,7 +60,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(255, 133, 192, 0.2);
+            border-bottom: 1px solid rgba(255, 133, 192, 0.3);
         }
 
         .logo-img-container {
@@ -75,10 +81,9 @@
             align-items: center;
         }
 
-        /* Lupa e Flor maiores e sem emojis */
         .icon-btn {
             background: #181822;
-            border: 1px solid rgba(255, 133, 192, 0.4);
+            border: 1px solid rgba(255, 133, 192, 0.5);
             color: var(--primary-pink);
             width: 44px;
             height: 44px;
@@ -88,12 +93,15 @@
             justify-content: center;
             cursor: pointer;
             transition: 0.2s;
+            font-size: 1.2rem;
+            text-shadow: var(--neon-glow);
         }
 
         .icon-btn svg {
             width: 22px;
             height: 22px;
             fill: currentColor;
+            filter: drop-shadow(0 0 5px rgba(255, 133, 192, 0.6));
         }
 
         .icon-btn:hover {
@@ -116,12 +124,19 @@
             border-radius: 22px;
             border: 1px solid var(--primary-pink);
             background: #0b0b0e;
-            color: white;
+            color: var(--primary-pink);
             outline: none;
             font-size: 0.95rem;
+            text-shadow: var(--neon-glow);
+            box-shadow: var(--neon-glow);
         }
 
-        /* Menu Lateral (Flor) Estilizado */
+        #search-input::placeholder {
+            color: #b36b95;
+            text-shadow: none;
+        }
+
+        /* Menu Lateral com Emoji de Flor */
         #sidebar-menu {
             position: fixed;
             top: 0;
@@ -146,7 +161,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 24px 20px;
-            border-bottom: 1px solid rgba(255, 133, 192, 0.2);
+            border-bottom: 1px solid rgba(255, 133, 192, 0.3);
             background: rgba(255, 133, 192, 0.05);
         }
 
@@ -157,18 +172,13 @@
             color: var(--primary-pink);
             font-size: 1.2rem;
             font-weight: 700;
-        }
-
-        .sidebar-title-area svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
+            text-shadow: var(--neon-glow);
         }
 
         .close-menu {
             background: #1a1a26;
-            border: 1px solid rgba(255, 133, 192, 0.3);
-            color: white;
+            border: 1px solid rgba(255, 133, 192, 0.4);
+            color: var(--primary-pink);
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -178,6 +188,7 @@
             font-size: 1.1rem;
             cursor: pointer;
             transition: 0.2s;
+            text-shadow: var(--neon-glow);
         }
 
         .close-menu:hover {
@@ -194,7 +205,7 @@
         }
 
         .sidebar-links a {
-            color: var(--text-main);
+            color: var(--primary-pink);
             text-decoration: none;
             font-size: 1rem;
             font-weight: 600;
@@ -205,13 +216,14 @@
             align-items: center;
             gap: 14px;
             background: #171722;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(255, 133, 192, 0.2);
+            text-shadow: var(--neon-glow);
         }
 
         .sidebar-links a:hover {
-            background: rgba(255, 133, 192, 0.15);
-            color: var(--primary-pink);
-            border-color: rgba(255, 133, 192, 0.4);
+            background: rgba(255, 133, 192, 0.2);
+            color: #fff;
+            border-color: var(--primary-pink);
             transform: translateX(5px);
         }
 
@@ -264,7 +276,7 @@
             font-weight: 800;
             color: var(--primary-pink);
             margin-bottom: 4px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.9);
+            text-shadow: var(--neon-glow);
         }
 
         .hero-synopsis {
@@ -275,6 +287,7 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
             line-height: 1.4;
+            text-shadow: var(--neon-glow);
         }
 
         /* Seções */
@@ -296,6 +309,7 @@
             height: 20px;
             background: var(--primary-pink);
             border-radius: 2px;
+            box-shadow: var(--neon-glow);
         }
 
         .section-title {
@@ -303,6 +317,7 @@
             font-weight: 800;
             letter-spacing: 0.5px;
             color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
         }
 
         /* Grade 2 colunas com Capas Maiores */
@@ -318,19 +333,20 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255, 133, 192, 0.3);
             box-shadow: var(--shadow);
             transition: transform 0.2s;
         }
 
         .manga-card:hover {
             transform: translateY(-3px);
-            border-color: rgba(255, 133, 192, 0.4);
+            border-color: var(--primary-pink);
+            box-shadow: var(--neon-glow);
         }
 
         .manga-capa-box {
             width: 100%;
-            height: 275px; /* Capas bem maiores e imponentes */
+            height: 275px; /* Capas grandes */
             position: relative;
             background: #1a1a22;
             cursor: pointer;
@@ -357,6 +373,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             cursor: pointer;
+            text-shadow: var(--neon-glow);
         }
 
         .manga-titulo:hover {
@@ -375,6 +392,7 @@
             text-decoration: none;
             font-weight: 600;
             transition: 0.2s;
+            text-shadow: var(--neon-glow);
         }
 
         .capitulo-link:hover {
@@ -392,12 +410,13 @@
             border-radius: 4px;
             animation: pulsar 1.5s infinite ease-in-out;
             letter-spacing: 0.5px;
+            box-shadow: var(--neon-glow);
         }
 
         @keyframes pulsar {
-            0% { opacity: 0.6; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.06); box-shadow: 0 0 10px var(--primary-pink); }
-            100% { opacity: 0.6; transform: scale(0.95); }
+            0% { opacity: 0.7; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.06); box-shadow: 0 0 15px var(--primary-pink); }
+            100% { opacity: 0.7; transform: scale(0.95); }
         }
 
         /* Barra Inferior Fixa */
@@ -407,7 +426,7 @@
             left: 0;
             width: 100%;
             background: #111116;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 133, 192, 0.3);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
@@ -427,16 +446,19 @@
             font-weight: 600;
             text-decoration: none;
             transition: 0.2s;
+            text-shadow: var(--neon-glow);
         }
 
         .nav-item svg {
             width: 22px;
             height: 22px;
             fill: currentColor;
+            filter: drop-shadow(0 0 4px rgba(255, 133, 192, 0.5));
         }
 
         .nav-item.active, .nav-item:hover {
             color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
         }
 
         .view-section { display: none; }
@@ -453,6 +475,7 @@
             font-size: 0.95rem;
             cursor: pointer;
             margin-bottom: 15px;
+            text-shadow: var(--neon-glow);
         }
     </style>
 </head>
@@ -467,14 +490,12 @@
         </a>
         
         <div class="top-actions">
-            <!-- Lupa Vetorial -->
+            <!-- Lupa -->
             <button class="icon-btn" onclick="togglePesquisa()" title="Pesquisar">
                 <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             </button>
-            <!-- Flor Vetorial (Menu) -->
-            <button class="icon-btn" onclick="toggleMenu()" title="Menu Flor">
-                <svg viewBox="0 0 24 24"><path d="M12 2c-2.21 0-4 1.79-4 4 0 .74.2 1.43.55 2.02C7.35 8.5 6 10.08 6 12c0 1.92 1.35 3.5 3.55 3.98-.35.59-.55 1.28-.55 2.02 0 2.21 1.79 4 4 4s4-1.79 4-4c0-.74-.2-1.43-.55-2.02C16.65 15.5 18 13.92 18 12c0-1.92-1.35-3.5-3.55-3.98.35-.59.55-1.28.55-2.02 0-2.21-1.79-4-4-4zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-6c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM6 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/></svg>
-            </button>
+            <!-- Menu com Emoji de Flor -->
+            <button class="icon-btn" onclick="toggleMenu()" title="Menu Flor">🌸</button>
         </div>
     </header>
 
@@ -487,19 +508,18 @@
     <div id="sidebar-menu">
         <div class="sidebar-header">
             <div class="sidebar-title-area">
-                <svg viewBox="0 0 24 24"><path d="M12 2c-2.21 0-4 1.79-4 4 0 .74.2 1.43.55 2.02C7.35 8.5 6 10.08 6 12c0 1.92 1.35 3.5 3.55 3.98-.35.59-.55 1.28-.55 2.02 0 2.21 1.79 4 4 4s4-1.79 4-4c0-.74-.2-1.43-.55-2.02C16.65 15.5 18 13.92 18 12c0-1.92-1.35-3.5-3.55-3.98.35-.59.55-1.28.55-2.02 0-2.21-1.79-4-4-4zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-6c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM6 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/></svg>
-                Menu Principal
+                🌸 Menu Principal
             </div>
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="#" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
-            <a href="#" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
-            <a href="#" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
-            <a href="#" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
-            <a href="#" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
-            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
-            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
+            <a href="#" onclick="mudarAba('inicio'); toggleMenu();">🌸 Início</a>
+            <a href="#" onclick="mudarAba('obras'); toggleMenu();">🌸 Obras</a>
+            <a href="#" onclick="mudarAba('favoritos'); toggleMenu();">🌸 Biblioteca</a>
+            <a href="#" onclick="mudarAba('avisos'); toggleMenu();">🌸 Avisos</a>
+            <a href="#" onclick="mudarAba('generos'); toggleMenu();">🌸 Gêneros</a>
+            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">💖 Apoie a Scan</a>
+            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">✨ Pedidos</a>
         </div>
     </div>
 
@@ -722,7 +742,7 @@
                 obra.capitulos.forEach(cap => {
                     const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
                     capsHtml += `
-                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:white; text-decoration:none; border:1px solid rgba(255,133,192,0.2);">
+                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,133,192,0.3); text-shadow:var(--neon-glow);">
                             <span>${cap.numero}</span>
                             <span style="color:var(--primary-pink)">Ler →</span>
                         </a>
@@ -734,13 +754,13 @@
 
             container.innerHTML = `
                 <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
-                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,133,192,0.3);">
+                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,133,192,0.4); box-shadow:var(--neon-glow);">
                     <div style="flex:1;">
-                        <h2 style="color:var(--primary-pink); margin-bottom:8px; font-size:1.2rem;">${obra.titulo}</h2>
-                        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">${obra.sinopse || 'Sem sinopse.'}</p>
+                        <h2 style="color:var(--primary-pink); margin-bottom:8px; font-size:1.2rem; text-shadow:var(--neon-glow);">${obra.titulo}</h2>
+                        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; text-shadow:var(--neon-glow);">${obra.sinopse || 'Sem sinopse.'}</p>
                     </div>
                 </div>
-                <h3 style="margin-bottom:12px; font-size:1.05rem; color:var(--primary-pink);">Capítulos</h3>
+                <h3 style="margin-bottom:12px; font-size:1.05rem; color:var(--primary-pink); text-shadow:var(--neon-glow);">Capítulos</h3>
                 ${capsHtml}
             `;
 
