@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Obra - Flower's Nenasscan</title>
+    <style>
+        :root {
+            --bg-color: #0b0b0e;
+            --card-bg: #14141a;
+            --primary-pink: #FF99DD; 
+            --neon-glow: 0 0 12px rgba(255, 153, 221, 0.7), 0 0 25px rgba(255, 153, 221, 0.35);
+            --text-main: #FF99DD;
+            --text-muted: #e69ac5;
+            --shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 40px;
+        }
+
+        p, span, a, h1, h2, h3, div {
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(11, 11, 14, 0.96);
+            border-bottom: 1px solid rgba(255, 153, 221, 0.3);
+        }
+
+        .btn-voltar {
+            background: none;
+            border: none;
+            color: var(--primary-pink);
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-shadow: var(--neon-glow);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .detalhe-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 153, 221, 0.3);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .erro {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="btn-voltar">← Voltar para o Início</a>
+    </header>
+
+    <div class="container">
+        <div id="conteudo-detalhes" class="detalhe-box">
+            <p style="text-align: center;">Carregando obra...</p>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const obraId = urlParams.get('id');
+
+        async function carregarDetalhesObra() {
+            const container = document.getElementById('conteudo-detalhes');
+
+            if (!obraId) {
+                container.innerHTML = '<h2 class="erro">Erro: Nenhuma obra especificada na URL.</h2>';
+                return;
+            }
+
+            try {
+                const resposta = await fetch('obras.json?v=' + new Date().getTime());
+                const obras = await resposta.json();
+
+                const obra = obras.find(o => String(o.id).trim() === String(obraId).trim());
+
+                if (!obra) {
+                    container.innerHTML = '<h2 class="erro">Obra não encontrada!</h2>';
+                    return;
+                }
+
+                let capsHtml = '';
+                if (obra.capitulos && obra.capitulos.length > 0) {
+                    obra.capitulos.forEach(cap => {
+                        const numCap = typeof cap === 'object' ? cap.numero : cap;
+                        const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(numCap)}`;
+                        capsHtml += `
+                            <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,153,221,0.3); text-shadow:var(--neon-glow);">
+                                <span>${numCap}</span>
+                                <span style="color:var(--primary-pink)">Ler →</span>
+                            </a>
+                        `;
+                    });
+                } else {
+                    capsHtml = '<p style="color:var(--text-muted)">Nenhum capítulo cadastrado ainda.</p>';
+                }
+
+                container.innerHTML = `
+                    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:20px;">
+                        <img src="${obra.capa}" style="width:150px; height:215px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,153,221,0.4); box-shadow:var(--neon-glow);">
+                        <div style="flex:1; min-width: 250px;">
+                            <h2 style="color:var(--primary-pink); margin-bottom:10px; font-size:1.4rem; text-shadow:var(--neon-glow);">${obra.titulo}</h2>
+                            <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.6; text-shadow:var(--neon-glow);">${obra.sinopse || 'Sem sinopse.'}</p>
+                        </div>
+                    </div>
+                    <h3 style="margin-bottom:12px; font-size:1.1rem; color:var(--primary-pink); text-shadow:var(--neon-glow);">Capítulos</h3>
+                    ${capsHtml}
+                `;
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<h2 class="erro">Erro ao carregar os dados da obra.</h2>';
+            }
+        }
+
+        carregarDetalhesObra();
+    </script>
+</body>
+</html>
