@@ -22,10 +22,10 @@
         #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
 
         :root {
-            --bg-color: #000000; /* Fundo totalmente preto */
+            --bg-color: #000000;
             --card-bg: #0c0c10;
-            --primary-pink: #ff85e0; /* Um tiquinho mais forte que o anterior */
-            --neon-glow: 0 0 8px rgba(255, 133, 224, 0.5), 0 0 18px rgba(255, 133, 224, 0.25); /* Sombra neon diminuída */
+            --primary-pink: #ff85e0;
+            --neon-glow: 0 0 8px rgba(255, 133, 224, 0.5), 0 0 18px rgba(255, 133, 224, 0.25);
             --text-main: #ff85e0;
             --text-muted: #e092c7;
             --shadow: 0 4px 22px rgba(0, 0, 0, 0.85);
@@ -44,8 +44,8 @@
             padding-bottom: 85px;
         }
 
-        /* Textos gerais com a cor exata e brilho neon ajustado */
-        p, span, a, h1, h2, h3, h4, div, button {
+        /* Corrigido: Removido a tag 'a' daqui para não quebrar links e rotas */
+        p, span, h1, h2, h3, h4, div, button {
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
         }
@@ -483,17 +483,14 @@
 
     <!-- TOPO -->
     <header>
-        <a href="#" class="logo-img-container" onclick="mudarAba('inicio')">
-            <img src="https://i.imgur.com/sua-logo.png" alt="Flower's Nenasscan" class="logo-custom" onerror="this.onerror=null; this.src='https://i.imgur.com/exemplo.png'; this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
-            <span id="fallback-logo" style="display:none; font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
+        <a href="#" class="logo-img-container" onclick="mudarAba('inicio'); return false;">
+            <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
         </a>
         
         <div class="top-actions">
-            <!-- Lupa -->
             <button class="icon-btn" onclick="togglePesquisa()" title="Pesquisar">
                 <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             </button>
-            <!-- Botão de Flor para abrir o Menu -->
             <button class="icon-btn" onclick="toggleMenu()" title="Menu Flor">🌸</button>
         </div>
     </header>
@@ -512,13 +509,13 @@
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="#" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
-            <a href="#" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
-            <a href="#" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
-            <a href="#" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
-            <a href="#" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
-            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
-            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
+            <a href="#" onclick="mudarAba('inicio'); toggleMenu(); return false;">Início</a>
+            <a href="#" onclick="mudarAba('obras'); toggleMenu(); return false;">Obras</a>
+            <a href="#" onclick="mudarAba('favoritos'); toggleMenu(); return false;">Biblioteca</a>
+            <a href="#" onclick="mudarAba('avisos'); toggleMenu(); return false;">Avisos</a>
+            <a href="#" onclick="mudarAba('generos'); toggleMenu(); return false;">Gêneros</a>
+            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu(); return false;">Apoie a Scan</a>
+            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu(); return false;">Pedidos</a>
         </div>
     </div>
 
@@ -791,7 +788,7 @@
 
         function filtrarObras(termo) {
             const query = termo.toLowerCase();
-            const filtradas = listaObras.filter(o => o.titulo.toLowerCase().includes(query));
+            const filtradas = listaObras.fileter(o => o.titulo.toLowerCase().includes(query));
             const grid = document.getElementById('grid-todas-obras');
             mudarAba('obras');
             
