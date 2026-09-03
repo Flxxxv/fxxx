@@ -24,9 +24,9 @@
         :root {
             --bg-color: #0b0b0e;
             --card-bg: #14141a;
-            --primary-pink: #ff70b3; /* Cor exata da sua imagem de referência */
-            --neon-glow: 0 0 12px rgba(255, 112, 179, 0.7), 0 0 25px rgba(255, 112, 179, 0.35);
-            --text-main: #ff70b3;
+            --primary-pink: #FF99DD; /* Tom exato confirmado (#FF99DD) */
+            --neon-glow: 0 0 12px rgba(255, 153, 221, 0.7), 0 0 25px rgba(255, 153, 221, 0.35);
+            --text-main: #FF99DD;
             --text-muted: #e69ac5;
             --shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
         }
@@ -44,7 +44,7 @@
             padding-bottom: 85px;
         }
 
-        /* Todos os textos do site com a cor rosa exata e brilho neon */
+        /* Textos gerais com a cor exata e brilho neon */
         p, span, a, h1, h2, h3, h4, div, button {
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
@@ -60,7 +60,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(255, 112, 179, 0.3);
+            border-bottom: 1px solid rgba(255, 153, 221, 0.3);
         }
 
         .logo-img-container {
@@ -83,7 +83,7 @@
 
         .icon-btn {
             background: #181822;
-            border: 1px solid rgba(255, 112, 179, 0.5);
+            border: 1px solid rgba(255, 153, 221, 0.5);
             color: var(--primary-pink);
             width: 44px;
             height: 44px;
@@ -101,7 +101,7 @@
             width: 22px;
             height: 22px;
             fill: currentColor;
-            filter: drop-shadow(0 0 6px rgba(255, 112, 179, 0.7));
+            filter: drop-shadow(0 0 6px rgba(255, 153, 221, 0.7));
         }
 
         .icon-btn:hover {
@@ -132,7 +132,7 @@
         }
 
         #search-input::placeholder {
-            color: #b3598b;
+            color: #b37aa0;
             text-shadow: none;
         }
 
@@ -161,8 +161,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 24px 20px;
-            border-bottom: 1px solid rgba(255, 112, 179, 0.3);
-            background: rgba(255, 112, 179, 0.05);
+            border-bottom: 1px solid rgba(255, 153, 221, 0.3);
+            background: rgba(255, 153, 221, 0.05);
         }
 
         .sidebar-title-area {
@@ -177,7 +177,7 @@
 
         .close-menu {
             background: #1a1a26;
-            border: 1px solid rgba(255, 112, 179, 0.4);
+            border: 1px solid rgba(255, 153, 221, 0.4);
             color: var(--primary-pink);
             width: 36px;
             height: 36px;
@@ -216,12 +216,12 @@
             align-items: center;
             gap: 14px;
             background: #171722;
-            border: 1px solid rgba(255, 112, 179, 0.2);
+            border: 1px solid rgba(255, 153, 221, 0.2);
             text-shadow: var(--neon-glow);
         }
 
         .sidebar-links a:hover {
-            background: rgba(255, 112, 179, 0.2);
+            background: rgba(255, 153, 221, 0.2);
             color: #fff;
             border-color: var(--primary-pink);
             transform: translateX(5px);
@@ -333,7 +333,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255, 112, 179, 0.3);
+            border: 1px solid rgba(255, 153, 221, 0.3);
             box-shadow: var(--shadow);
             transition: transform 0.2s;
         }
@@ -346,7 +346,7 @@
 
         .manga-capa-box {
             width: 100%;
-            height: 275px; /* Capas grandes */
+            height: 275px;
             position: relative;
             background: #1a1a22;
             cursor: pointer;
@@ -426,7 +426,7 @@
             left: 0;
             width: 100%;
             background: #111116;
-            border-top: 1px solid rgba(255, 112, 179, 0.3);
+            border-top: 1px solid rgba(255, 153, 221, 0.3);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
@@ -453,7 +453,7 @@
             width: 22px;
             height: 22px;
             fill: currentColor;
-            filter: drop-shadow(0 0 4px rgba(255, 112, 179, 0.6));
+            filter: drop-shadow(0 0 4px rgba(255, 153, 221, 0.6));
         }
 
         .nav-item.active, .nav-item:hover {
@@ -483,7 +483,6 @@
 
     <!-- TOPO -->
     <header>
-        <!-- TROQUE O LINK ABAIXO PELA URL DA SUA LOGO PRÓPRIA QUANDO QUISER -->
         <a href="#" class="logo-img-container" onclick="mudarAba('inicio')">
             <img src="https://i.imgur.com/sua-logo.png" alt="Flower's Nenasscan" class="logo-custom" onerror="this.onerror=null; this.src='https://i.imgur.com/exemplo.png'; this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
             <span id="fallback-logo" style="display:none; font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
@@ -742,7 +741,7 @@
                 obra.capitulos.forEach(cap => {
                     const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
                     capsHtml += `
-                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,112,179,0.3); text-shadow:var(--neon-glow);">
+                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,153,221,0.3); text-shadow:var(--neon-glow);">
                             <span>${cap.numero}</span>
                             <span style="color:var(--primary-pink)">Ler →</span>
                         </a>
@@ -754,7 +753,7 @@
 
             container.innerHTML = `
                 <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
-                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,112,179,0.4); box-shadow:var(--neon-glow);">
+                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,153,221,0.4); box-shadow:var(--neon-glow);">
                     <div style="flex:1;">
                         <h2 style="color:var(--primary-pink); margin-bottom:8px; font-size:1.2rem; text-shadow:var(--neon-glow);">${obra.titulo}</h2>
                         <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; text-shadow:var(--neon-glow);">${obra.sinopse || 'Sem sinopse.'}</p>
