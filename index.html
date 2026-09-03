@@ -214,6 +214,7 @@
             background: #171722;
             border: 1px solid rgba(255, 153, 221, 0.2);
             text-shadow: var(--neon-glow);
+            cursor: pointer;
         }
 
         .sidebar-links a:hover {
@@ -474,9 +475,8 @@
 
     <!-- TOPO -->
     <header>
-        <a href="#" class="logo-img-container" onclick="mudarAba('inicio')">
-            <img src="https://i.imgur.com/sua-logo.png" alt="Flower's Nenasscan" class="logo-custom" onerror="this.onerror=null; this.src='https://i.imgur.com/exemplo.png'; this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
-            <span id="fallback-logo" style="display:none; font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
+        <a href="javascript:void(0)" class="logo-img-container" onclick="mudarAba('inicio')">
+            <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan 🌸</span>
         </a>
         
         <div class="top-actions">
@@ -501,13 +501,13 @@
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="#" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
-            <a href="#" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
-            <a href="#" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
-            <a href="#" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
-            <a href="#" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
-            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
-            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
+            <a href="javascript:void(0)" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
+            <a href="javascript:void(0)" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
+            <a href="javascript:void(0)" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
+            <a href="javascript:void(0)" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
+            <a href="javascript:void(0)" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
+            <a href="javascript:void(0)" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
+            <a href="javascript:void(0)" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
         </div>
     </div>
 
