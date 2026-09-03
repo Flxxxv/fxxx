@@ -612,8 +612,6 @@
         }
 
         function mudarAbaVisual(idAba) {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.0 ? sec.classList.remove('active') : sec.classList.remove('active'));
-            // Usando remoção segura de classe
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             const alvo = document.getElementById(idAba);
             if (alvo) alvo.classList.add('active');
