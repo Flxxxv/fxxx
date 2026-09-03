@@ -434,7 +434,6 @@
                 listaObras = data;
                 renderizarLancamentos();
 
-                // Verifica se o usuário entrou direto por um link com ?obra=...
                 const urlParams = new URLSearchParams(window.location.search);
                 const obraParam = urlParams.get('obra');
                 if (obraParam) {
@@ -454,8 +453,9 @@
 
             container.innerHTML = '';
             listaObras.forEach(obra => {
-                const primeiroCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].link : '#';
-                const nomeCap = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
+                const primeiroCapObj = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0] : null;
+                const nomeCap = primeiroCapObj ? primeiroCapObj.numero : 'Em breve';
+                const linkLeitor = primeiroCapObj ? `ler.html?obra=${obra.id}&cap=${encodeURIComponent(nomeCap)}` : '#';
 
                 container.innerHTML += `
                     <div class="manga-card" data-id="${obra.id}">
@@ -468,7 +468,7 @@
                                 <p>${nomeCap}</p>
                             </div>
                             <div class="card-actions">
-                                <a href="${primeiroCap}" class="btn-ler" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${nomeCap}').then(() => { window.location.href = '${primeiroCap}'; });">Ler</a>
+                                <a href="${linkLeitor}" class="btn-ler" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${nomeCap}').then(() => { window.location.href = '${linkLeitor}'; });">Ler</a>
                                 <button class="btn-fav" onclick="toggleFavorito('${obra.id}', this)">⭐</button>
                             </div>
                         </div>
@@ -482,7 +482,6 @@
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
 
-            // Registra no Supabase e atualiza a URL do navegador para ?obra=...
             registrarVisualizacaoNoBanco('obra-' + obra.id);
             if (mudarUrl) {
                 history.pushState({id: id}, "", "?obra=" + id);
@@ -501,8 +500,9 @@
             let capitulosHtml = '';
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
+                    const linkLeitorCap = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
                     capitulosHtml += `
-                        <a href="${cap.link}" class="capitulo-item" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}').then(() => { window.location.href = '${cap.link}'; });">
+                        <a href="${linkLeitorCap}" class="capitulo-item" onclick="event.preventDefault(); registrarVisualizacaoNoBanco('capitulo-${obra.id}-${cap.numero}').then(() => { window.location.href = '${linkLeitorCap}'; });">
                             <span>${cap.numero}</span>
                             <span>Ler →</span>
                         </a>
@@ -558,12 +558,16 @@
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
 
+            const primeiroCapObj = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0] : null;
+            const nomeCapFav = primeiroCapObj ? primeiroCapObj.numero : '';
+            const linkFav = primeiroCapObj ? `ler.html?obra=${obra.id}&cap=${encodeURIComponent(nomeCapFav)}` : '#';
+
             const dadosObra = {
                 id: obra.id,
                 titulo: obra.titulo,
-                cap: obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : '',
+                cap: nomeCapFav,
                 img: obra.capa,
-                link: obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].link : '#'
+                link: linkFav
             };
 
             const index = favoritos.findIndex(f => f.id === id);
@@ -623,19 +627,16 @@
         atualizarContadorFavs();
     </script>
     <script>
-    // Remove o selinho do Netlify caso ele tente aparecer
     window.addEventListener('DOMContentLoaded', () => {
         const netlifyBadge = document.getElementById('netlify-badge') || document.querySelector('div[id*="netlify-badge"]');
         if (netlifyBadge) netlifyBadge.remove();
         
-        // Remove também pelo texto caso o ID mude
         document.querySelectorAll('*').forEach(el => {
             if (el.innerText && el.innerText.includes('Powered by Netlify')) {
                 el.remove();
             }
         });
     });
-</script>
-
+    </script>
 </body>
 </html>
