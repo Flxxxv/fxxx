@@ -339,6 +339,8 @@
             position: relative;
             background: #1a1a22;
             cursor: pointer;
+            text-decoration: none;
+            display: block;
         }
 
         .manga-capa {
@@ -362,6 +364,8 @@
             overflow: hidden;
             text-overflow: ellipsis;
             cursor: pointer;
+            text-decoration: none;
+            display: block;
             text-shadow: var(--neon-glow);
         }
 
@@ -456,7 +460,7 @@
 
     <!-- TOPO -->
     <header>
-        <a href="javascript:void(0)" class="logo-img-container" onclick="mudarAba('inicio')">
+        <a href="index.html" class="logo-img-container">
             <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan 🌸</span>
         </a>
         
@@ -476,17 +480,15 @@
     <!-- MENU LATERAL -->
     <div id="sidebar-menu">
         <div class="sidebar-header">
-            <div class="sidebar-title-area">
-                🌸 Menu Principal
-            </div>
+            <div class="sidebar-title-area">🌸 Menu Principal</div>
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="javascript:void(0)" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
-            <a href="javascript:void(0)" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
-            <a href="javascript:void(0)" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
-            <a href="javascript:void(0)" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
-            <a href="javascript:void(0)" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
+            <a href="index.html">Início</a>
+            <a href="index.html?aba=obras">Obras</a>
+            <a href="index.html?aba=favoritos">Biblioteca</a>
+            <a href="index.html?aba=avisos">Avisos</a>
+            <a href="index.html?aba=generos">Gêneros</a>
             <a href="javascript:void(0)" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
             <a href="javascript:void(0)" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
         </div>
@@ -497,7 +499,6 @@
 
         <!-- TELA INÍCIO -->
         <div id="inicio" class="view-section active">
-            
             <!-- CARROSSEL DE DESTAQUE -->
             <div class="hero-carousel" id="hero-carousel" onclick="abrirObraDoCarrossel()">
                 <div class="hero-slide active" style="background-image: url('');">
@@ -514,7 +515,6 @@
                     <div class="section-bar"></div>
                     <h2 class="section-title">ÚLTIMAS ATUALIZAÇÕES</h2>
                 </div>
-                
                 <div id="grid-atualizacoes" class="manga-grid">
                     <p style="color: var(--text-muted); grid-column: span 2;">Carregando atualizações...</p>
                 </div>
@@ -565,22 +565,22 @@
 
     <!-- BARRA INFERIOR FIXA -->
     <nav class="bottom-nav">
-        <button class="nav-item active" onclick="mudarAba('inicio', this)">
+        <a href="index.html" class="nav-item active" id="nav-inicio">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             Início
-        </button>
-        <button class="nav-item" onclick="mudarAba('obras', this)">
+        </a>
+        <a href="index.html?aba=obras" class="nav-item" id="nav-obras">
             <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
             Obras
-        </button>
-        <button class="nav-item" onclick="mudarAba('favoritos', this)">
+        </a>
+        <a href="index.html?aba=favoritos" class="nav-item" id="nav-favoritos">
             <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6  12V4z"/></svg>
             Biblioteca
-        </button>
-        <button class="nav-item" onclick="mudarAba('avisos', this)">
+        </a>
+        <a href="index.html?aba=avisos" class="nav-item" id="nav-avisos">
             <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
             Avisos
-        </button>
+        </a>
     </nav>
 
     <script>
@@ -592,6 +592,7 @@
             .then(data => {
                 listaObras = data;
                 inicializarHome();
+                verificarParametroUrl();
             })
             .catch(err => console.error("Erro ao carregar obras:", err));
 
@@ -600,6 +601,27 @@
             renderizarCarrosselAleatorio();
             renderizarAtualizacoes();
             renderizarTodasObras();
+        }
+
+        function verificarParametroUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const aba = urlParams.get('aba');
+            if (aba && document.getElementById(aba)) {
+                mudarAbaVisual(aba);
+            }
+        }
+
+        function mudarAbaVisual(idAba) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.0 ? sec.classList.remove('active') : sec.classList.remove('active'));
+            // Usando remoção segura de classe
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            const alvo = document.getElementById(idAba);
+            if (alvo) alvo.classList.add('active');
+
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(b => b.classList.remove('active'));
+            const navBtn = document.getElementById('nav-' + idAba);
+            if (navBtn) navBtn.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderizarCarrosselAleatorio() {
@@ -611,10 +633,10 @@
 
             destaques.forEach((obra, index) => {
                 const ativa = index === 0 ? 'active' : '';
-                if (index === 0) obraCarrosselAtualId = obra.id;
+                if (index === 0) obraCarrosselAtualId = obra.titulo;
 
                 carousel.innerHTML += `
-                    <div class="hero-slide ${ativa}" style="background-image: url('${obra.capa}');" data-id="${obra.id}">
+                    <div class="hero-slide ${ativa}" style="background-image: url('${obra.capa}');" data-titulo="${obra.titulo}">
                         <div class="hero-content">
                             <div class="hero-title">${obra.titulo}</div>
                             <div class="hero-synopsis">${obra.sinopse || 'Sem sinopse informada.'}</div>
@@ -630,14 +652,14 @@
                     slides[slideIndex].classList.remove('active');
                     slideIndex = (slideIndex + 1) % slides.length;
                     slides[slideIndex].classList.add('active');
-                    obraCarrosselAtualId = slides[slideIndex].dataset.id;
+                    obraCarrosselAtualId = slides[slideIndex].dataset.titulo;
                 }, 4500);
             }
         }
 
         function abrirObraDoCarrossel() {
             if (obraCarrosselAtualId) {
-                abrirDetalhesObra(obraCarrosselAtualId);
+                window.location.href = `obra.html?nome=${encodeURIComponent(obraCarrosselAtualId)}`;
             }
         }
 
@@ -654,16 +676,16 @@
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     let capObj = obra.capitulos[0];
                     ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
-                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.titulo)}&cap=${encodeURIComponent(ultimoCapNum)}`;
                 }
                 
                 grid.innerHTML += `
                     <div class="manga-card">
-                        <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')">
+                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box">
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
-                        </div>
+                        </a>
                         <div class="manga-info">
-                            <div class="manga-titulo" title="${obra.titulo}" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                                 <span class="selo-novo">NOVO</span>
@@ -684,16 +706,16 @@
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     let capObj = obra.capitulos[0];
                     ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
-                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.titulo)}&cap=${encodeURIComponent(ultimoCapNum)}`;
                 }
 
                 grid.innerHTML += `
                     <div class="manga-card">
-                        <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')">
+                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box">
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
-                        </div>
+                        </a>
                         <div class="manga-info">
-                            <div class="manga-titulo" title="${obra.titulo}" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                             </div>
@@ -701,21 +723,6 @@
                     </div>
                 `;
             });
-        }
-
-        function abrirDetalhesObra(id) {
-            window.location.href = `obra.html?id=${id}`;
-        }
-
-        function mudarAba(idAba, btnElement) {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(idAba).classList.add('active');
-
-            if(btnElement) {
-                document.querySelectorAll('.bottom-nav .nav-item').forEach(b => b.classList.remove('active'));
-                btnElement.classList.add('active');
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMenu() {
@@ -734,7 +741,7 @@
             const query = termo.toLowerCase();
             const filtradas = listaObras.filter(o => o.titulo.toLowerCase().includes(query));
             const grid = document.getElementById('grid-todas-obras');
-            mudarAba('obras');
+            mudarAbaVisual('obras');
             
             grid.innerHTML = '';
             filtradas.forEach(obra => {
@@ -744,14 +751,14 @@
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     let capObj = obra.capitulos[0];
                     ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
-                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.titulo)}&cap=${encodeURIComponent(ultimoCapNum)}`;
                 }
 
                 grid.innerHTML += `
                     <div class="manga-card">
-                        <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')"><img src="${obra.capa}" class="manga-capa"></div>
+                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box"><img src="${obra.capa}" class="manga-capa"></a>
                         <div class="manga-info">
-                            <div class="manga-titulo" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo">${obra.titulo}</a>
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                             </div>
