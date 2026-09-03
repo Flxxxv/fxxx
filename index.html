@@ -540,7 +540,7 @@
                     <h2 class="section-title">SUA BIBLIOTECA</h2>
                 </div>
                 <div id="lista-favoritos" class="manga-grid">
-                    <p style="color: var(--text-muted); grid-column: span 2;">Sua biblioteca está vazia.</p>
+                    <p style="color: var(--text-muted); grid-column: span 2;">Sua biblioteca está vazia. Favorite obras para acompanhar aqui!</p>
                 </div>
             </div>
         </div>
@@ -548,8 +548,14 @@
         <!-- AVISOS -->
         <div id="avisos" class="view-section">
             <div class="section-container">
-                <div class="section-header"><div class="section-bar"></div><h2 class="section-title">AVISOS</h2></div>
-                <p style="color: var(--text-muted); padding: 10px 0;">Nenhum aviso importante no momento. Bom proveito das leituras!</p>
+                <div class="section-header">
+                    <div class="section-bar"></div>
+                    <h2 class="section-title">AVISOS</h2>
+                </div>
+                <div style="background: var(--card-bg); border: 1px solid rgba(255,153,221,0.3); padding: 18px; border-radius: 12px; margin-top: 10px;">
+                    <h3 style="font-size: 1rem; margin-bottom: 6px;">🌸 Bem-vindos à Flower's Nenasscan!</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Nenhum aviso importante no momento. Aproveitem as traduções e boa leitura!</p>
+                </div>
             </div>
         </div>
 
@@ -565,19 +571,19 @@
 
     <!-- BARRA INFERIOR FIXA -->
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active" id="nav-inicio">
+        <a href="index.html" class="nav-item active" id="nav-inicio" onclick="event.preventDefault(); mudarAbaVisual('inicio'); history.pushState({}, '', 'index.html');">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             Início
         </a>
-        <a href="index.html?aba=obras" class="nav-item" id="nav-obras">
+        <a href="index.html?aba=obras" class="nav-item" id="nav-obras" onclick="event.preventDefault(); mudarAbaVisual('obras'); history.pushState({}, '', 'index.html?aba=obras');">
             <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
             Obras
         </a>
-        <a href="index.html?aba=favoritos" class="nav-item" id="nav-favoritos">
+        <a href="index.html?aba=favoritos" class="nav-item" id="nav-favoritos" onclick="event.preventDefault(); mudarAbaVisual('favoritos'); history.pushState({}, '', 'index.html?aba=favoritos'); renderizarBiblioteca();">
             <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6  12V4z"/></svg>
             Biblioteca
         </a>
-        <a href="index.html?aba=avisos" class="nav-item" id="nav-avisos">
+        <a href="index.html?aba=avisos" class="nav-item" id="nav-avisos" onclick="event.preventDefault(); mudarAbaVisual('avisos'); history.pushState({}, '', 'index.html?aba=avisos');">
             <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
             Avisos
         </a>
@@ -601,6 +607,7 @@
             renderizarCarrosselAleatorio();
             renderizarAtualizacoes();
             renderizarTodasObras();
+            renderizarBiblioteca();
         }
 
         function verificarParametroUrl() {
@@ -608,6 +615,7 @@
             const aba = urlParams.get('aba');
             if (aba && document.getElementById(aba)) {
                 mudarAbaVisual(aba);
+                if (aba === 'favoritos') renderizarBiblioteca();
             }
         }
 
@@ -717,6 +725,39 @@
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                             </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderizarBiblioteca() {
+            const container = document.getElementById('lista-favoritos');
+            let favoritos = [];
+            try {
+                favoritos = JSON.parse(localStorage.getItem('flowers_favoritos')) || [];
+            } catch(e) { favoritos = []; }
+
+            container.innerHTML = '';
+            if (favoritos.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); grid-column: span 2;">Sua biblioteca está vazia. Favorite obras para acompanhar aqui!</p>`;
+                return;
+            }
+
+            const obrasFavs = listaObras.filter(o => favoritos.includes(o.titulo));
+            if (obrasFavs.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); grid-column: span 2;">Nenhuma obra favoritada encontrada no catálogo.</p>`;
+                return;
+            }
+
+            obrasFavs.forEach(obra => {
+                container.innerHTML += `
+                    <div class="manga-card">
+                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box">
+                            <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
+                        </a>
+                        <div class="manga-info">
+                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
                         </div>
                     </div>
                 `;
