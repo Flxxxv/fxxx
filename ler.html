@@ -32,19 +32,21 @@
             position: fixed; 
             top: 10px; 
             left: 10px; 
-            background: #ff69b4; 
-            color: white; 
+            background: #FF99DD; 
+            color: #0b0b0e; 
             padding: 10px 15px; 
             text-decoration: none; 
             border-radius: 5px; 
             font-weight: bold; 
             z-index: 100; 
+            box-shadow: 0 0 10px rgba(255,153,221,0.7);
         }
         .erro { 
             margin-top: 100px; 
             text-align: center; 
-            color: #ffb6c1; 
+            color: #FF99DD; 
             padding: 20px; 
+            text-shadow: 0 0 10px rgba(255,153,221,0.7);
         }
     </style>
 </head>
@@ -55,12 +57,12 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const obraId = urlParams.get('obra');
-        const capNum = urlParams.get('cap');
+        const capNum = decodeURIComponent(urlParams.get('cap') || '').trim();
         const container = document.getElementById('painel-imagens');
 
         async function carregarLeitor() {
             if (!obraId || !capNum) {
-                container.innerHTML = '<h2 class="erro">Erro: Obra ou capítulo não encontrados.</h2>';
+                container.innerHTML = '<h2 class="erro">Erro: Obra ou capítulo não encontrados na URL.</h2>';
                 return;
             }
 
@@ -68,31 +70,38 @@
                 const resposta = await fetch('obras.json?v=' + new Date().getTime());
                 const obras = await resposta.json();
 
-                const obra = obras.find(o => o.id === obraId);
+                const obra = obras.find(o => String(o.id).trim() === String(obraId).trim());
                 if (!obra) {
-                    container.innerHTML = '<h2 class="erro">Obra não encontrada!</h2>';
+                    container.innerHTML = '<h2 class="erro">Obra não encontrada no sistema!</h2>';
                     return;
                 }
 
-                // Acha o capítulo correspondente no JSON pelo número
-                const capitulo = obra.capitulos.find(c => c.numero === decodeURIComponent(capNum));
+                if (!obra.capitulos || obra.capitulos.length === 0) {
+                    container.innerHTML = '<h2 class="erro">Esta obra não possui capítulos cadastrados.</h2>';
+                    return;
+                }
+
+                // Procura o capítulo de forma flexível (suporta objeto ou string, e compara ignorando maiúsculas/minúsculas)
+                const capitulo = obra.capitulos.find(c => {
+                    const numeroCadastrado = typeof c === 'object' ? String(c.numero).trim() : String(c).trim();
+                    return numeroCadastrado.toLowerCase() === capNum.toLowerCase();
+                });
                 
                 if (!capitulo) {
-                    container.innerHTML = '<h2 class="erro">Capítulo não encontrado no sistema!</h2>';
+                    container.innerHTML = `<h2 class="erro">Capítulo "${capNum}" não encontrado!</h2>`;
                     return;
                 }
 
-                // Pega o link ou a lista de links do Catbox definidos no JSON
-                const dadosLink = capitulo.link || capitulo.paginas;
+                // Pega as páginas de qualquer propriedade provável (link, paginas ou pages)
+                const dadosLink = capitulo.link || capitulo.paginas || capitulo.pages;
 
                 if (!dadosLink) {
-                    container.innerHTML = '<h2 class="erro">Este capítulo ainda não possui páginas cadastradas!</h2>';
+                    container.innerHTML = '<h2 class="erro">Este capítulo ainda não possui páginas cadastradas no JSON!</h2>';
                     return;
                 }
 
                 container.innerHTML = '';
 
-                // Se for um array de links do Catbox
                 if (Array.isArray(dadosLink)) {
                     dadosLink.forEach((urlImg, index) => {
                         let img = document.createElement('img');
@@ -100,9 +109,7 @@
                         img.alt = `Página ${index + 1}`;
                         container.appendChild(img);
                     });
-                } 
-                // Se for apenas uma string (um único link do Catbox ou uma imagem só)
-                else if (typeof dadosLink === 'string') {
+                } else if (typeof dadosLink === 'string') {
                     let img = document.createElement('img');
                     img.src = dadosLink;
                     img.alt = "Página do Capítulo";
