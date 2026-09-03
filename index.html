@@ -69,11 +69,6 @@
             text-decoration: none;
         }
 
-        .logo-custom {
-            height: 38px;
-            object-fit: contain;
-        }
-
         .top-actions {
             display: flex;
             gap: 12px;
@@ -135,14 +130,14 @@
             text-shadow: none;
         }
 
-        /* Menu Lateral (Fundo totalmente preto) */
+        /* Menu Lateral (Fundo totalmente preto garantido) */
         #sidebar-menu {
             position: fixed;
             top: 0;
             right: -100%;
             width: 310px;
             height: 100%;
-            background: #000000;
+            background: #000000 !important;
             box-shadow: -15px 0 40px rgba(0,0,0,0.95);
             z-index: 1000;
             transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -161,7 +156,7 @@
             align-items: center;
             padding: 24px 20px;
             border-bottom: 1px solid rgba(255, 133, 224, 0.25);
-            background: #000000;
+            background: #000000 !important;
         }
 
         .sidebar-title-area {
@@ -201,7 +196,7 @@
             padding: 18px;
             gap: 10px;
             overflow-y: auto;
-            background: #000000;
+            background: #000000 !important;
         }
 
         .sidebar-links a {
@@ -215,7 +210,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            background: #000000;
+            background: #000000 !important;
             border: 1px solid rgba(255, 133, 224, 0.15);
             text-shadow: var(--neon-glow);
         }
@@ -517,8 +512,7 @@
     <!-- TOPO -->
     <header>
         <a href="#" class="logo-img-container" onclick="mudarAba('inicio', document.querySelector('.bottom-nav .nav-item'))">
-            <img src="https://i.imgur.com/sua-logo.png" alt="Flower's Nenasscan" class="logo-custom" onerror="this.onerror=null; this.src='https://i.imgur.com/exemplo.png'; this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
-            <span id="fallback-logo" style="display:none; font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
+            <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
         </a>
         
         <div class="top-actions">
@@ -536,7 +530,7 @@
         <input type="text" id="search-input" class="search-input" placeholder="Pesquisar obra..." oninput="filtrarObrasGeral(this.value)">
     </div>
 
-    <!-- MENU LATERAL (Fundo Preto) -->
+    <!-- MENU LATERAL (Fundo Preto Total) -->
     <div id="sidebar-menu">
         <div class="sidebar-header">
             <div class="sidebar-title-area">
@@ -560,13 +554,12 @@
 
         <!-- TELA INÍCIO -->
         <div id="inicio" class="view-section active">
-            
             <!-- CARROSSEL DE DESTAQUE -->
             <div class="hero-carousel" id="hero-carousel" onclick="abrirObraDoCarrossel()">
-                <div class="hero-slide active" style="background-image: url('');">
+                <div class="hero-slide active" style="background-image: url('https://i.imgur.com/71Q0y05.png');">
                     <div class="hero-content">
-                        <div class="hero-title">Carregando Destaques...</div>
-                        <div class="hero-synopsis">Aguarde um instante...</div>
+                        <div class="hero-title">Flower's Nenasscan</div>
+                        <div class="hero-synopsis">Bem-vindo ao nosso leitor de webtoons e manhwas!</div>
                     </div>
                 </div>
             </div>
@@ -579,12 +572,12 @@
                 </div>
                 
                 <div id="grid-atualizacoes" class="manga-grid">
-                    <p style="color: var(--text-muted); grid-column: span 2;">Carregando atualizações...</p>
+                    <!-- Preenchido via JS -->
                 </div>
             </div>
         </div>
 
-        <!-- TELA DE OBRAS (Sem capítulo em baixo, barra "procurar...", título sem tracinho, paginação de 8 e botões ant/prox) -->
+        <!-- TELA DE OBRAS -->
         <div id="obras" class="view-section">
             <div class="section-container">
                 <div style="margin-bottom: 20px;">
@@ -679,20 +672,24 @@
     </nav>
 
     <script>
-        let listaObras = [];
+        let listaObras = [
+            { id: "obra-1", titulo: "Exemplo de Webtoon 1", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Primeira obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-2", titulo: "Exemplo de Manhwa 2", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Segunda obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-3", titulo: "Exemplo de Manhwa 3", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Terceira obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-4", titulo: "Exemplo de Manhwa 4", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Quarta obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-5", titulo: "Exemplo de Manhwa 5", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Quinta obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-6", titulo: "Exemplo de Manhwa 6", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Sexta obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-7", titulo: "Exemplo de Manhwa 7", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Sétima obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-8", titulo: "Exemplo de Manhwa 8", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Oitava obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
+            { id: "obra-9", titulo: "Exemplo de Manhwa 9", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Nona obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] }
+        ];
+
         let obraCarrosselAtualId = '';
         let paginaAtualObras = 1;
         const itensPorPagina = 8;
-        let obrasFiltradasPagina = [];
+        let obrasFiltradasPagina = [...listaObras];
 
-        fetch('obras.json?v=' + new Date().getTime())
-            .then(res => res.json())
-            .then(data => {
-                listaObras = data;
-                obrasFiltradasPagina = [...listaObras];
-                inicializarHome();
-            })
-            .catch(err => console.error("Erro ao carregar obras:", err));
+        inicializarHome();
 
         function inicializarHome() {
             if (listaObras.length === 0) return;
@@ -705,7 +702,6 @@
         function renderizarCarrosselAleatorio() {
             const copia = [...listaObras].sort(() => 0.5 - Math.random());
             const destaques = copia.slice(0, 5);
-            
             const carousel = document.getElementById('hero-carousel');
             carousel.innerHTML = '';
 
@@ -722,23 +718,10 @@
                     </div>
                 `;
             });
-
-            let slideIndex = 0;
-            const slides = carousel.querySelectorAll('.hero-slide');
-            if (slides.length > 1) {
-                setInterval(() => {
-                    slides[slideIndex].classList.remove('active');
-                    slideIndex = (slideIndex + 1) % slides.length;
-                    slides[slideIndex].classList.add('active');
-                    obraCarrosselAtualId = slides[slideIndex].dataset.id;
-                }, 4500);
-            }
         }
 
         function abrirObraDoCarrossel() {
-            if (obraCarrosselAtualId) {
-                abrirDetalhesObra(obraCarrosselAtualId);
-            }
+            if (obraCarrosselAtualId) abrirDetalhesObra(obraCarrosselAtualId);
         }
 
         function renderizarAtualizacoes() {
