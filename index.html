@@ -679,7 +679,8 @@
                 let linkLeitor = '#';
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
-                    ultimoCapNum = obra.capitulos[0].numero;
+                    let capObj = obra.capitulos[0];
+                    ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
                     linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
                 }
                 
@@ -708,7 +709,8 @@
                 let linkLeitor = '#';
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
-                    ultimoCapNum = obra.capitulos[0].numero;
+                    let capObj = obra.capitulos[0];
+                    ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
                     linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
                 }
 
@@ -737,10 +739,11 @@
 
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
-                    const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
+                    const numCap = typeof cap === 'object' ? cap.numero : cap;
+                    const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(numCap)}`;
                     capsHtml += `
                         <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,153,221,0.3); text-shadow:var(--neon-glow);">
-                            <span>${cap.numero}</span>
+                            <span>${numCap}</span>
                             <span style="color:var(--primary-pink)">Ler →</span>
                         </a>
                     `;
@@ -795,8 +798,14 @@
             
             grid.innerHTML = '';
             filtradas.forEach(obra => {
-                let ultimoCapNum = obra.capitulos && obra.capitulos.length > 0 ? obra.capitulos[0].numero : 'Em breve';
-                let linkLeitor = obra.capitulos && obra.capitulos.length > 0 ? `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}` : '#';
+                let ultimoCapNum = 'Em breve';
+                let linkLeitor = '#';
+
+                if (obra.capitulos && obra.capitulos.length > 0) {
+                    let capObj = obra.capitulos[0];
+                    ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
+                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                }
 
                 grid.innerHTML += `
                     <div class="manga-card">
