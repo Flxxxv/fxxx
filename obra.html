@@ -296,7 +296,6 @@
                     return;
                 }
 
-                // Atualiza o título da aba do navegador para o nome exato da obra
                 document.title = `${obra.titulo} - Flower's Nenascan 🌸`;
 
                 let listaCapsHtml = '';
@@ -338,7 +337,7 @@
                             </div>
                             <div class="acoes-obra">
                                 <a href="${primeiroCapLink}" class="btn-acao">Ler do Começo</a>
-                                <button class="btn-acao" onclick="alert('Biblioteca salva localmente em breve!')">Salvar Favorito</button>
+                                <button class="btn-acao" id="btn-favorito" onclick="toggleFavorito('${obra.titulo.replace(/'/g, "\\'")}')">Salvar Favorito</button>
                             </div>
                         </div>
                     </div>
@@ -353,11 +352,48 @@
                         </div>
                     </div>
                 `;
+
+                atualizarTextoBotaoFavorito(obra.titulo);
             })
             .catch(err => {
                 console.error("Erro ao carregar detalhes:", err);
                 document.getElementById('detalhes-conteudo').innerHTML = `<p style="color:red; text-align:center;">Erro ao carregar os dados da obra.</p>`;
             });
+
+        function toggleFavorito(tituloObra) {
+            let favoritos = [];
+            try {
+                favoritos = JSON.parse(localStorage.getItem('flowers_favoritos')) || [];
+            } catch(e) { favoritos = []; }
+
+            const index = favoritos.indexOf(tituloObra);
+            if (index > -1) {
+                favoritos.splice(index, 1);
+                alert('Obra removida da sua biblioteca!');
+            } else {
+                favoritos.push(tituloObra);
+                alert('Obra salva na sua biblioteca com sucesso!');
+            }
+
+            localStorage.setItem('flowers_favoritos', JSON.stringify(favoritos));
+            atualizarTextoBotaoFavorito(tituloObra);
+        }
+
+        function atualizarTextoBotaoFavorito(tituloObra) {
+            let favoritos = [];
+            try {
+                favoritos = JSON.parse(localStorage.getItem('flowers_favoritos')) || [];
+            } catch(e) { favoritos = []; }
+
+            const btn = document.getElementById('btn-favorito');
+            if (btn) {
+                if (favoritos.includes(tituloObra)) {
+                    btn.textContent = 'Remover Favorito';
+                } else {
+                    btn.textContent = 'Salvar Favorito';
+                }
+            }
+        }
     </script>
 </body>
 </html>
