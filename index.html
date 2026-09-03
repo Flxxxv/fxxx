@@ -135,7 +135,7 @@
             text-shadow: none;
         }
 
-        /* Menu Lateral (Fundo totalmente preto agora) */
+        /* Menu Lateral (Fundo totalmente preto) */
         #sidebar-menu {
             position: fixed;
             top: 0;
@@ -516,7 +516,7 @@
 
     <!-- TOPO -->
     <header>
-        <a href="#" class="logo-img-container" onclick="mudarAba('inicio')">
+        <a href="#" class="logo-img-container" onclick="mudarAba('inicio', document.querySelector('.bottom-nav .nav-item'))">
             <img src="https://i.imgur.com/sua-logo.png" alt="Flower's Nenasscan" class="logo-custom" onerror="this.onerror=null; this.src='https://i.imgur.com/exemplo.png'; this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
             <span id="fallback-logo" style="display:none; font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
         </a>
@@ -536,7 +536,7 @@
         <input type="text" id="search-input" class="search-input" placeholder="Pesquisar obra..." oninput="filtrarObrasGeral(this.value)">
     </div>
 
-    <!-- MENU LATERAL -->
+    <!-- MENU LATERAL (Fundo Preto) -->
     <div id="sidebar-menu">
         <div class="sidebar-header">
             <div class="sidebar-title-area">
@@ -545,10 +545,10 @@
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="#" onclick="mudarAba('inicio'); toggleMenu();">Início</a>
-            <a href="#" onclick="mudarAba('obras'); toggleMenu();">Obras</a>
-            <a href="#" onclick="mudarAba('favoritos'); toggleMenu();">Biblioteca</a>
-            <a href="#" onclick="mudarAba('avisos'); toggleMenu();">Avisos</a>
+            <a href="#" onclick="mudarAba('inicio', document.querySelectorAll('.bottom-nav .nav-item')[0]); toggleMenu();">Início</a>
+            <a href="#" onclick="mudarAba('obras', document.querySelectorAll('.bottom-nav .nav-item')[1]); toggleMenu();">Obras</a>
+            <a href="#" onclick="mudarAba('favoritos', document.querySelectorAll('.bottom-nav .nav-item')[2]); carregarBiblioteca(); toggleMenu();">Biblioteca</a>
+            <a href="#" onclick="mudarAba('avisos', document.querySelectorAll('.bottom-nav .nav-item')[3]); toggleMenu();">Avisos</a>
             <a href="#" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
             <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
             <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
@@ -584,20 +584,17 @@
             </div>
         </div>
 
-        <!-- TELA DE OBRAS -->
+        <!-- TELA DE OBRAS (Sem capítulo em baixo, barra "procurar...", título sem tracinho, paginação de 8 e botões ant/prox) -->
         <div id="obras" class="view-section">
             <div class="section-container">
-                <!-- Barra de Pesquisa específica na página de Obras -->
                 <div style="margin-bottom: 20px;">
                     <input type="text" id="obras-search-input" class="search-input" placeholder="procurar..." oninput="filtrarObrasPagina(this.value)">
                 </div>
 
-                <!-- Título sem tracinho -->
                 <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--primary-pink); margin-bottom: 15px; text-shadow: var(--neon-glow);">todas as obras</h2>
                 
                 <div id="grid-todas-obras" class="manga-grid"></div>
 
-                <!-- Botões Ant / Prox -->
                 <div class="pagination-container" id="pagination-controls" style="display: none;">
                     <button class="page-btn" id="btn-ant" onclick="mudarPaginaObras(-1)">ant</button>
                     <span id="page-indicator" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">1</span>
@@ -617,7 +614,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #0c0c10; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,133,224,0.2);">
                     <span id="contador-favoritos" style="font-size: 0.85rem; font-weight: 700; color: var(--primary-pink);">Favoritadas: 0 obras</span>
                     <div style="display: flex; gap: 8px;">
-                        <button class="page-btn" onclick="mudarAba('obras')">Explorar</button>
+                        <button class="page-btn" onclick="mudarAba('obras', document.querySelectorAll('.bottom-nav .nav-item')[1])">Explorar</button>
                         <button class="page-btn" onclick="mudarAba('generos')">Gêneros</button>
                     </div>
                 </div>
@@ -654,7 +651,7 @@
         <!-- TELA DE DETALHES -->
         <div id="detalhes-obra" class="view-section">
             <div class="detalhe-box">
-                <button class="btn-voltar" onclick="mudarAba('inicio')">← Voltar</button>
+                <button class="btn-voltar" onclick="mudarAba('inicio', document.querySelector('.bottom-nav .nav-item'))">← Voltar</button>
                 <div id="conteudo-detalhes"></div>
             </div>
         </div>
@@ -940,7 +937,7 @@
             const query = termo.toLowerCase();
             obrasFiltradasPagina = listaObras.filter(o => o.titulo.toLowerCase().includes(query));
             paginaAtualObras = 1;
-            mudarAba('obras');
+            mudarAba('obras', document.querySelectorAll('.bottom-nav .nav-item')[1]);
             renderizarTodasObrasPaginadas();
         }
     </script>
