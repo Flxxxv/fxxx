@@ -86,7 +86,7 @@
             box-shadow: 0 0 12px var(--primary-pink);
         }
 
-        /* Menu Lateral (Fundo totalmente preto garantido) */
+        /* Menu Lateral */
         #sidebar-menu {
             position: fixed;
             top: 0;
@@ -607,24 +607,29 @@
     </nav>
 
     <script>
-        let listaObras = [
-            { id: "obra-1", titulo: "Exemplo de Webtoon 1", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Primeira obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-2", titulo: "Exemplo de Manhwa 2", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Segunda obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-3", titulo: "Exemplo de Manhwa 3", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Terceira obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-4", titulo: "Exemplo de Manhwa 4", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Quarta obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-5", titulo: "Exemplo de Manhwa 5", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Quinta obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-6", titulo: "Exemplo de Manhwa 6", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Sexta obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-7", titulo: "Exemplo de Manhwa 7", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Sétima obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-8", titulo: "Exemplo de Manhwa 8", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Oitava obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] },
-            { id: "obra-9", titulo: "Exemplo de Manhwa 9", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Nona obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] }
-        ];
-
+        let listaObras = [];
         let paginaAtualObras = 1;
         const itensPorPagina = 8;
-        let obrasFiltradasPagina = [...listaObras];
-        let obraCarrosselAtualId = listaObras[0].id;
+        let obrasFiltradasPagina = [];
+        let obraCarrosselAtualId = "";
 
-        renderizarTudo();
+        // Carrega o JSON real do repositório ao abrir a página
+        async function carregarDados() {
+            try {
+                const resposta = await fetch('./obras.json');
+                if (!resposta.ok) throw new Error('Erro ao carregar obras.json');
+                listaObras = await resposta.json();
+                obrasFiltradasPagina = [...listaObras];
+                if (listaObras.length > 0) {
+                    obraCarrosselAtualId = listaObras[0].id;
+                }
+                renderizarTudo();
+            } catch (erro) {
+                console.error("Erro:", erro);
+            }
+        }
+
+        carregarDados();
 
         function renderizarTudo() {
             renderizarAtualizacoes();
@@ -636,7 +641,7 @@
             const grid = document.getElementById('grid-atualizacoes');
             grid.innerHTML = '';
             listaObras.slice(0, 10).forEach(obra => {
-                let ultimoCapNum = obra.capitulos[0]?.numero || 'Em breve';
+                let ultimoCapNum = obra.capitulos && obra.capitulos[0] ? obra.capitulos[0].numero : 'Em breve';
                 grid.innerHTML += `
                     <div class="manga-card">
                         <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')">
@@ -750,7 +755,7 @@
                     <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,133,224,0.35);">
                     <div>
                         <h2 style="color:var(--primary-pink); margin-bottom:8px;">${obra.titulo}</h2>
-                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">${obra.sinopse}</p>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">${obra.sinopse || ''}</p>
                         <button class="page-btn" onclick="alternarFavorito('${obra.id}')">${isFav ? '❤️ Favoritado' : '♡ Favoritar'}</button>
                     </div>
                 </div>
@@ -782,7 +787,9 @@
         }
 
         function abrirObraDoCarrossel() {
-            abrirDetalhesObra(obraCarrosselAtualId);
+            if (obraCarrosselAtualId) {
+                abrirDetalhesObra(obraCarrosselAtualId);
+            }
         }
     </script>
 </body>
