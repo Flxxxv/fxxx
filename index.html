@@ -68,11 +68,6 @@
             text-decoration: none;
         }
 
-        .logo-custom {
-            height: 38px;
-            object-fit: contain;
-        }
-
         .top-actions {
             display: flex;
             gap: 12px;
@@ -455,20 +450,6 @@
 
         .view-section { display: none; }
         .view-section.active { display: block; }
-
-        .detalhe-box {
-            padding: 20px;
-        }
-        .btn-voltar {
-            background: none;
-            border: none;
-            color: var(--primary-pink);
-            font-weight: bold;
-            font-size: 0.95rem;
-            cursor: pointer;
-            margin-bottom: 15px;
-            text-shadow: var(--neon-glow);
-        }
     </style>
 </head>
 <body>
@@ -577,14 +558,6 @@
             <div class="section-container">
                 <div class="section-header"><div class="section-bar"></div><h2 class="section-title">GÊNEROS</h2></div>
                 <p style="color: var(--text-muted); padding: 10px 0;">Filtros de gêneros em breve!</p>
-            </div>
-        </div>
-
-        <!-- TELA DE DETALHES -->
-        <div id="detalhes-obra" class="view-section">
-            <div class="detalhe-box">
-                <button class="btn-voltar" onclick="mudarAba('inicio')">← Voltar</button>
-                <div id="conteudo-detalhes"></div>
             </div>
         </div>
 
@@ -731,40 +704,7 @@
         }
 
         function abrirDetalhesObra(id) {
-            const obra = listaObras.find(o => o.id === id);
-            if (!obra) return;
-
-            const container = document.getElementById('conteudo-detalhes');
-            let capsHtml = '';
-
-            if (obra.capitulos && obra.capitulos.length > 0) {
-                obra.capitulos.forEach(cap => {
-                    const numCap = typeof cap === 'object' ? cap.numero : cap;
-                    const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(numCap)}`;
-                    capsHtml += `
-                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#161622; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,153,221,0.3); text-shadow:var(--neon-glow);">
-                            <span>${numCap}</span>
-                            <span style="color:var(--primary-pink)">Ler →</span>
-                        </a>
-                    `;
-                });
-            } else {
-                capsHtml = '<p style="color:var(--text-muted)">Nenhum capítulo cadastrado ainda.</p>';
-            }
-
-            container.innerHTML = `
-                <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
-                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,153,221,0.4); box-shadow:var(--neon-glow);">
-                    <div style="flex:1;">
-                        <h2 style="color:var(--primary-pink); margin-bottom:8px; font-size:1.2rem; text-shadow:var(--neon-glow);">${obra.titulo}</h2>
-                        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; text-shadow:var(--neon-glow);">${obra.sinopse || 'Sem sinopse.'}</p>
-                    </div>
-                </div>
-                <h3 style="margin-bottom:12px; font-size:1.05rem; color:var(--primary-pink); text-shadow:var(--neon-glow);">Capítulos</h3>
-                ${capsHtml}
-            `;
-
-            mudarAba('detalhes-obra');
+            window.location.href = `obra.html?id=${id}`;
         }
 
         function mudarAba(idAba, btnElement) {
