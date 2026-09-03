@@ -68,11 +68,6 @@
             text-decoration: none;
         }
 
-        .logo-custom {
-            height: 38px;
-            object-fit: contain;
-        }
-
         .top-actions {
             display: flex;
             gap: 12px;
@@ -494,9 +489,7 @@
     <!-- MENU LATERAL -->
     <div id="sidebar-menu">
         <div class="sidebar-header">
-            <div class="sidebar-title-area">
-                🌸 Menu Principal
-            </div>
+            <div class="sidebar-title-area">🌸 Menu Principal</div>
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
@@ -515,8 +508,6 @@
 
         <!-- TELA INÍCIO -->
         <div id="inicio" class="view-section active">
-            
-            <!-- CARROSSEL DE DESTAQUE -->
             <div class="hero-carousel" id="hero-carousel" onclick="abrirObraDoCarrossel()">
                 <div class="hero-slide active" style="background-image: url('');">
                     <div class="hero-content">
@@ -526,13 +517,11 @@
                 </div>
             </div>
 
-            <!-- SEÇÃO ÚLTIMAS ATUALIZAÇÕES -->
             <div class="section-container">
                 <div class="section-header">
                     <div class="section-bar"></div>
                     <h2 class="section-title">ÚLTIMAS ATUALIZAÇÕES</h2>
                 </div>
-                
                 <div id="grid-atualizacoes" class="manga-grid">
                     <p style="color: var(--text-muted); grid-column: span 2;">Carregando atualizações...</p>
                 </div>
@@ -679,7 +668,8 @@
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     ultimoCapNum = obra.capitulos[0].numero;
-                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    // Link absoluto/direto garantindo o arquivo ler.html
+                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.id)}&cap=${encodeURIComponent(ultimoCapNum)}`;
                 }
                 
                 grid.innerHTML += `
@@ -727,7 +717,7 @@
 
             if (obra.capitulos && obra.capitulos.length > 0) {
                 obra.capitulos.forEach(cap => {
-                    const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
+                    const linkLeitor = `ler.html?obra=${encodeURIComponent(obra.id)}&cap=${encodeURIComponent(cap.numero)}`;
                     capsHtml += `
                         <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#0d0d12; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,133,224,0.25); text-shadow:var(--neon-glow);">
                             <span>${cap.numero}</span>
