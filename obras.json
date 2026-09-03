@@ -7,20 +7,44 @@
     "generos": ["Romance", "Drama"],
     "sinopse": "Uma história incrível de mistério e romance.",
     "capitulos": [
-      { "numero": "Capítulo 02", "link": "ler.html?obra=meu-vizinho&cap=2" },
-      { "numero": "Capítulo 01", "link": "ler.html?obra=meu-vizinho&cap=1" }
+      {
+        "numero": "Capítulo 02",
+        "paginas": [
+          "https://files.catbox.moe/ae205i.png",
+          "https://files.catbox.moe/7fbdln.png"
+        ]
+      },
+      {
+        "numero": "Capítulo 01",
+        "paginas": [
+          "https://files.catbox.moe/ae205i.png",
+          "https://files.catbox.moe/7fbdln.png",
+          "https://files.catbox.moe/llrh59.png"
+        ]
+      }
     ]
   },
   {
     "id": "meu-mestre-sadico",
     "titulo": "Meu Mestre Sádico",
-    "capa": "link_da_imagem_da_capa.jpg",
+    "capa": "https://files.catbox.moe/wyy3gm.png",
     "status": "Em Lançamento",
     "generos": ["Romance", "Drama", "Josei"],
     "sinopse": "Escreva a sinopse da obra aqui...",
     "capitulos": [
-      { "numero": "Capítulo 02", "link": "https://link-do-seu-leitor-ou-capitulo-2" },
-      { "numero": "Capítulo 01", "link": "https://link-do-seu-leitor-ou-capitulo-1" }
+      {
+        "numero": "Capítulo 02",
+        "paginas": [
+          "https://files.catbox.moe/ae205i.png"
+        ]
+      },
+      {
+        "numero": "Capítulo 01",
+        "paginas": [
+          "https://files.catbox.moe/ae205i.png",
+          "https://files.catbox.moe/7fbdln.png"
+        ]
+      }
     ]
   },
   {
