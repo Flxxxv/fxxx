@@ -6,21 +6,10 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Flower's Nenascan 🌸</title>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5HHMHEDSD0"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-5HHMHEDSD0');
-    </script>
-
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
-
         :root {
             --bg-color: #000000;
             --card-bg: #0c0c10;
@@ -55,7 +44,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 18px;
-            background-color: rgba(0, 0, 0, 0.96);
+            background-color: #000000;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -76,7 +65,7 @@
         }
 
         .icon-btn {
-            background: #0d0d12;
+            background: #000000;
             border: 1px solid rgba(255, 133, 224, 0.4);
             color: var(--primary-pink);
             width: 44px;
@@ -91,43 +80,10 @@
             text-shadow: var(--neon-glow);
         }
 
-        .icon-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-            filter: drop-shadow(0 0 5px rgba(255, 133, 224, 0.5));
-        }
-
         .icon-btn:hover {
             background: var(--primary-pink);
             color: #000000;
             box-shadow: 0 0 12px var(--primary-pink);
-        }
-
-        /* Barra de Pesquisa Geral do Topo */
-        #search-container {
-            display: none;
-            padding: 12px 18px;
-            background: #000000;
-            border-bottom: 1px solid rgba(255, 133, 224, 0.2);
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 22px;
-            border: 1px solid var(--primary-pink);
-            background: #000000;
-            color: var(--primary-pink);
-            outline: none;
-            font-size: 0.95rem;
-            text-shadow: var(--neon-glow);
-            box-shadow: var(--neon-glow);
-        }
-
-        .search-input::placeholder {
-            color: #a65d8e;
-            text-shadow: none;
         }
 
         /* Menu Lateral (Fundo totalmente preto garantido) */
@@ -181,7 +137,6 @@
             justify-content: center;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: 0.2s;
             text-shadow: var(--neon-glow);
         }
 
@@ -315,7 +270,7 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* Grade 2 colunas com Capas Maiores */
+        /* Grade 2 colunas */
         .manga-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -414,7 +369,25 @@
             100% { opacity: 0.75; transform: scale(0.95); }
         }
 
-        /* Botões de Paginação */
+        /* Inputs e Botões */
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 22px;
+            border: 1px solid var(--primary-pink);
+            background: #000000;
+            color: var(--primary-pink);
+            outline: none;
+            font-size: 0.95rem;
+            text-shadow: var(--neon-glow);
+            box-shadow: var(--neon-glow);
+        }
+
+        .search-input::placeholder {
+            color: #a65d8e;
+            text-shadow: none;
+        }
+
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -491,20 +464,6 @@
 
         .view-section { display: none; }
         .view-section.active { display: block; }
-
-        .detalhe-box {
-            padding: 20px;
-        }
-        .btn-voltar {
-            background: none;
-            border: none;
-            color: var(--primary-pink);
-            font-weight: bold;
-            font-size: 0.95rem;
-            cursor: pointer;
-            margin-bottom: 15px;
-            text-shadow: var(--neon-glow);
-        }
     </style>
 </head>
 <body>
@@ -514,28 +473,15 @@
         <a href="#" class="logo-img-container" onclick="mudarAba('inicio', document.querySelector('.bottom-nav .nav-item'))">
             <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan</span>
         </a>
-        
         <div class="top-actions">
-            <!-- Lupa -->
-            <button class="icon-btn" onclick="togglePesquisa()" title="Pesquisar">
-                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            </button>
-            <!-- Botão de Flor para abrir o Menu -->
             <button class="icon-btn" onclick="toggleMenu()" title="Menu Flor">🌸</button>
         </div>
     </header>
 
-    <!-- BARRA DE PESQUISA GERAL -->
-    <div id="search-container">
-        <input type="text" id="search-input" class="search-input" placeholder="Pesquisar obra..." oninput="filtrarObrasGeral(this.value)">
-    </div>
-
-    <!-- MENU LATERAL (Fundo Preto Total) -->
+    <!-- MENU LATERAL -->
     <div id="sidebar-menu">
         <div class="sidebar-header">
-            <div class="sidebar-title-area">
-                🌸 Menu Principal
-            </div>
+            <div class="sidebar-title-area">🌸 Menu Principal</div>
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
@@ -544,36 +490,29 @@
             <a href="#" onclick="mudarAba('favoritos', document.querySelectorAll('.bottom-nav .nav-item')[2]); carregarBiblioteca(); toggleMenu();">Biblioteca</a>
             <a href="#" onclick="mudarAba('avisos', document.querySelectorAll('.bottom-nav .nav-item')[3]); toggleMenu();">Avisos</a>
             <a href="#" onclick="mudarAba('generos'); toggleMenu();">Gêneros</a>
-            <a href="#" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
-            <a href="#" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
         </div>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- CONTEÚDO -->
     <div class="container">
 
-        <!-- TELA INÍCIO -->
+        <!-- INÍCIO -->
         <div id="inicio" class="view-section active">
-            <!-- CARROSSEL DE DESTAQUE -->
             <div class="hero-carousel" id="hero-carousel" onclick="abrirObraDoCarrossel()">
                 <div class="hero-slide active" style="background-image: url('https://i.imgur.com/71Q0y05.png');">
                     <div class="hero-content">
                         <div class="hero-title">Flower's Nenasscan</div>
-                        <div class="hero-synopsis">Bem-vindo ao nosso leitor de webtoons e manhwas!</div>
+                        <div class="hero-synopsis">Bem-vindo ao nosso leitor!</div>
                     </div>
                 </div>
             </div>
 
-            <!-- SEÇÃO ÚLTIMAS ATUALIZAÇÕES -->
             <div class="section-container">
                 <div class="section-header">
                     <div class="section-bar"></div>
                     <h2 class="section-title">ÚLTIMAS ATUALIZAÇÕES</h2>
                 </div>
-                
-                <div id="grid-atualizacoes" class="manga-grid">
-                    <!-- Preenchido via JS -->
-                </div>
+                <div id="grid-atualizacoes" class="manga-grid"></div>
             </div>
         </div>
 
@@ -612,9 +551,7 @@
                     </div>
                 </div>
 
-                <div id="lista-favoritos" class="manga-grid">
-                    <!-- Preenchido via JS -->
-                </div>
+                <div id="lista-favoritos" class="manga-grid"></div>
             </div>
         </div>
 
@@ -622,7 +559,7 @@
         <div id="avisos" class="view-section">
             <div class="section-container">
                 <div class="section-header"><div class="section-bar"></div><h2 class="section-title">AVISOS</h2></div>
-                <p style="color: var(--text-muted); padding: 10px 0;">Nenhum aviso importante no momento. Bom proveito das leituras!</p>
+                <p style="color: var(--text-muted); padding: 10px 0;">Nenhum aviso no momento.</p>
             </div>
         </div>
 
@@ -635,23 +572,21 @@
                     <span style="background:#0d0d12; padding:6px 12px; border-radius:8px; border:1px solid rgba(255,133,224,0.3); font-size:0.85rem;">Completo</span>
                     <span style="background:#0d0d12; padding:6px 12px; border-radius:8px; border:1px solid rgba(255,133,224,0.3); font-size:0.85rem;">Romance</span>
                     <span style="background:#0d0d12; padding:6px 12px; border-radius:8px; border:1px solid rgba(255,133,224,0.3); font-size:0.85rem;">Fantasia</span>
-                    <span style="background:#0d0d12; padding:6px 12px; border-radius:8px; border:1px solid rgba(255,133,224,0.3); font-size:0.85rem;">Ação</span>
                 </div>
-                <p style="color: var(--text-muted); padding: 10px 0;">Filtros completos por gênero e status em breve!</p>
             </div>
         </div>
 
-        <!-- TELA DE DETALHES -->
+        <!-- DETALHES -->
         <div id="detalhes-obra" class="view-section">
-            <div class="detalhe-box">
-                <button class="btn-voltar" onclick="mudarAba('inicio', document.querySelector('.bottom-nav .nav-item'))">← Voltar</button>
+            <div style="padding: 20px;">
+                <button class="page-btn" onclick="mudarAba('inicio', document.querySelector('.bottom-nav .nav-item'))" style="margin-bottom:15px;">← Voltar</button>
                 <div id="conteudo-detalhes"></div>
             </div>
         </div>
 
     </div>
 
-    <!-- BARRA INFERIOR FIXA -->
+    <!-- BARRA INFERIOR -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="mudarAba('inicio', this)">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -684,69 +619,33 @@
             { id: "obra-9", titulo: "Exemplo de Manhwa 9", capa: "https://i.imgur.com/71Q0y05.png", sinopse: "Nona obra de exemplo.", capitulos: [{ numero: "Capítulo 1" }] }
         ];
 
-        let obraCarrosselAtualId = '';
         let paginaAtualObras = 1;
         const itensPorPagina = 8;
         let obrasFiltradasPagina = [...listaObras];
+        let obraCarrosselAtualId = listaObras[0].id;
 
-        inicializarHome();
+        renderizarTudo();
 
-        function inicializarHome() {
-            if (listaObras.length === 0) return;
-            renderizarCarrosselAleatorio();
+        function renderizarTudo() {
             renderizarAtualizacoes();
             renderizarTodasObrasPaginadas();
             carregarBiblioteca();
         }
 
-        function renderizarCarrosselAleatorio() {
-            const copia = [...listaObras].sort(() => 0.5 - Math.random());
-            const destaques = copia.slice(0, 5);
-            const carousel = document.getElementById('hero-carousel');
-            carousel.innerHTML = '';
-
-            destaques.forEach((obra, index) => {
-                const ativa = index === 0 ? 'active' : '';
-                if (index === 0) obraCarrosselAtualId = obra.id;
-
-                carousel.innerHTML += `
-                    <div class="hero-slide ${ativa}" style="background-image: url('${obra.capa}');" data-id="${obra.id}">
-                        <div class="hero-content">
-                            <div class="hero-title">${obra.titulo}</div>
-                            <div class="hero-synopsis">${obra.sinopse || 'Sem sinopse informada.'}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function abrirObraDoCarrossel() {
-            if (obraCarrosselAtualId) abrirDetalhesObra(obraCarrosselAtualId);
-        }
-
         function renderizarAtualizacoes() {
             const grid = document.getElementById('grid-atualizacoes');
             grid.innerHTML = '';
-            const recentes = listaObras.slice(0, 10);
-
-            recentes.forEach(obra => {
-                let ultimoCapNum = 'Em breve';
-                let linkLeitor = '#';
-
-                if (obra.capitulos && obra.capitulos.length > 0) {
-                    ultimoCapNum = obra.capitulos[0].numero;
-                    linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(ultimoCapNum)}`;
-                }
-                
+            listaObras.slice(0, 10).forEach(obra => {
+                let ultimoCapNum = obra.capitulos[0]?.numero || 'Em breve';
                 grid.innerHTML += `
                     <div class="manga-card">
                         <div class="manga-capa-box" onclick="abrirDetalhesObra('${obra.id}')">
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                         </div>
                         <div class="manga-info">
-                            <div class="manga-titulo" title="${obra.titulo}" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <div class="manga-titulo" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
                             <div class="capitulo-recente-row">
-                                <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
+                                <span class="capitulo-link">${ultimoCapNum}</span>
                                 <span class="selo-novo">NOVO</span>
                             </div>
                         </div>
@@ -771,8 +670,7 @@
             if (paginaAtualObras < 1) paginaAtualObras = 1;
 
             const inicio = (paginaAtualObras - 1) * itensPorPagina;
-            const fim = inicio + itensPorPagina;
-            const obrasPagina = obrasFiltradasPagina.slice(inicio, fim);
+            const obrasPagina = obrasFiltradasPagina.slice(inicio, inicio + itensPorPagina);
 
             obrasPagina.forEach(obra => {
                 grid.innerHTML += `
@@ -781,7 +679,7 @@
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                         </div>
                         <div class="manga-info">
-                            <div class="manga-titulo" title="${obra.titulo}" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                            <div class="manga-titulo" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
                         </div>
                     </div>
                 `;
@@ -832,7 +730,7 @@
                                 <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                             </div>
                             <div class="manga-info">
-                                <div class="manga-titulo" title="${obra.titulo}" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
+                                <div class="manga-titulo" onclick="abrirDetalhesObra('${obra.id}')">${obra.titulo}</div>
                             </div>
                         </div>
                     `;
@@ -840,63 +738,38 @@
             });
         }
 
-        function alternarFavorito(id) {
-            let listaFav = JSON.parse(localStorage.getItem('favoritos_nenascan') || '[]');
-            const index = listaFav.indexOf(id);
-            if (index > -1) {
-                listaFav.splice(index, 1);
-                alert('Removido dos favoritos!');
-            } else {
-                listaFav.push(id);
-                alert('Adicionado aos favoritos! ♡');
-            }
-            localStorage.setItem('favoritos_nenascan', JSON.stringify(listaFav));
-            abrirDetalhesObra(id);
-        }
-
         function abrirDetalhesObra(id) {
             const obra = listaObras.find(o => o.id === id);
             if (!obra) return;
-
             const listaFav = JSON.parse(localStorage.getItem('favoritos_nenascan') || '[]');
             const isFav = listaFav.includes(id);
             const container = document.getElementById('conteudo-detalhes');
-            let capsHtml = '';
-
-            if (obra.capitulos && obra.capitulos.length > 0) {
-                obra.capitulos.forEach(cap => {
-                    const linkLeitor = `ler.html?obra=${obra.id}&cap=${encodeURIComponent(cap.numero)}`;
-                    capsHtml += `
-                        <a href="${linkLeitor}" style="display:flex; justify-content:space-between; background:#0d0d12; padding:12px 15px; border-radius:10px; margin-bottom:8px; color:var(--primary-pink); text-decoration:none; border:1px solid rgba(255,133,224,0.25); text-shadow:var(--neon-glow);">
-                            <span>${cap.numero}</span>
-                            <span style="color:var(--primary-pink)">Ler →</span>
-                        </a>
-                    `;
-                });
-            } else {
-                capsHtml = '<p style="color:var(--text-muted)">Nenhum capítulo cadastrado ainda.</p>';
-            }
 
             container.innerHTML = `
                 <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px;">
-                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,133,224,0.35); box-shadow:var(--neon-glow);">
-                    <div style="flex:1;">
-                        <h2 style="color:var(--primary-pink); margin-bottom:8px; font-size:1.2rem; text-shadow:var(--neon-glow);">${obra.titulo}</h2>
-                        <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; text-shadow:var(--neon-glow); margin-bottom:12px;">${obra.sinopse || 'Sem sinopse.'}</p>
+                    <img src="${obra.capa}" style="width:130px; height:185px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,133,224,0.35);">
+                    <div>
+                        <h2 style="color:var(--primary-pink); margin-bottom:8px;">${obra.titulo}</h2>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">${obra.sinopse}</p>
                         <button class="page-btn" onclick="alternarFavorito('${obra.id}')">${isFav ? '❤️ Favoritado' : '♡ Favoritar'}</button>
                     </div>
                 </div>
-                <h3 style="margin-bottom:12px; font-size:1.05rem; color:var(--primary-pink); text-shadow:var(--neon-glow);">Capítulos</h3>
-                ${capsHtml}
             `;
-
             mudarAba('detalhes-obra');
+        }
+
+        function alternarFavorito(id) {
+            let listaFav = JSON.parse(localStorage.getItem('favoritos_nenascan') || '[]');
+            const index = listaFav.indexOf(id);
+            if (index > -1) listaFav.splice(index, 1);
+            else listaFav.push(id);
+            localStorage.setItem('favoritos_nenascan', JSON.stringify(listaFav));
+            abrirDetalhesObra(id);
         }
 
         function mudarAba(idAba, btnElement) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(idAba).classList.add('active');
-
             if(btnElement) {
                 document.querySelectorAll('.bottom-nav .nav-item').forEach(b => b.classList.remove('active'));
                 btnElement.classList.add('active');
@@ -908,20 +781,8 @@
             document.getElementById('sidebar-menu').classList.toggle('open');
         }
 
-        function togglePesquisa() {
-            const searchBox = document.getElementById('search-container');
-            searchBox.style.display = searchBox.style.display === 'block' ? 'none' : 'block';
-            if(searchBox.style.display === 'block') {
-                document.getElementById('search-input').focus();
-            }
-        }
-
-        function filtrarObrasGeral(termo) {
-            const query = termo.toLowerCase();
-            obrasFiltradasPagina = listaObras.filter(o => o.titulo.toLowerCase().includes(query));
-            paginaAtualObras = 1;
-            mudarAba('obras', document.querySelectorAll('.bottom-nav .nav-item')[1]);
-            renderizarTodasObrasPaginadas();
+        function abrirObraDoCarrossel() {
+            abrirDetalhesObra(obraCarrosselAtualId);
         }
     </script>
 </body>
