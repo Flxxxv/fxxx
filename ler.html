@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-pink); padding-bottom: 40px; overflow-x: hidden; }
 
-        /* BARRA DE PROGRESSO MAIS FINA */
         .barra-progresso-container {
             position: fixed;
             bottom: 0;
@@ -34,7 +33,6 @@
             transition: width 0.1s linear;
         }
 
-        /* TOPO DO LEITOR */
         .leitor-topo {
             background-color: #000000;
             padding: 18px 16px;
@@ -46,7 +44,6 @@
             z-index: 50;
         }
 
-        /* TÍTULO DO CAPÍTULO */
         .capitulo-titulo-topo {
             font-size: 1.5rem;
             font-weight: 800;
@@ -62,7 +59,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* CONTROLES DO TOPO */
         .leitor-controles {
             display: flex;
             justify-content: center;
@@ -72,7 +68,6 @@
             gap: 12px;
         }
 
-        /* BOTÃO VOLTAR ARREDONDADO */
         .btn-voltar-obra {
             background: #000000;
             color: #FF99DD;
@@ -96,7 +91,6 @@
             box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
         }
 
-        /* LISTA DE CAPÍTULOS ARREDONDADA */
         .dropdown-container {
             position: relative;
             flex: 1;
@@ -137,7 +131,6 @@
             padding: 8px;
         }
 
-        /* ÁREA DE LEITURA */
         .paginas-leitor {
             width: 100%;
             max-width: 800px;
@@ -145,7 +138,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0px;
             min-height: 70vh;
         }
         .pagina-manga {
@@ -155,7 +147,6 @@
             background: #000;
         }
 
-        /* NAVEGAÇÃO DO FINAL DO CAPÍTULO */
         .navegacao-final {
             display: flex;
             justify-content: center;
@@ -198,7 +189,6 @@
             box-shadow: none;
         }
 
-        /* BOTÃO FLUTUANTE DA FLOR */
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -207,19 +197,15 @@
             height: 42px;
             background: transparent;
             border: none;
-            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: none;
             z-index: 999;
             transition: transform 0.2s ease;
             text-decoration: none;
         }
-        .btn-flor-topo:hover {
-            transform: scale(1.15);
-        }
+        .btn-flor-topo:hover { transform: scale(1.15); }
         .btn-flor-topo img {
             width: 100%;
             height: 100%;
@@ -230,20 +216,14 @@
 </head>
 <body>
 
-    <!-- BARRA DE PROGRESSO -->
     <div class="barra-progresso-container">
         <div class="barra-progresso-fill" id="barraProgresso"></div>
     </div>
 
-    <!-- TOPO DO LEITOR -->
     <div class="leitor-topo">
-        <!-- TÍTULO DO CAPÍTULO -->
-        <div class="capitulo-titulo-topo" id="textoCapituloReal">
-            CAPÍTULO --
-        </div>
-
-        <!-- CONTROLES -->
+        <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
         <div class="leitor-controles">
+            <!-- Usando diretamente o parâmetro que veio na URL para evitar falhas -->
             <a href="#" class="btn-voltar-obra" id="btnVoltarObra">voltar</a>
             
             <div class="dropdown-container">
@@ -254,25 +234,22 @@
         </div>
     </div>
 
-    <!-- PÁGINAS DO CAPÍTULO -->
     <div class="paginas-leitor" id="paginasContainer">
         <p style="text-align: center; color: var(--primary-pink); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
-    <!-- BOTÕES DE NAVEGAÇÃO NO FINAL DO CAPÍTULO -->
     <div class="navegacao-final" id="navegacaoFinal" style="display: none;">
         <a href="#" id="btnAnterior" class="btn-navegacao disabled">‹ anterior</a>
         <a href="#" id="btnProximo" class="btn-navegacao disabled">próximo ›</a>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DA FLOR -->
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
         <img src="https://files.catbox.moe/fjfbc8.png" alt="Voltar ao Topo">
     </a>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim().toLowerCase();
+        const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim();
         const capSlugUrl = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
 
         let obraGlobal = null;
@@ -281,10 +258,17 @@
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
 
+        // Força o botão voltar a usar exatamente o que veio na URL, garantindo que nunca dê 404
+        if (obraSlugUrl) {
+            document.getElementById('btnVoltarObra').href = `detalhes.html?nome=${encodeURIComponent(obraSlugUrl)}`;
+        } else {
+            document.getElementById('btnVoltarObra').href = './';
+        }
+
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                obraGlobal = obras.find(o => criarSlug(o.titulo) === obraSlugUrl || String(o.id).trim().toLowerCase() === obraSlugUrl || String(o.titulo).trim().toLowerCase() === obraSlugUrl);
+                obraGlobal = obras.find(o => criarSlug(o.titulo) === obraSlugUrl.toLowerCase() || String(o.id).trim() === obraSlugUrl || String(o.titulo).trim().toLowerCase() === obraSlugUrl.toLowerCase());
 
                 if (!obraGlobal) {
                     document.getElementById('paginasContainer').innerHTML = `
@@ -305,10 +289,6 @@
             });
 
         function carregarLeitor() {
-            // Ajustado para apontar para detalhes.html usando ?nome= exatamente como o script de detalhes espera
-            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
-            document.getElementById('btnVoltarObra').href = `detalhes.html?nome=${slugObraId}`;
-
             let capitulos = obraGlobal.capitulos || [];
             let indexAtual = -1;
             let capAtual = null;
@@ -338,7 +318,6 @@
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // Configurar lista de capítulos mantendo estritamente "Lista de Capítulos" no topo
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
             
@@ -360,11 +339,12 @@
                 containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
             }
 
-            // Configurar botões de Anterior e Próximo no final do capítulo
             const navFinal = document.getElementById('navegacaoFinal');
             const btnAnterior = document.getElementById('btnAnterior');
             const btnProximo = document.getElementById('btnProximo');
             navFinal.style.display = 'flex';
+
+            const slugObraId = encodeURIComponent(obraSlugUrl);
 
             if (indexAtual > 0) {
                 let capAnt = capitulos[indexAtual - 1];
@@ -391,7 +371,7 @@
 
         function mudarCapitulo(slugCap) {
             if (!slugCap || !obraGlobal) return;
-            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
+            const slugObraId = encodeURIComponent(obraSlugUrl);
             window.location.href = `ler.html?obra=${slugObraId}&cap=${slugCap}`;
         }
 
@@ -411,3 +391,4 @@
     </script>
 </body>
 </html>
+  
