@@ -29,7 +29,7 @@
 
         .obra-container { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-        /* BANNER DE FUNDO MENOS ESCURO */
+        /* BANNER DE FUNDO */
         .banner-topo {
             position: relative;
             width: 100%;
@@ -57,7 +57,7 @@
         .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
 
-        /* CAPA PRINCIPAL MAIOR E CENTRALIZADA */
+        /* CAPA PRINCIPAL */
         .wrapper-capa-principal {
             display: flex;
             justify-content: center;
@@ -77,7 +77,7 @@
             background: #14141a;
         }
 
-        /* TÍTULO E STATUS CENTRALIZADOS */
+        /* TÍTULO E STATUS */
         .info-principal-central {
             text-align: center;
             padding: 20px 20px 10px 20px;
@@ -198,27 +198,28 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* CAPÍTULOS SEM CAIXAS INTERNAS E COM MINIATURA PEQUENA */
+        /* ESTILO EXATO DOS CAPÍTULOS (COM CAIXINHA E MINIATURA GRANDE/HORIZONTAL) */
         .secao-cabecalho-caps {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
         .section-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-pink); text-shadow: var(--neon-glow); }
         
-        .lista-capitulos { display: flex; flex-direction: column; gap: 8px; }
+        .lista-capitulos { display: flex; flex-direction: column; gap: 14px; }
         
         .capitulo-item {
             background: #121219;
-            border: 1px solid rgba(255, 153, 221, 0.25);
-            padding: 8px 12px;
-            border-radius: 12px;
+            border: 1px solid rgba(255, 153, 221, 0.4);
+            padding: 10px 14px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             transition: 0.2s;
+            box-shadow: var(--shadow);
         }
         .capitulo-item:hover {
             background: rgba(255, 153, 221, 0.08);
@@ -229,14 +230,14 @@
         .cap-esquerda {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
         .cap-miniatura {
-            width: 55px;
-            height: 65px;
+            width: 120px;
+            height: 75px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 153, 221, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 153, 221, 0.4);
             background: #1a1a24;
         }
         .cap-info-texto {
@@ -245,28 +246,34 @@
             gap: 2px;
         }
         .cap-num-principal {
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
+        }
+        .cap-sub-label {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            text-shadow: none;
+            font-weight: 600;
         }
         .cap-direita {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 4px;
+            gap: 6px;
         }
         .cap-data {
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             text-shadow: none;
         }
         .selo-novo-cap {
             background-color: var(--primary-pink);
             color: #0b0b0e;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            padding: 2px 6px;
+            padding: 2px 7px;
             border-radius: 4px;
             letter-spacing: 0.5px;
             box-shadow: var(--neon-glow);
@@ -345,6 +352,7 @@
                                     <img src="${capaCap}" alt="Cap ${numCap}" class="cap-miniatura">
                                     <div class="cap-info-texto">
                                         <span class="cap-num-principal">Cap. ${numCap}</span>
+                                        <span class="cap-sub-label">Capítulo ${numCap}</span>
                                     </div>
                                 </div>
                                 <div class="cap-direita">
@@ -376,19 +384,19 @@
                 }
 
                 container.innerHTML = `
-                    <!-- BANNER DE FUNDO MENOS ESCURO -->
+                    <!-- BANNER DE FUNDO -->
                     <div class="banner-topo" style="background-image: url('${imagemFundo}');">
                         <div class="caminho-breadcrumb">
                             <a href="./">Início</a> / <a href="./?aba=obras">Obras</a> / <span>${obra.titulo}</span>
                         </div>
                     </div>
 
-                    <!-- CAPA PRINCIPAL MAIOR E CENTRALIZADA -->
+                    <!-- CAPA PRINCIPAL -->
                     <div class="wrapper-capa-principal">
                         <img src="${capaFrente}" alt="${obra.titulo}" class="obra-capa-large">
                     </div>
 
-                    <!-- TÍTULO E STATUS CENTRALIZADOS -->
+                    <!-- TÍTULO E STATUS -->
                     <div class="info-principal-central">
                         <h1 class="obra-titulo-principal">${obra.titulo}</h1>
                         <div class="tag-status">
@@ -402,7 +410,7 @@
                         <button class="btn-acao" id="btn-favorito" onclick="toggleFavorito('${obra.titulo}')">Favoritar</button>
                     </div>
 
-                    <!-- INFORMAÇÕES DA OBRA (EM CIMA DA SINOPSE) -->
+                    <!-- INFORMAÇÕES DA OBRA -->
                     <div class="secao-bloco">
                         <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700; margin-bottom: 12px;">Informações</h3>
                         <div class="info-grid">
@@ -435,7 +443,7 @@
                         <p class="sinopse-texto">${obra.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
                     </div>
 
-                    <!-- CAPÍTULOS -->
+                    <!-- CAPÍTULOS NO FORMATO EXATO DA SUA IMAGEM -->
                     <div class="secao-bloco">
                         <div class="secao-cabecalho-caps">
                             <h3 class="section-title">Capítulos</h3>
