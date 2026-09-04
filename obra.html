@@ -139,7 +139,7 @@
         }
         .btn-acao:hover { background: var(--primary-pink); color: #0b0b0e; box-shadow: 0 0 15px var(--primary-pink); }
 
-        /* BLOCOS GERAIS */
+        /* BLOCOS GERAIS (INFORMAÇÕES E SINOPSE) */
         .secao-bloco {
             background: var(--card-bg);
             border-radius: 16px;
@@ -198,47 +198,59 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* ESTILO EXATO DOS CAPÍTULOS (COM CAIXINHA E MINIATURA GRANDE/HORIZONTAL) */
+        /* SEÇÃO DE CAPÍTULOS EXATAMENTE COMO NA SUA IMAGEM (SEM CAIXAS EM VOLTA) */
+        .secao-capitulos-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 15px 15px 0 15px;
+            border: 1px solid rgba(255, 153, 221, 0.3);
+            box-shadow: var(--shadow);
+            width: calc(100% - 30px);
+        }
         .secao-cabecalho-caps {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         .section-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-pink); text-shadow: var(--neon-glow); }
         
         .lista-capitulos { display: flex; flex-direction: column; gap: 14px; }
         
         .capitulo-item {
-            background: #121219;
-            border: 1px solid rgba(255, 153, 221, 0.4);
-            padding: 10px 14px;
-            border-radius: 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 153, 221, 0.15);
+            padding: 8px 0 14px 0;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             transition: 0.2s;
-            box-shadow: var(--shadow);
+        }
+        .capitulo-item:last-child {
+            border-bottom: none;
+            padding-bottom: 4px;
         }
         .capitulo-item:hover {
-            background: rgba(255, 153, 221, 0.08);
-            border-color: var(--primary-pink);
-            transform: translateX(3px);
-            box-shadow: var(--neon-glow);
+            transform: translateX(4px);
         }
         .cap-esquerda {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
         }
+        /* SÓ A MINIATURA TEM A BORDA ROSA ARREDONDADA, NENHUM OUTRO QUADRADO EM VOLTA */
         .cap-miniatura {
-            width: 120px;
-            height: 75px;
+            width: 130px;
+            height: 80px;
             object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 153, 221, 0.4);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 153, 221, 0.7);
             background: #1a1a24;
+            box-shadow: var(--neon-glow);
         }
         .cap-info-texto {
             display: flex;
@@ -443,8 +455,8 @@
                         <p class="sinopse-texto">${obra.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
                     </div>
 
-                    <!-- CAPÍTULOS NO FORMATO EXATO DA SUA IMAGEM -->
-                    <div class="secao-bloco">
+                    <!-- CAPÍTULOS SEM CAIXAS EM VOLTA, SÓ A MINIATURA COM BORDA ROSA -->
+                    <div class="secao-capitulos-container">
                         <div class="secao-cabecalho-caps">
                             <h3 class="section-title">Capítulos</h3>
                             <span style="font-size: 0.85rem; color: var(--text-muted);">${totalCaps} capítulos</span>
