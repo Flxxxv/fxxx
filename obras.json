@@ -3,19 +3,26 @@
     "id": "meu-vizinho",
     "titulo": "Meu vizinho está sempre me observando",
     "capa": "cover.jpg",
+    "banner": "cover.jpg",
     "status": "Em Lançamento",
+    "autor": "",
+    "artista": "",
+    "classificacao": "",
+    "ano": "2026",
     "generos": ["Romance", "Drama"],
     "sinopse": "Uma história incrível de mistério e romance.",
     "capitulos": [
       {
-        "numero": "Capítulo 02",
+        "numero": "02",
+        "data": "",
         "paginas": [
           "https://files.catbox.moe/ae205i.png",
           "https://files.catbox.moe/7fbdln.png"
         ]
       },
       {
-        "numero": "Capítulo 01",
+        "numero": "01",
+        "data": "",
         "paginas": [
           "https://files.catbox.moe/ae205i.png",
           "https://files.catbox.moe/7fbdln.png",
@@ -28,18 +35,25 @@
     "id": "meu-mestre-sadico",
     "titulo": "Meu Mestre Sádico",
     "capa": "https://files.catbox.moe/wyy3gm.png",
+    "banner": "https://files.catbox.moe/s641ug.png",
     "status": "Em Lançamento",
+    "autor": "",
+    "artista": "",
+    "classificacao": "",
+    "ano": "2026",
     "generos": ["Romance", "Drama", "Josei"],
     "sinopse": "Escreva a sinopse da obra aqui...",
     "capitulos": [
       {
-        "numero": "Capítulo 02",
+        "numero": "02",
+        "data": "",
         "paginas": [
           "https://files.catbox.moe/ae205i.png"
         ]
       },
       {
-        "numero": "Capítulo 01",
+        "numero": "01",
+        "data": "",
         "paginas": [
           "https://files.catbox.moe/ae205i.png",
           "https://files.catbox.moe/7fbdln.png"
@@ -50,13 +64,19 @@
   {
     "id": "nome-da-nova-obra",
     "titulo": "Nome da Nova Obra",
+    "capa": "https://files.catbox.moe/wyy3gm.png",
+    "banner": "https://files.catbox.moe/wyy3gm.png",
+    "status": "Em Lançamento",
+    "autor": "",
+    "artista": "",
+    "classificacao": "",
+    "ano": "2026",
     "generos": ["Ação", "Fantasia"],
     "sinopse": "Escreva a sinopse da obra aqui...",
-    "capa": "https://files.catbox.moe/wyy3gm.png",
-    "status": "Em Lançamento",
     "capitulos": [
       {
-        "numero": "Capítulo 01",
+        "numero": "01",
+        "data": "",
         "paginas": [
           "https://files.catbox.moe/ae205i.png",
           "https://files.catbox.moe/7fbdln.png",
