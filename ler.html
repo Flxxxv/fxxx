@@ -56,47 +56,36 @@
         .caminho-breadcrumb a { color: var(--primary-pink); text-decoration: none; }
         .caminho-breadcrumb a:hover { text-decoration: underline; }
 
-        /* TÍTULO DA OBRA REMOVIDO CONFORME PEDIDO */
-
-        /* TÍTULO DO CAPÍTULO CENTRALIZADO COM A FLOR PEQUENA AO LADO */
+        /* TÍTULO DO CAPÍTULO CENTRALIZADO E DESTACADO (SEM FLOR, SÓ TEXTO) */
         .capitulo-titulo-topo {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: var(--primary-pink);
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .icone-flor-pequena {
-            width: 18px;
-            height: 18px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 5px rgba(255, 153, 221, 0.8));
-            flex-shrink: 0;
+            width: 100%;
+            text-shadow: 0 0 10px rgba(255, 153, 221, 0.5);
         }
 
-        /* CONTROLES: BOTÕES COM FUNDO PRETO E APENAS BORDA E SOMBRA ROSA */
+        /* CONTROLES: BOTÕES RETOS (SEM ARREDONDAR), FUNDO PRETO, BORDA E SOMBRA ROSA */
         .leitor-controles {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-width: 500px;
-            gap: 12px;
+            max-width: 550px;
+            gap: 15px;
         }
 
-        /* BOTÃO VOLTAR (FUNDO PRETO, BORDA E SOMBRA ROSA) */
+        /* BOTÃO VOLTAR (RETO, SEM BORDAS ARREDONDADAS) */
         .btn-voltar-obra {
             background: #000000;
             color: #FF99DD;
             border: 2px solid #FF99DD;
-            padding: 10px 24px;
-            border-radius: 25px;
+            padding: 10px 28px;
+            border-radius: 0px;
             font-weight: 800;
             font-size: 1rem;
             cursor: pointer;
@@ -111,14 +100,13 @@
         }
         .btn-voltar-obra:hover {
             background: rgba(255, 153, 221, 0.1);
-            transform: scale(1.02);
         }
 
-        /* BOTÃO LISTA DE CAPÍTULOS (FUNDO PRETO, BORDA E SOMBRA ROSA, TEXTO FIXO) */
+        /* BOTÃO LISTA DE CAPÍTULOS (RETO, SEM BORDAS ARREDONDADAS) */
         .dropdown-container {
             position: relative;
             flex: 1;
-            max-width: 240px;
+            max-width: 260px;
         }
         .select-capitulos {
             width: 100%;
@@ -126,9 +114,9 @@
             border: 2px solid #FF99DD;
             color: #FF99DD;
             padding: 10px 16px;
-            border-radius: 25px;
+            border-radius: 0px;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             outline: none;
             box-shadow: 0 0 12px rgba(255, 153, 221, 0.5);
@@ -137,7 +125,7 @@
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.364%22%20height%3D%22292.364%22%3E%3Cpath%20fill%3D%22%23FF99DD%22%20d%3D%22M287.934%20197.935L146.123%2056.127%204.31%20197.935c-3.28%203.28-3.28%208.6-0.003%2011.88l19.52%2019.52c3.28%203.28%208.6%203.28%2011.88%200l110.4-110.4%20110.4%20110.4c3.28%203.28%208.6%203.28%2011.88%200l19.52-19.52c3.28-3.28%203.28-8.6%200.002-11.88z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
             background-position: right 14px center;
-            background-size: 9px;
+            background-size: 10px;
             padding-right: 32px;
             text-align-last: center;
             white-space: nowrap;
@@ -167,33 +155,33 @@
             background: #000;
         }
 
-        /* BOTÃO DE FLOR FLUTUANTE NO CANTO INFERIOR DIREITO USANDO SUA IMAGEM */
+        /* BOTÃO FLUTUANTE: SÓ A IMAGEM MAIOR, SEM CIRCULO ROSA ATRÁS */
         .btn-flor-topo {
             position: fixed;
             bottom: 25px;
             right: 20px;
-            width: 58px;
-            height: 58px;
-            background: #FF99DD;
+            width: 75px;
+            height: 75px;
+            background: transparent;
             border: none;
-            border-radius: 50%;
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.9), 0 0 18px rgba(255, 153, 221, 0.8);
+            box-shadow: none;
             z-index: 999;
             transition: 0.2s;
             text-decoration: none;
         }
         .btn-flor-topo:hover {
             transform: scale(1.1);
-            background: #ff77d5;
         }
         .btn-flor-topo img {
-            width: 32px;
-            height: 32px;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 12px rgba(255, 153, 221, 0.8));
         }
     </style>
 </head>
@@ -210,13 +198,12 @@
             <a href="./">Início</a> / <a href="#" id="linkBreadcrumbObra">Obras</a> / <span id="nomeObraBreadcrumb">Carregando...</span>
         </div>
 
-        <!-- TÍTULO DO CAPÍTULO COM A SUA FLOR PEQUENA -->
-        <div class="capitulo-titulo-topo" id="tituloCapituloTopo">
-            <img src="https://files.catbox.moe/fjfbc8.png" class="icone-flor-pequena" alt="Flor">
-            <span id="textoCapituloReal">CAPÍTULO --</span>
+        <!-- TÍTULO DO CAPÍTULO CENTRALIZADO (SEM FLOR, SÓ O TEXTO) -->
+        <div class="capitulo-titulo-topo" id="textoCapituloReal">
+            CAPÍTULO --
         </div>
 
-        <!-- CONTROLES COM BORDA E FUNDO PRETO -->
+        <!-- CONTROLES RETOS -->
         <div class="leitor-controles">
             <a href="#" class="btn-voltar-obra" id="btnVoltarObra">voltar</a>
             
@@ -233,9 +220,9 @@
         <p style="text-align: center; color: var(--primary-pink); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
-    <!-- BOTÃO FLUTUANTE COM A SUA IMAGEM DE FLOR -->
+    <!-- BOTÃO FLUTUANTE (SÓ A IMAGEM MAIOR, SEM FUNDO ROSA) -->
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
-        <img src="https://files.catbox.moe/fjfbc8.png" alt="Flor Topo">
+        <img src="https://files.catbox.moe/fjfbc8.png" alt="Voltar ao Topo">
     </a>
 
     <script>
@@ -304,7 +291,7 @@
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // Configurar lista de capítulos mantendo o texto fixo padrão "Lista de Capítulos"
+            // Configurar lista de capítulos mantendo o texto fixo "Lista de Capítulos"
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
             
