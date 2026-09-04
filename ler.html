@@ -519,7 +519,6 @@
     </a>
 
     <script>
-        // SUPABASE: Se preferir não usar nuvem por enquanto, deixe em branco.
         const SUPABASE_URL = '';
         const SUPABASE_ANON_KEY = '';
         
@@ -533,17 +532,13 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim();
-        const capSlugUrl = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
+        const nomeObra = decodeURIComponent(urlParams.get('nome') || urlParams.get('obra') || '').trim();
+        const numCapituloUrl = decodeURIComponent(urlParams.get('cap') || '').trim();
 
         let obraGlobal = null;
-        let idCapituloUnico = `${obraSlugUrl}_${capSlugUrl}`;
+        let idCapituloUnico = `${nomeObra}_${numCapituloUrl}`;
 
-        function criarSlug(texto) {
-            return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-        }
-
-        // Evento seguro para abrir/fechar as regras dos comentários no celular
+        // Correção segura para abrir/fechar as regras dos comentários no celular
         document.getElementById('btnToggleRegras').addEventListener('click', function() {
             const caixa = document.getElementById('caixaRegras');
             caixa.classList.toggle('ativa');
@@ -553,37 +548,24 @@
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                // Tenta encontrar a obra de forma flexível por ID, Slug do Título ou Título exato
-                obraGlobal = obras.find(o => {
-                    let sTitulo = criarSlug(o.titulo);
-                    let sId = String(o.id || '').trim().toLowerCase();
-                    let urlBusca = obraSlugUrl.toLowerCase();
-                    return sTitulo === urlBusca || sId === urlBusca || String(o.titulo).trim().toLowerCase() === urlBusca;
-                });
-
+                obraGlobal = obras.find(o => String(o.nome || o.titulo).trim().toLowerCase() === nomeObra.toLowerCase());
+                
                 if (!obraGlobal) {
-                    document.getElementById('paginasContainer').innerHTML = `
-                        <div style="text-align:center; padding: 60px 20px;">
-                            <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
-                            <p style="color:var(--primary-pink); margin-top: 10px; opacity:0.8;">Verifique se o link está correto ou se a obra está cadastrada no obras.json</p>
-                            <a href="./" class="obra-titulo-link" style="display:inline-block; margin-top:20px; font-size:1rem;">Voltar ao Início</a>
-                        </div>
-                    `;
+                    document.getElementById('paginasContainer').innerHTML = `<p style="color: #FF99DD; text-align: center; padding: 50px;">Obra não encontrada.</p>`;
                     return;
                 }
 
-                document.getElementById('linkObraTopo').textContent = obraGlobal.titulo;
+                document.getElementById('linkObraTopo').textContent = obraGlobal.titulo || obraGlobal.nome;
                 carregarLeitor();
             })
             .catch(err => {
                 console.error("Erro ao carregar obras.json:", err);
-                document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar os dados das obras.</p>`;
+                document.getElementById('paginasContainer').innerHTML = `<p style="color: #FF99DD; text-align: center; padding: 50px;">Erro ao carregar dados.</p>`;
             });
 
         function irParaDetalhes() {
             if (obraGlobal) {
-                const identificadorObra = obraGlobal.id || criarSlug(obraGlobal.titulo);
-                window.location.href = `obra.html?nome=${encodeURIComponent(identificadorObra)}`;
+                window.location.href = `obra.html?nome=${encodeURIComponent(obraGlobal.nome || obraGlobal.titulo)}`;
             } else {
                 window.location.href = './';
             }
@@ -594,12 +576,8 @@
             let indexAtual = -1;
             let capAtual = null;
 
-            if (capSlugUrl) {
-                indexAtual = capitulos.findIndex(c => {
-                    let num = typeof c === 'object' ? c.numero : c;
-                    let slugC = String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                    return slugC === capSlugUrl || String(num).toLowerCase() === capSlugUrl;
-                });
+            if (numCapituloUrl) {
+                indexAtual = capitulos.findIndex(c => String(c.numero) === numCapituloUrl);
                 if (indexAtual !== -1) capAtual = capitulos[indexAtual];
             }
 
@@ -614,23 +592,20 @@
                 return;
             }
 
-            let numCap = typeof capAtual === 'object' ? capAtual.numero : capAtual;
-            document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
-            document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
+            document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${capAtual.numero}`;
+            document.title = `Capítulo ${capAtual.numero} - ${obraGlobal.titulo || obraGlobal.nome} - Flower's Nenascan 🌸`;
 
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
             capitulos.forEach((c) => {
-                let num = typeof c === 'object' ? c.numero : c;
-                let slugC = String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                let selecionado = (String(num) === String(numCap) || slugC === capSlugUrl) ? 'selected' : '';
-                selectEl.innerHTML += `<option value="${slugC}" ${selecionado}>Capítulo ${num}</option>`;
+                let selecionado = String(c.numero) === String(capAtual.numero) ? 'selected' : '';
+                selectEl.innerHTML += `<option value="${c.numero}" ${selecionado}>Capítulo ${c.numero}</option>`;
             });
 
-            let paginas = (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) ? capAtual.paginas : [];
+            let paginas = capAtual.paginas || [];
             const containerPaginas = document.getElementById('paginasContainer');
             if (paginas.length > 0) {
-                containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
+                containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página" class="pagina-manga" loading="lazy">`).join('');
             } else {
                 containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
             }
@@ -639,13 +614,11 @@
             const btnAnterior = document.getElementById('btnAnterior');
             const btnProximo = document.getElementById('btnProximo');
             navFinal.style.display = 'flex';
-            const slugObraId = encodeURIComponent(obraSlugUrl);
+            const nomeObraEncoded = encodeURIComponent(nomeObra);
 
             if (indexAtual > 0) {
                 let capAnt = capitulos[indexAtual - 1];
-                let numAnt = typeof capAnt === 'object' ? capAnt.numero : capAnt;
-                let slugAnt = String(numAnt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                btnAnterior.href = `ler.html?obra=${slugObraId}&cap=${slugAnt}`;
+                btnAnterior.href = `ler.html?nome=${nomeObraEncoded}&cap=${capAnt.numero}`;
                 btnAnterior.classList.remove('disabled');
             } else {
                 btnAnterior.href = '#';
@@ -654,9 +627,7 @@
 
             if (indexAtual < capitulos.length - 1 && indexAtual !== -1) {
                 let capProx = capitulos[indexAtual + 1];
-                let numProx = typeof capProx === 'object' ? capProx.numero : capProx;
-                let slugProx = String(numProx).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                btnProximo.href = `ler.html?obra=${slugObraId}&cap=${slugProx}`;
+                btnProximo.href = `ler.html?nome=${nomeObraEncoded}&cap=${capProx.numero}`;
                 btnProximo.classList.remove('disabled');
             } else {
                 btnProximo.href = '#';
@@ -784,9 +755,9 @@
             return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
         }
 
-        function mudarCapitulo(slugCap) {
-            if (!slugCap || !obraGlobal) return;
-            window.location.href = `ler.html?obra=${encodeURIComponent(obraSlugUrl)}&cap=${slugCap}`;
+        function mudarCapitulo(numCap) {
+            if (!numCap) return;
+            window.location.href = `ler.html?nome=${encodeURIComponent(nomeObra)}&cap=${numCap}`;
         }
 
         function voltarAoTopo(e) {
