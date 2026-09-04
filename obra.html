@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Flower's Nenascan 🌸 - Detalhes da Obra</title>
-    <!-- Importando fonte estilizada para o título de capítulos -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <!-- Fonte estilizada para o título de capítulos -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
@@ -141,16 +141,23 @@
         }
         .btn-acao:hover { background: var(--primary-pink); color: #0b0b0e; box-shadow: 0 0 15px var(--primary-pink); }
 
-        /* BOTÃO FAVORITO COM CORAÇÃO */
+        /* BOTÃO FAVORITO COM CORAÇÃO MAIOR E VAZIO */
         .btn-favorito {
+            background: #181822;
+            border: 1px solid var(--primary-pink);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+        }
+        .btn-favorito:hover {
+            background: #181822;
+            color: var(--primary-pink);
+            box-shadow: 0 0 15px var(--primary-pink);
         }
         .btn-favorito svg {
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             transition: 0.2s;
             fill: none;
             stroke: var(--primary-pink);
@@ -161,10 +168,6 @@
             fill: var(--primary-pink);
             stroke: var(--primary-pink);
             filter: drop-shadow(0 0 10px var(--primary-pink));
-        }
-        .btn-favorito.favoritado {
-            background: rgba(255, 153, 221, 0.15);
-            border-color: var(--primary-pink);
         }
 
         /* BLOCOS GERAIS */
@@ -216,7 +219,6 @@
             gap: 6px;
             margin-top: 4px;
         }
-        /* GÊNEROS CLICÁVEIS */
         .tag-genero {
             background: rgba(255, 153, 221, 0.1);
             border: 1px solid rgba(255, 153, 221, 0.35);
@@ -251,18 +253,52 @@
             padding-bottom: 10px;
         }
         
-        /* TÍTULO CAPÍTULOS COM FONTE ESTILIZADA DIFERENTE E SEM EMOJI DE FLOR */
+        /* TÍTULO CAPÍTULOS COM NOVA FONTE ELEGANTE */
         .section-title { 
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem; 
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem; 
             font-weight: 700; 
             color: var(--primary-pink); 
             text-shadow: var(--neon-glow); 
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* TÍTULO DA TEMPORADA COM EMOJI ROSA */
+        .cabecalho-dir-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* BOTÃO DE ORDENAÇÃO (SETAS) */
+        .btn-ordenar {
+            background: #181822;
+            border: 1px solid rgba(255, 153, 221, 0.4);
+            color: var(--primary-pink);
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+            padding: 0;
+        }
+        .btn-ordenar svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            filter: drop-shadow(0 0 4px rgba(255, 153, 221, 0.6));
+        }
+        .btn-ordenar:hover {
+            background: var(--primary-pink);
+            color: #0b0b0e;
+            box-shadow: 0 0 12px var(--primary-pink);
+        }
+
+        /* TÍTULO DA TEMPORADA */
         .temporada-titulo {
             font-size: 1.05rem;
             font-weight: 800;
@@ -275,7 +311,6 @@
             letter-spacing: 0.5px;
         }
         .temporada-titulo .pasta-icone {
-            /* Deixa o emoji com o tom rosa neon e com brilho */
             filter: drop-shadow(0 0 8px rgba(255, 153, 221, 0.9)) sepia(100%) hue-rotate(270deg) saturate(300%);
             font-size: 1.1rem;
         }
@@ -303,9 +338,10 @@
             align-items: center;
             gap: 14px;
         }
+        /* CAPAS MAIORES E MAIS ALTAS */
         .cap-miniatura {
-            width: 130px;
-            height: 80px;
+            width: 155px;
+            height: 100px;
             object-fit: cover;
             border-radius: 10px;
             border: 1px solid rgba(255, 153, 221, 0.35);
@@ -318,7 +354,7 @@
             gap: 3px;
         }
         .cap-num-principal {
-            font-size: 1.02rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
@@ -341,7 +377,6 @@
             text-shadow: none;
         }
         
-        /* SELO NOVO PERFEITO */
         .selo-novo-cap {
             background: rgba(255, 153, 221, 0.2);
             color: var(--primary-pink);
@@ -374,6 +409,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         const slugUrl = decodeURIComponent(urlParams.get('nome') || '').trim().toLowerCase();
 
+        let obraGlobal = null;
+        let ordemInvertida = false; // Controla se a lista está invertida
+
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
@@ -397,11 +435,10 @@
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                const obra = obras.find(o => criarSlug(o.titulo) === slugUrl || String(o.id).trim().toLowerCase() === slugUrl || String(o.titulo).trim().toLowerCase() === slugUrl);
-                const container = document.getElementById('detalhes-conteudo');
-
-                if (!obra) {
-                    container.innerHTML = `
+                obraGlobal = obras.find(o => criarSlug(o.titulo) === slugUrl || String(o.id).trim().toLowerCase() === slugUrl || String(o.titulo).trim().toLowerCase() === slugUrl);
+                
+                if (!obraGlobal) {
+                    document.getElementById('detalhes-conteudo').innerHTML = `
                         <div style="text-align:center; padding: 60px 20px;">
                             <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
                             <p style="color:var(--text-muted); margin-top: 10px;">O identificador informado na URL não confere com nenhuma obra cadastrada.</p>
@@ -411,159 +448,185 @@
                     return;
                 }
 
-                document.title = `${obra.titulo} - Flower's Nenascan 🌸`;
-                const slugObraId = obra.id || criarSlug(obra.titulo);
-
-                const imagemFundo = obra.banner || obra.capa;
-                const capaFrente = obra.capa || obra.banner;
-
-                let listaCapsHtml = '';
-                let totalCaps = obra.capitulos ? obra.capitulos.length : 0;
-
-                if (obra.capitulos && obra.capitulos.length > 0) {
-                    let temporadaAtual = null;
-
-                    obra.capitulos.forEach((cap, index) => {
-                        let numCap = typeof cap === 'object' ? cap.numero : cap;
-                        let dataCap = typeof cap === 'object' && cap.data ? cap.data : '';
-                        let temporadaCap = typeof cap === 'object' && cap.temporada ? cap.temporada : null;
-
-                        if (temporadaCap && temporadaCap !== temporadaAtual) {
-                            temporadaAtual = temporadaCap;
-                            listaCapsHtml += `<div class="temporada-titulo"><span class="pasta-icone">📁</span> ${temporadaAtual}</div>`;
-                        }
-                        
-                        let capaCap = obra.capa;
-                        if (typeof cap === 'object') {
-                            if (cap.capa) {
-                                capaCap = cap.capa;
-                            } else if (Array.isArray(cap.paginas) && cap.paginas.length > 0) {
-                                capaCap = cap.paginas[0];
-                            }
-                        }
-
-                        let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                        let exibirSelo = ehCapituloNovo(dataCap) || (!dataCap && index === 0);
-                        let seloNovoHtml = exibirSelo ? `<span class="selo-novo-cap">NOVO</span>` : '';
-
-                        listaCapsHtml += `
-                            <a href="ler.html?obra=${slugObraId}&cap=${slugCap}" class="capitulo-item">
-                                <div class="cap-esquerda">
-                                    <img src="${capaCap}" alt="Cap ${numCap}" class="cap-miniatura">
-                                    <div class="cap-info-texto">
-                                        <span class="cap-num-principal">Cap. ${numCap}</span>
-                                        <span class="cap-sub-label">Capítulo ${numCap}</span>
-                                    </div>
-                                </div>
-                                <div class="cap-direita">
-                                    ${seloNovoHtml}
-                                    <span class="cap-data">${dataCap}</span>
-                                </div>
-                            </a>
-                        `;
-                    });
-                } else {
-                    listaCapsHtml = `<p style="color: var(--text-muted); text-align: center; padding: 20px;">Nenhum capítulo lançado ainda.</p>`;
-                }
-
-                let primeiroCapLink = '#';
-                if (obra.capitulos && obra.capitulos.length > 0) {
-                    let primeiro = obra.capitulos[obra.capitulos.length - 1]; 
-                    let numPrimeiro = typeof primeiro === 'object' ? primeiro.numero : primeiro;
-                    let slugPrimeiro = String(numPrimeiro).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                    primeiroCapLink = `ler.html?obra=${slugObraId}&cap=${slugPrimeiro}`;
-                }
-
-                let generosHtml = '<span class="info-value">Não informado</span>';
-                if (obra.generos) {
-                    if (Array.isArray(obra.generos)) {
-                        generosHtml = `<div class="generos-tags">${obra.generos.map(g => `<a href="./?genero=${encodeURIComponent(g)}" class="tag-genero">${g}</a>`).join('')}</div>`;
-                    } else {
-                        generosHtml = `<div class="generos-tags"><a href="./?genero=${encodeURIComponent(obra.generos)}" class="tag-genero">${obra.generos}</a></div>`;
-                    }
-                }
-
-                container.innerHTML = `
-                    <!-- BANNER DE FUNDO -->
-                    <div class="banner-topo" style="background-image: url('${imagemFundo}');">
-                        <div class="caminho-breadcrumb">
-                            <a href="./">Início</a> / <a href="./?aba=obras">Obras</a> / <span>${obra.titulo}</span>
-                        </div>
-                    </div>
-
-                    <!-- CAPA PRINCIPAL -->
-                    <div class="wrapper-capa-principal">
-                        <img src="${capaFrente}" alt="${obra.titulo}" class="obra-capa-large">
-                    </div>
-
-                    <!-- TÍTULO E STATUS -->
-                    <div class="info-principal-central">
-                        <h1 class="obra-titulo-principal">${obra.titulo}</h1>
-                        <div class="tag-status">
-                            <span></span> ${obra.status || 'Em andamento'}
-                        </div>
-                    </div>
-
-                    <!-- BOTÕES DE AÇÃO COM CORAÇÃO NO FAVORITO -->
-                    <div class="acoes-obra">
-                        <a href="${primeiroCapLink}" class="btn-acao">Ler do Começo</a>
-                        <button class="btn-acao btn-favorito" id="btn-favorito" onclick="toggleFavorito('${obra.titulo}')">
-                            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                            <span id="texto-favorito">Favoritar</span>
-                        </button>
-                    </div>
-
-                    <!-- INFORMAÇÕES DA OBRA -->
-                    <div class="secao-bloco">
-                        <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700; margin-bottom: 12px;">Informações</h3>
-                        <div class="info-grid">
-                            <div class="info-item-detalhe" style="grid-column: span 2;">
-                                <span class="info-label">Gêneros</span>
-                                ${generosHtml}
-                            </div>
-                            <div class="info-item-detalhe">
-                                <span class="info-label">Autor</span>
-                                <span class="info-value">${obra.autor || 'Desconhecido'}</span>
-                            </div>
-                            <div class="info-item-detalhe">
-                                <span class="info-label">Artista</span>
-                                <span class="info-value">${obra.artista || 'Desconhecido'}</span>
-                            </div>
-                            <div class="info-item-detalhe">
-                                <span class="info-label">Classificação</span>
-                                <span class="info-value">${obra.classificacao || 'Livre'}</span>
-                            </div>
-                            <div class="info-item-detalhe">
-                                <span class="info-label">Ano</span>
-                                <span class="info-value">${obra.ano || '2026'}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SINOPSE -->
-                    <div class="secao-bloco">
-                        <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700;">Sinopse</h3>
-                        <p class="sinopse-texto">${obra.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
-                    </div>
-
-                    <!-- CAPÍTULOS -->
-                    <div class="secao-capitulos-solta">
-                        <div class="secao-cabecalho-caps">
-                            <h3 class="section-title">Capítulos</h3>
-                            <span style="font-size: 0.82rem; color: var(--text-muted);">${totalCaps} capítulos</span>
-                        </div>
-                        <div class="lista-capitulos">
-                            ${listaCapsHtml}
-                        </div>
-                    </div>
-                `;
-
-                atualizarEstadoFavorito(obra.titulo);
+                document.title = `${obraGlobal.titulo} - Flower's Nenascan 🌸`;
+                renderizarPagina();
             })
             .catch(err => {
                 console.error("Erro ao carregar detalhes:", err);
                 document.getElementById('detalhes-conteudo').innerHTML = `<p style="color:red; text-align:center; padding: 40px;">Erro ao carregar os dados da obra.</p>`;
             });
+
+        function renderizarPagina() {
+            if (!obraGlobal) return;
+            const container = document.getElementById('detalhes-conteudo');
+            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
+
+            const imagemFundo = obraGlobal.banner || obraGlobal.capa;
+            const capaFrente = obraGlobal.capa || obraGlobal.banner;
+
+            let listaCapsHtml = '';
+            let totalCaps = obraGlobal.capitulos ? obraGlobal.capitulos.length : 0;
+
+            if (obraGlobal.capitulos && obraGlobal.capitulos.length > 0) {
+                // Cria uma cópia dos capítulos para poder inverter sem alterar o original
+                let capsParaExibir = [...obraGlobal.capitulos];
+                if (ordemInvertida) {
+                    capsParaExibir.reverse();
+                }
+
+                let temporadaAtual = null;
+
+                capsParaExibir.forEach((cap, index) => {
+                    let numCap = typeof cap === 'object' ? cap.numero : cap;
+                    let dataCap = typeof cap === 'object' && cap.data ? cap.data : '';
+                    let temporadaCap = typeof cap === 'object' && cap.temporada ? cap.temporada : null;
+
+                    if (temporadaCap && temporadaCap !== temporadaAtual) {
+                        temporadaAtual = temporadaCap;
+                        listaCapsHtml += `<div class="temporada-titulo"><span class="pasta-icone">📁</span> ${temporadaAtual}</div>`;
+                    }
+                    
+                    let capaCap = obraGlobal.capa;
+                    if (typeof cap === 'object') {
+                        if (cap.capa) {
+                            capaCap = cap.capa;
+                        } else if (Array.isArray(cap.paginas) && cap.paginas.length > 0) {
+                            capaCap = cap.paginas[0];
+                        }
+                    }
+
+                    let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    let exibirSelo = ehCapituloNovo(dataCap) || (!dataCap && index === 0 && !ordemInvertida);
+                    let seloNovoHtml = exibirSelo ? `<span class="selo-novo-cap">NOVO</span>` : '';
+
+                    listaCapsHtml += `
+                        <a href="ler.html?obra=${slugObraId}&cap=${slugCap}" class="capitulo-item">
+                            <div class="cap-esquerda">
+                                <img src="${capaCap}" alt="Cap ${numCap}" class="cap-miniatura">
+                                <div class="cap-info-texto">
+                                    <span class="cap-num-principal">Cap. ${numCap}</span>
+                                    <span class="cap-sub-label">Capítulo ${numCap}</span>
+                                </div>
+                            </div>
+                            <div class="cap-direita">
+                                ${seloNovoHtml}
+                                <span class="cap-data">${dataCap}</span>
+                            </div>
+                        </a>
+                    `;
+                });
+            } else {
+                listaCapsHtml = `<p style="color: var(--text-muted); text-align: center; padding: 20px;">Nenhum capítulo lançado ainda.</p>`;
+            }
+
+            let primeiroCapLink = '#';
+            if (obraGlobal.capitulos && obraGlobal.capitulos.length > 0) {
+                // Pega o primeiro ou último dependendo da ordem atual lógica de leitura
+                let primeiro = obraGlobal.capitulos[obraGlobal.capitulos.length - 1]; 
+                let numPrimeiro = typeof primeiro === 'object' ? primeiro.numero : primeiro;
+                let slugPrimeiro = String(numPrimeiro).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                primeiroCapLink = `ler.html?obra=${slugObraId}&cap=${slugPrimeiro}`;
+            }
+
+            let generosHtml = '<span class="info-value">Não informado</span>';
+            if (obraGlobal.generos) {
+                if (Array.isArray(obraGlobal.generos)) {
+                    generosHtml = `<div class="generos-tags">${obraGlobal.generos.map(g => `<a href="./?aba=obras&genero=${encodeURIComponent(g)}" class="tag-genero">${g}</a>`).join('')}</div>`;
+                } else {
+                    generosHtml = `<div class="generos-tags"><a href="./?aba=obras&genero=${encodeURIComponent(obraGlobal.generos)}" class="tag-genero">${obraGlobal.generos}</a></div>`;
+                }
+            }
+
+            container.innerHTML = `
+                <!-- BANNER DE FUNDO -->
+                <div class="banner-topo" style="background-image: url('${imagemFundo}');">
+                    <div class="caminho-breadcrumb">
+                        <a href="./">Início</a> / <a href="./?aba=obras">Obras</a> / <span>${obraGlobal.titulo}</span>
+                    </div>
+                </div>
+
+                <!-- CAPA PRINCIPAL -->
+                <div class="wrapper-capa-principal">
+                    <img src="${capaFrente}" alt="${obraGlobal.titulo}" class="obra-capa-large">
+                </div>
+
+                <!-- TÍTULO E STATUS -->
+                <div class="info-principal-central">
+                    <h1 class="obra-titulo-principal">${obraGlobal.titulo}</h1>
+                    <div class="tag-status">
+                        <span></span> ${obraGlobal.status || 'Em andamento'}
+                    </div>
+                </div>
+
+                <!-- BOTÕES DE AÇÃO -->
+                <div class="acoes-obra">
+                    <a href="${primeiroCapLink}" class="btn-acao">Ler do Começo</a>
+                    <button class="btn-acao btn-favorito" id="btn-favorito" onclick="toggleFavorito('${obraGlobal.titulo}')">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span id="texto-favorito">Favoritar</span>
+                    </button>
+                </div>
+
+                <!-- INFORMAÇÕES DA OBRA -->
+                <div class="secao-bloco">
+                    <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700; margin-bottom: 12px;">Informações</h3>
+                    <div class="info-grid">
+                        <div class="info-item-detalhe" style="grid-column: span 2;">
+                            <span class="info-label">Gêneros</span>
+                            ${generosHtml}
+                        </div>
+                        <div class="info-item-detalhe">
+                            <span class="info-label">Autor</span>
+                            <span class="info-value">${obraGlobal.autor || 'Desconhecido'}</span>
+                        </div>
+                        <div class="info-item-detalhe">
+                            <span class="info-label">Artista</span>
+                            <span class="info-value">${obraGlobal.artista || 'Desconhecido'}</span>
+                        </div>
+                        <div class="info-item-detalhe">
+                            <span class="info-label">Classificação</span>
+                            <span class="info-value">${obraGlobal.classificacao || 'Livre'}</span>
+                        </div>
+                        <div class="info-item-detalhe">
+                            <span class="info-label">Ano</span>
+                            <span class="info-value">${obraGlobal.ano || '2026'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SINOPSE -->
+                <div class="secao-bloco">
+                    <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700;">Sinopse</h3>
+                    <p class="sinopse-texto">${obraGlobal.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
+                </div>
+
+                <!-- CAPÍTULOS -->
+                <div class="secao-capitulos-solta">
+                    <div class="secao-cabecalho-caps">
+                        <h3 class="section-title">Capítulos</h3>
+                        <div class="cabecalho-dir-container">
+                            <button class="btn-ordenar" onclick="inverterOrdem()" title="Inverter Ordem">
+                                <!-- Seta para cima -->
+                                <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
+                                <!-- Seta para baixo -->
+                                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                            </button>
+                            <span style="font-size: 0.82rem; color: var(--text-muted);">${totalCaps} capítulos</span>
+                        </div>
+                    </div>
+                    <div class="lista-capitulos">
+                        ${listaCapsHtml}
+                    </div>
+                </div>
+            `;
+
+            atualizarEstadoFavorito(obraGlobal.titulo);
+        }
+
+        function inverterOrdem() {
+            ordemInvertida = !ordemInvertida;
+            renderizarPagina();
+        }
 
         function toggleFavorito(obraTitulo) {
             let favoritos = [];
