@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -212,7 +212,22 @@
             font-weight: 700;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+        
+        /* BANDEIRINHAS CIRCULARES */
+        .bandeira-tipo {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(255, 153, 221, 0.6);
+            display: inline-block;
+            box-shadow: 0 0 5px rgba(255, 153, 221, 0.5);
+        }
+
         .generos-tags {
             display: flex;
             flex-wrap: wrap;
@@ -227,15 +242,7 @@
             font-size: 0.78rem;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
-            text-decoration: none;
-            transition: 0.2s;
             display: inline-block;
-        }
-        .tag-genero:hover {
-            background: var(--primary-pink);
-            color: #0b0b0e;
-            box-shadow: 0 0 12px var(--primary-pink);
-            text-shadow: none;
         }
 
         /* ÁREA DE CAPÍTULOS */
@@ -268,14 +275,14 @@
             gap: 12px;
         }
 
-        /* BOTÃO DE ORDENAÇÃO COM SETAS MAIORES */
+        /* BOTÃO DE ORDENAÇÃO (CAIXA MANTIDA, APENAS AS SETINHAS AUMENTADAS) */
         .btn-ordenar {
             background: #181822;
             border: 1px solid rgba(255, 153, 221, 0.5);
             color: var(--primary-pink);
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -284,13 +291,13 @@
             transition: 0.2s;
             box-shadow: var(--shadow);
             padding: 0;
-            gap: 2px;
+            gap: 1px;
         }
         .btn-ordenar svg {
-            width: 18px;
-            height: 18px;
+            width: 15px;
+            height: 15px;
             fill: currentColor;
-            filter: drop-shadow(0 0 5px rgba(255, 153, 221, 0.7));
+            filter: drop-shadow(0 0 6px rgba(255, 153, 221, 0.9));
         }
         .btn-ordenar:hover {
             background: var(--primary-pink);
@@ -415,6 +422,20 @@
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
 
+        function obterBandeiraTipo(tipo) {
+            if (!tipo) return '';
+            let t = String(tipo).toLowerCase().trim();
+            // Mapeamento de bandeiras por país de origem do formato
+            let sigla = '';
+            if (t.includes('manhwa')) sigla = 'kr'; // Coreia do Sul
+            else if (t.includes('manga')) sigla = 'jp'; // Japão
+            else if (t.includes('manhua')) sigla = 'cn'; // China
+            else if (t.includes('comic') || t.includes('webtoon')) sigla = 'us'; // EUA / Global padrão
+
+            if (!sigla) return '';
+            return `<img src="https://flagcdn.com/w40/${sigla}.png" alt="${tipo}" class="bandeira-tipo" title="${tipo}">`;
+        }
+
         function ehCapituloNovo(dataStr) {
             if (!dataStr) return false;
             let partes = dataStr.split('/');
@@ -528,11 +549,14 @@
             let generosHtml = '<span class="info-value">Não informado</span>';
             if (obraGlobal.generos) {
                 if (Array.isArray(obraGlobal.generos)) {
-                    generosHtml = `<div class="generos-tags">${obraGlobal.generos.map(g => `<a href="./?genero=${encodeURIComponent(g)}" class="tag-genero">${g}</a>`).join('')}</div>`;
+                    generosHtml = `<div class="generos-tags">${obraGlobal.generos.map(g => `<span class="tag-genero">${g}</span>`).join('')}</div>`;
                 } else {
-                    generosHtml = `<div class="generos-tags"><a href="./?genero=${encodeURIComponent(obraGlobal.generos)}" class="tag-genero">${obraGlobal.generos}</a></div>`;
+                    generosHtml = `<div class="generos-tags"><span class="tag-genero">${obraGlobal.generos}</span></div>`;
                 }
             }
+
+            let tipoObra = obraGlobal.tipo || 'Manhwa';
+            let bandeiraHtml = obterBandeiraTipo(tipoObra);
 
             container.innerHTML = `
                 <!-- BANNER DE FUNDO -->
@@ -568,6 +592,14 @@
                 <div class="secao-bloco">
                     <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700; margin-bottom: 12px;">Informações</h3>
                     <div class="info-grid">
+                        <div class="info-item-detalhe">
+                            <span class="info-label">Tipo</span>
+                            <span class="info-value">${bandeiraHtml} ${tipoObra}</span>
+                        </div>
+                        <div class="info-item-detalhe">
+                            <span class="info-label">Status</span>
+                            <span class="info-value">${obraGlobal.status || 'Em andamento'}</span>
+                        </div>
                         <div class="info-item-detalhe" style="grid-column: span 2;">
                             <span class="info-label">Gêneros</span>
                             ${generosHtml}
@@ -657,3 +689,4 @@
     </script>
 </body>
 </html>
+        
