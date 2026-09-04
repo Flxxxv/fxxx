@@ -321,12 +321,8 @@
             padding: 12px 16px;
             max-height: 200px;
         }
-        .regras-conteudo ul {
-            padding-left: 20px;
-        }
-        .regras-conteudo li {
-            margin-bottom: 4px;
-        }
+        .regras-conteudo ul { padding-left: 20px; }
+        .regras-conteudo li { margin-bottom: 4px; }
 
         /* FORMULÁRIO E LISTA DE COMENTÁRIOS */
         .form-comentario {
@@ -457,10 +453,9 @@
     </div>
 
     <!-- PAINEL DE REAÇÕES PERSONALIZADAS -->
-    <div class="secao-reamoes" id="secaoReacoes" style="display: none;">
+    <div class="secao-reamoes" id="secaoReacoes" style="display: block;">
         <div class="titulo-secao">O que achou deste capítulo?</div>
         <div class="grid-reamoes" id="gridReacoes">
-            <!-- Insira aqui os links das suas imagens e textos personalizados -->
             <div class="item-reacao" onclick="votarReacao('amei')">
                 <img src="https://files.catbox.moe/fjfbc8.png" alt="Amei">
                 <span class="texto-reacao">ameei</span>
@@ -523,10 +518,19 @@
     </a>
 
     <script>
-        // Supabase configuração (substitua pelas suas chaves ou use as mesmas que já usa no projeto)
-        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
-        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
-        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        // SUPABASE: Substitua pelas suas credenciais reais caso queira usar na nuvem.
+        // Se deixar em branco, o site funcionará normalmente sem travar o leitor.
+        const SUPABASE_URL = '';
+        const SUPABASE_ANON_KEY = '';
+        
+        let supabase = null;
+        try {
+            if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.log("Supabase não inicializado:", e);
+        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim();
@@ -558,6 +562,7 @@
                     document.getElementById('paginasContainer').innerHTML = `
                         <div style="text-align:center; padding: 60px 20px;">
                             <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
+                            <p style="color:var(--primary-pink); margin-top: 10px; opacity:0.8;">Verifique o link ou se a obra está cadastrada no obras.json</p>
                             <a href="./" class="obra-titulo-link" style="display:inline-block; margin-top:20px; font-size:1rem;">Voltar ao Início</a>
                         </div>
                     `;
@@ -568,7 +573,8 @@
                 carregarLeitor();
             })
             .catch(err => {
-                console.error("Erro ao carregar dados:", err);
+                console.error("Erro ao carregar obras.json:", err);
+                document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar os dados das obras.</p>`;
             });
 
         function irParaDetalhes() {
@@ -600,7 +606,11 @@
                 capAtual = capitulos[0];
             }
 
-            if (!capAtual) return;
+            if (!capAtual) {
+                document.getElementById('textoCapituloReal').textContent = `CAPÍTULO --`;
+                document.getElementById('paginasContainer').innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 50px;">Capítulo não encontrado.</p>`;
+                return;
+            }
 
             let numCap = typeof capAtual === 'object' ? capAtual.numero : capAtual;
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
@@ -617,9 +627,9 @@
             let paginas = (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) ? capAtual.paginas : [];
             const containerPaginas = document.getElementById('paginasContainer');
             if (paginas.length > 0) {
-                containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página" class="pagina-manga" loading="lazy">`).join('');
+                containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
             } else {
-                containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada.</p>`;
+                containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
             }
 
             const navFinal = document.getElementById('navegacaoFinal');
@@ -631,7 +641,8 @@
             if (indexAtual > 0) {
                 let capAnt = capitulos[indexAtual - 1];
                 let numAnt = typeof capAnt === 'object' ? capAnt.numero : capAnt;
-                btnAnterior.href = `ler.html?obra=${slugObraId}&cap=${String(numAnt).toLowerCase().replace(/\s+/g, '-')}`;
+                let slugAnt = String(numAnt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                btnAnterior.href = `ler.html?obra=${slugObraId}&cap=${slugAnt}`;
                 btnAnterior.classList.remove('disabled');
             } else {
                 btnAnterior.href = '#';
@@ -641,32 +652,35 @@
             if (indexAtual < capitulos.length - 1 && indexAtual !== -1) {
                 let capProx = capitulos[indexAtual + 1];
                 let numProx = typeof capProx === 'object' ? capProx.numero : capProx;
-                btnProximo.href = `ler.html?obra=${slugObraId}&cap=${String(numProx).toLowerCase().replace(/\s+/g, '-')}`;
+                let slugProx = String(numProx).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                btnProximo.href = `ler.html?obra=${slugObraId}&cap=${slugProx}`;
                 btnProximo.classList.remove('disabled');
             } else {
                 btnProximo.href = '#';
                 btnProximo.classList.add('disabled');
             }
 
-            // Exibir painel de reações e carregar dados do Supabase
-            document.getElementById('secaoReacoes').style.display = 'block';
+            // Carregar dados remotos se o Supabase estiver configurado
             carregarReacoes();
             carregarComentarios();
         }
 
-        // --- SUPABASE: FUNÇÕES DE REAÇÕES E COMENTÁRIOS ---
         async function carregarReacoes() {
             if (!supabase) return;
-            let { data, error } = await supabase
-                .from('reacoes_capitulos')
-                .select('*')
-                .eq('capitulo_id', idCapituloUnico);
+            try {
+                let { data } = await supabase
+                    .from('reacoes_capitulos')
+                    .select('*')
+                    .eq('capitulo_id', idCapituloUnico);
 
-            if (data && data.length > 0) {
-                data.forEach(row => {
-                    let el = document.getElementById(`cnt-${row.tipo}`);
-                    if (el) el.textContent = row.quantidade;
-                });
+                if (data && data.length > 0) {
+                    data.forEach(row => {
+                        let el = document.getElementById(`cnt-${row.tipo}`);
+                        if (el) el.textContent = row.quantidade;
+                    });
+                }
+            } catch (e) {
+                console.log("Erro ao carregar reações:", e);
             }
         }
 
@@ -677,54 +691,67 @@
                 return;
             }
             if (!supabase) {
-                alert("Supabase não configurado.");
+                // Modo local simulado caso o Supabase não esteja configurado ainda
+                let el = document.getElementById(`cnt-${tipo}`);
+                if (el) {
+                    let atual = parseInt(el.textContent) || 0;
+                    el.textContent = atual + 1;
+                    localStorage.setItem(chaveLocal, 'true');
+                }
                 return;
             }
 
-            // Busca valor atual no banco
-            let { data } = await supabase
-                .from('reacoes_capitulos')
-                .select('quantidade')
-                .eq('capitulo_id', idCapituloUnico)
-                .eq('tipo', tipo)
-                .single();
+            try {
+                let { data } = await supabase
+                    .from('reacoes_capitulos')
+                    .select('quantidade')
+                    .eq('capitulo_id', idCapituloUnico)
+                    .eq('tipo', tipo)
+                    .single();
 
-            let novaQtd = (data ? data.quantidade : 0) + 1;
+                let novaQtd = (data ? data.quantidade : 0) + 1;
 
-            let { error } = await supabase
-                .from('reacoes_capitulos')
-                .upsert({ capitulo_id: idCapituloUnico, tipo: tipo, quantidade: novaQtd }, { onConflict: 'capitulo_id,tipo' });
+                let { error } = await supabase
+                    .from('reacoes_capitulos')
+                    .upsert({ capitulo_id: idCapituloUnico, tipo: tipo, quantidade: novaQtd }, { onConflict: 'capitulo_id,tipo' });
 
-            if (!error) {
-                localStorage.setItem(chaveLocal, 'true');
-                document.getElementById(`cnt-${tipo}`).textContent = novaQtd;
+                if (!error) {
+                    localStorage.setItem(chaveLocal, 'true');
+                    document.getElementById(`cnt-${tipo}`).textContent = novaQtd;
+                }
+            } catch (e) {
+                console.log("Erro ao registrar voto:", e);
             }
         }
 
         async function carregarComentarios() {
             const lista = document.getElementById('listaComentarios');
             if (!supabase) {
-                lista.innerHTML = `<p style="text-align:center; color:#FF99DD; font-size:0.8rem;">Configure o Supabase para exibir os comentários.</p>`;
+                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário cadastrado (Configure o Supabase para ativar os comentários na nuvem).</p>`;
                 return;
             }
 
-            let { data, error } = await supabase
-                .from('comentarios_capitulos')
-                .select('*')
-                .eq('capitulo_id', idCapituloUnico)
-                .order('created_at', { ascending: false });
+            try {
+                let { data } = await supabase
+                    .from('comentarios_capitulos')
+                    .select('*')
+                    .eq('capitulo_id', idCapituloUnico)
+                    .order('created_at', { ascending: false });
 
-            if (!data || data.length === 0) {
-                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário ainda. Seja o primeiro a comentar!</p>`;
-                return;
+                if (!data || data.length === 0) {
+                    lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário ainda. Seja o primeiro a comentar!</p>`;
+                    return;
+                }
+
+                lista.innerHTML = data.map(c => `
+                    <div class="comentario-card">
+                        <div class="comentario-autor">🌸 ${escapeHtml(c.nome)}</div>
+                        <div class="comentario-texto">${escapeHtml(c.mensagem)}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                lista.innerHTML = `<p style="text-align: center; color: #FF99DD; font-size: 0.8rem; padding: 10px;">Erro ao carregar comentários do banco de dados.</p>`;
             }
-
-            lista.innerHTML = data.map(c => `
-                <div class="comentario-card">
-                    <div class="comentario-autor">🌸 ${escapeHtml(c.nome)}</div>
-                    <div class="comentario-texto">${escapeHtml(c.mensagem)}</div>
-                </div>
-            `).join('');
         }
 
         async function enviarComentario() {
@@ -736,7 +763,7 @@
                 return;
             }
             if (!supabase) {
-                alert("Supabase não configurado.");
+                alert("O Supabase precisa estar configurado para salvar os comentários na nuvem!");
                 return;
             }
 
