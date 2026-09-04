@@ -35,7 +35,7 @@
 
         .leitor-topo {
             background-color: #000000;
-            padding: 18px 16px;
+            padding: 16px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -44,57 +44,55 @@
             z-index: 50;
         }
 
+        /* NOME DA OBRA EM CIMA (PEQUENO E CLICÁVEL) */
+        .obra-titulo-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255, 153, 221, 0.75);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .obra-titulo-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px var(--primary-pink);
+        }
+
+        /* TÍTULO DO CAPÍTULO */
         .capitulo-titulo-topo {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #ffffff;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             text-align: center;
             width: 100%;
-            text-shadow: 0 0 12px var(--primary-pink);
+            text-shadow: 0 0 10px var(--primary-pink);
             background: linear-gradient(135deg, #ffffff 30%, var(--primary-pink) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* CONTROLES DO TOPO (AGORA SÓ COM O SELECT CENTRALIZADO) */
         .leitor-controles {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-width: 480px;
-            gap: 12px;
-        }
-
-        .btn-voltar-obra {
-            background: #000000;
-            color: #FF99DD;
-            border: 2px solid var(--primary-pink);
-            padding: 7px 20px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 0 0 10px rgba(255, 153, 221, 0.3);
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: lowercase;
-            white-space: nowrap;
-        }
-        .btn-voltar-obra:hover {
-            background: rgba(255, 153, 221, 0.15);
-            box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
+            max-width: 320px;
         }
 
         .dropdown-container {
             position: relative;
-            flex: 1;
-            max-width: 230px;
+            width: 100%;
         }
         .select-capitulos {
             width: 100%;
@@ -221,11 +219,13 @@
     </div>
 
     <div class="leitor-topo">
+        <!-- Nome da obra pequeno e clicável em cima -->
+        <a href="#" class="obra-titulo-link" id="linkObraTopo">Carregando obra...</a>
+        
+        <!-- Título do Capítulo -->
         <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
+
         <div class="leitor-controles">
-            <!-- Botão de voltar fixo que aponta diretamente para a página de detalhes da obra -->
-            <a href="#" class="btn-voltar-obra" id="btnVoltarObra">voltar</a>
-            
             <div class="dropdown-container">
                 <select class="select-capitulos" id="selectCapitulos" onchange="mudarCapitulo(this.value)">
                     <option value="" disabled selected>Lista de Capítulos</option>
@@ -261,7 +261,6 @@
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                // Tenta encontrar a obra no JSON usando o parâmetro que veio na URL
                 obraGlobal = obras.find(o => 
                     criarSlug(o.titulo) === obraSlugUrl.toLowerCase() || 
                     String(o.id).trim() === obraSlugUrl || 
@@ -273,16 +272,17 @@
                         <div style="text-align:center; padding: 60px 20px;">
                             <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
                             <p style="color:var(--primary-pink); margin-top: 10px; opacity:0.8;">Não foi possível carregar os dados desta obra.</p>
-                            <a href="./" class="btn-voltar-obra" style="display:inline-flex; margin-top:20px;">Voltar ao Início</a>
+                            <a href="./" class="obra-titulo-link" style="display:inline-block; margin-top:20px; font-size:1rem;">Voltar ao Início</a>
                         </div>
                     `;
                     return;
                 }
 
-                // DEFINIÇÃO GARANTIDA DO LINK DE VOLTAR:
-                // Usa o ID oficial da obra ou cria o slug seguro do título para combinar com detalhes.html?nome=
+                // Configura o nome da obra e o link direto para a página de detalhes
                 const identificadorObra = obraGlobal.id || criarSlug(obraGlobal.titulo);
-                document.getElementById('btnVoltarObra').href = `detalhes.html?nome=${encodeURIComponent(identificadorObra)}`;
+                const linkObraEl = document.getElementById('linkObraTopo');
+                linkObraEl.textContent = obraGlobal.titulo;
+                linkObraEl.href = `detalhes.html?nome=${encodeURIComponent(identificadorObra)}`;
 
                 carregarLeitor();
             })
