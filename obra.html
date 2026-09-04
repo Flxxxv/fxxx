@@ -27,13 +27,13 @@
         .icon-btn svg { width: 22px; height: 22px; fill: currentColor; filter: drop-shadow(0 0 6px rgba(255, 153, 221, 0.7)); }
         .icon-btn:hover { background: var(--primary-pink); color: #0b0b0e; box-shadow: 0 0 15px var(--primary-pink); }
 
-        .obra-container { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; }
+        .obra-container { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-        /* BANNER DE FUNDO ESTILO CAPA ATRÁS */
+        /* BANNER DE FUNDO MENOS ESCURO */
         .banner-topo {
             position: relative;
             width: 100%;
-            height: 220px;
+            height: 250px;
             background-size: cover;
             background-position: center;
             overflow: hidden;
@@ -42,7 +42,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(11,11,14,0.4), #0b0b0e);
+            background: linear-gradient(to bottom, rgba(11,11,14,0.15), rgba(11,11,14,0.75) 90%, #0b0b0e);
         }
         .caminho-breadcrumb {
             position: relative;
@@ -51,30 +51,33 @@
             font-size: 0.85rem;
             color: var(--text-muted);
             text-shadow: var(--neon-glow);
+            width: 100%;
+            max-width: 650px;
         }
         .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
 
-        /* CAPA PRINCIPAL NA FRENTE */
+        /* CAPA PRINCIPAL MAIOR E CENTRALIZADA */
         .wrapper-capa-principal {
             display: flex;
             justify-content: center;
-            margin-top: -110px;
+            width: 100%;
+            margin-top: -135px;
             position: relative;
             z-index: 5;
             padding: 0 15px;
         }
         .obra-capa-large {
-            width: 230px;
-            height: 330px;
+            width: 260px;
+            height: 370px;
             object-fit: cover;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 153, 221, 0.6);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8), var(--neon-glow);
+            border-radius: 18px;
+            border: 2px solid rgba(255, 153, 221, 0.7);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.85), var(--neon-glow);
             background: #14141a;
         }
 
-        /* TÍTULO E METADADOS CENTRALIZADOS */
+        /* TÍTULO E STATUS CENTRALIZADOS */
         .info-principal-central {
             text-align: center;
             padding: 20px 20px 10px 20px;
@@ -82,9 +85,10 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            width: 100%;
         }
         .obra-titulo-principal {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
@@ -117,8 +121,8 @@
             background: #181822;
             border: 1px solid var(--primary-pink);
             color: var(--primary-pink);
-            padding: 10px 20px;
-            border-radius: 22px;
+            padding: 11px 20px;
+            border-radius: 24px;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
@@ -130,12 +134,12 @@
             font-size: 0.9rem;
             text-decoration: none;
             flex: 1;
-            max-width: 180px;
+            max-width: 190px;
             box-shadow: var(--shadow);
         }
         .btn-acao:hover { background: var(--primary-pink); color: #0b0b0e; box-shadow: 0 0 15px var(--primary-pink); }
 
-        /* SINOPSE */
+        /* BLOCOS (SINOPSE, DETALHES, CAPÍTULOS) */
         .secao-bloco {
             background: var(--card-bg);
             border-radius: 16px;
@@ -143,6 +147,7 @@
             margin: 15px 15px 0 15px;
             border: 1px solid rgba(255, 153, 221, 0.3);
             box-shadow: var(--shadow);
+            width: calc(100% - 30px);
         }
         .sinopse-texto {
             font-size: 0.9rem;
@@ -152,7 +157,48 @@
             text-shadow: none;
         }
 
-        /* CAPÍTULOS ESTILO DA IMAGEM */
+        /* GRID DE INFORMAÇÕES EXTRAS (Gêneros, Autor, etc) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .info-item-detalhe {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
+        .info-value {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+        }
+        .generos-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .tag-genero {
+            background: rgba(255, 153, 221, 0.1);
+            border: 1px solid rgba(255, 153, 221, 0.3);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+        }
+
+        /* CAPÍTULOS MAIORES E CORRIGIDOS */
         .secao-cabecalho-caps {
             display: flex;
             justify-content: space-between;
@@ -166,8 +212,8 @@
         .capitulo-item {
             background: #121219;
             border: 1px solid rgba(255, 153, 221, 0.3);
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -184,28 +230,29 @@
         .cap-esquerda {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
         .cap-miniatura {
-            width: 55px;
-            height: 70px;
+            width: 75px;
+            height: 95px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 153, 221, 0.4);
+            background: #1a1a24;
         }
         .cap-info-texto {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
         .cap-num-principal {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 1.05rem;
+            font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
         }
         .cap-sub-label {
-            font-size: 0.83rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             text-shadow: none;
         }
@@ -222,9 +269,9 @@
         .selo-novo-cap {
             background-color: var(--primary-pink);
             color: #0b0b0e;
-            font-size: 0.62rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            padding: 2px 6px;
+            padding: 3px 7px;
             border-radius: 4px;
             letter-spacing: 0.5px;
             box-shadow: var(--neon-glow);
@@ -274,6 +321,11 @@
                 document.title = `${obra.titulo} - Flower's Nenascan 🌸`;
                 const slugObraId = obra.id || criarSlug(obra.titulo);
 
+                // Imagem de fundo: Usa obra.banner se existir, senão usa obra.capa
+                const imagemFundo = obra.banner || obra.capa;
+                // Imagem da capa principal da frente: Usa obra.capaPrincipal se existir, senão usa obra.capa
+                const capaFrente = obra.capaPrincipal || obra.capa;
+
                 let listaCapsHtml = '';
                 let totalCaps = obra.capitulos ? obra.capitulos.length : 0;
 
@@ -281,11 +333,19 @@
                     obra.capitulos.forEach((cap, index) => {
                         let numCap = typeof cap === 'object' ? cap.numero : cap;
                         let dataCap = typeof cap === 'object' && cap.data ? cap.data : '';
-                        // Se o capítulo tiver uma imagem/capa própria cadastrada, usa ela. Se não, usa a capa principal da obra.
-                        let capaCap = (typeof cap === 'object' && cap.capa) ? cap.capa : obra.capa;
-                        let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
                         
-                        // O primeiro da lista (índice 0) ganha a tag NOVO se desejar, ou mantém conforme sua lógica
+                        // Busca a primeira imagem de dentro do capítulo para usar de miniatura. 
+                        // Se não tiver páginas cadastradas, usa a capa da obra como alternativa.
+                        let capaCap = obra.capa;
+                        if (typeof cap === 'object') {
+                            if (cap.capa) {
+                                capaCap = cap.capa;
+                            } else if (Array.isArray(cap.paginas) && cap.paginas.length > 0) {
+                                capaCap = cap.paginas[0];
+                            }
+                        }
+
+                        let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
                         let seloNovoHtml = (index === 0) ? `<span class="selo-novo-cap">NOVO</span>` : '';
 
                         listaCapsHtml += `
@@ -316,17 +376,27 @@
                     primeiroCapLink = `ler.html?obra=${slugObraId}&cap=${slugPrimeiro}`;
                 }
 
+                // Renderiza as tags de gêneros se houver
+                let generosHtml = '<span class="info-value">Não informado</span>';
+                if (obra.generos) {
+                    if (Array.isArray(obra.generos)) {
+                        generosHtml = `<div class="generos-tags">${obra.generos.map(g => `<span class="tag-genero">${g}</span>`).join('')}</div>`;
+                    } else {
+                        generosHtml = `<span class="info-value">${obra.generos}</span>`;
+                    }
+                }
+
                 container.innerHTML = `
-                    <!-- BANNER DE FUNDO ATRÁS -->
-                    <div class="banner-topo" style="background-image: url('${obra.capa}');">
+                    <!-- BANNER DE FUNDO (MENOS ESCURO) -->
+                    <div class="banner-topo" style="background-image: url('${imagemFundo}');">
                         <div class="caminho-breadcrumb">
                             <a href="./">Início</a> / <a href="./?aba=obras">Obras</a> / <span>${obra.titulo}</span>
                         </div>
                     </div>
 
-                    <!-- CAPA PRINCIPAL NA FRENTE -->
+                    <!-- CAPA PRINCIPAL MAIOR E CENTRALIZADA -->
                     <div class="wrapper-capa-principal">
-                        <img src="${obra.capa}" alt="${obra.titulo}" class="obra-capa-large">
+                        <img src="${capaFrente}" alt="${obra.titulo}" class="obra-capa-large">
                     </div>
 
                     <!-- TÍTULO E STATUS CENTRALIZADOS -->
@@ -347,6 +417,33 @@
                     <div class="secao-bloco">
                         <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700;">Sinopse</h3>
                         <p class="sinopse-texto">${obra.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
+                    </div>
+
+                    <!-- INFORMAÇÕES DA OBRA (Gêneros, Autor, Artista, Classificação) -->
+                    <div class="secao-bloco">
+                        <h3 style="font-size: 1rem; color: var(--primary-pink); font-weight: 700; margin-bottom: 12px;">Informações</h3>
+                        <div class="info-grid">
+                            <div class="info-item-detalhe" style="grid-column: span 2;">
+                                <span class="info-label">Gêneros</span>
+                                ${generosHtml}
+                            </div>
+                            <div class="info-item-detalhe">
+                                <span class="info-label">Autor</span>
+                                <span class="info-value">${obra.autor || 'Desconhecido'}</span>
+                            </div>
+                            <div class="info-item-detalhe">
+                                <span class="info-label">Artista</span>
+                                <span class="info-value">${obra.artista || 'Desconhecido'}</span>
+                            </div>
+                            <div class="info-item-detalhe">
+                                <span class="info-label">Classificação</span>
+                                <span class="info-value">${obra.classificacao || 'Livre'}</span>
+                            </div>
+                            <div class="info-item-detalhe">
+                                <span class="info-label">Ano</span>
+                                <span class="info-value">${obra.ano || '2026'}</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- CAPÍTULOS -->
