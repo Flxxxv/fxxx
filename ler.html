@@ -44,7 +44,6 @@
             z-index: 50;
         }
 
-        /* NOME DA OBRA NO TOPO (CENTRALIZADO) */
         .obra-titulo-link {
             font-size: 0.85rem;
             font-weight: 600;
@@ -66,7 +65,6 @@
             text-shadow: 0 0 8px var(--primary-pink);
         }
 
-        /* LINHA DO CAPÍTULO E A CASINHA NO CANTO DIREITO */
         .capitulo-container-topo {
             position: relative;
             width: 100%;
@@ -91,7 +89,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* CASINHA MAIOR E ENCOSTADA NA LATERAL DIREITA DO BLOCO */
         .btn-casinha {
             position: absolute;
             right: 4px;
@@ -106,19 +103,15 @@
             text-decoration: none;
             transition: transform 0.2s ease, filter 0.2s ease;
         }
-        .btn-casinha:hover {
-            transform: translateY(-50%) scale(1.15);
-        }
+        .btn-casinha:hover { transform: translateY(-50%) scale(1.15); }
         .btn-casinha svg {
-            width: 24px; /* Aumentada levemente */
-            height: 24px; /* Aumentada levemente */
+            width: 24px;
+            height: 24px;
             fill: #FF99DD;
             filter: drop-shadow(0 0 6px rgba(255, 153, 221, 0.7));
             transition: fill 0.2s ease;
         }
-        .btn-casinha:hover svg {
-            fill: #ffffff;
-        }
+        .btn-casinha:hover svg { fill: #ffffff; }
 
         .leitor-controles {
             display: flex;
@@ -161,11 +154,7 @@
             background: rgba(255, 153, 221, 0.15);
             box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
         }
-        .select-capitulos option {
-            background: #000000;
-            color: #FF99DD;
-            padding: 8px;
-        }
+        .select-capitulos option { background: #000000; color: #FF99DD; padding: 8px; }
 
         .paginas-leitor {
             width: 100%;
@@ -174,7 +163,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 70vh;
+            min-height: 50vh;
         }
         .pagina-manga {
             width: 100%;
@@ -190,7 +179,7 @@
             gap: 15px;
             width: 100%;
             max-width: 500px;
-            margin: 40px auto 20px auto;
+            margin: 30px auto;
             padding: 0 16px;
         }
         .btn-navegacao {
@@ -225,7 +214,179 @@
             box-shadow: none;
         }
 
-        /* BOTÃO DA FLOR COM SOMBRA ROSA SUAVE */
+        /* SEÇÃO DE REAÇÕES PERSONALIZADAS */
+        .secao-reamoes {
+            width: 100%;
+            max-width: 600px;
+            margin: 40px auto 20px auto;
+            padding: 20px;
+            background: #111111;
+            border: 1px solid rgba(255, 153, 221, 0.2);
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+        .titulo-secao {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 6px var(--primary-pink);
+        }
+        .grid-reamoes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .item-reacao {
+            background: #000000;
+            border: 2px solid rgba(255, 153, 221, 0.4);
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.2s ease;
+            width: 75px;
+        }
+        .item-reacao:hover {
+            border-color: var(--primary-pink);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(255, 153, 221, 0.5);
+        }
+        .item-reacao img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            margin-bottom: 4px;
+        }
+        .item-reacao .texto-reacao {
+            font-size: 0.65rem;
+            color: #ffffff;
+            margin-bottom: 2px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .item-reacao .contador-reacao {
+            font-size: 0.75rem;
+            color: var(--primary-pink);
+            font-weight: bold;
+        }
+
+        /* SEÇÃO DE COMENTÁRIOS E REGRAS */
+        .secao-comentarios-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+        
+        .caixa-regras {
+            background: #111111;
+            border: 1px solid rgba(255, 153, 221, 0.3);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .regras-cabecalho {
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 153, 221, 0.08);
+            user-select: none;
+        }
+        .regras-cabecalho:hover { background: rgba(255, 153, 221, 0.15); }
+        .regras-conteudo {
+            padding: 0 16px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            font-size: 0.8rem;
+            color: #dddddd;
+            line-height: 1.5;
+        }
+        .caixa-regras.ativa .regras-conteudo {
+            padding: 12px 16px;
+            max-height: 250px;
+        }
+        .regras-conteudo ul { padding-left: 20px; }
+        .regras-conteudo li { margin-bottom: 6px; }
+
+        .form-comentario {
+            background: #111;
+            border: 1px solid rgba(255, 153, 221, 0.2);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .form-comentario input, .form-comentario textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid rgba(255, 153, 221, 0.4);
+            color: #FF99DD;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .form-comentario textarea { resize: vertical; min-height: 70px; }
+        .form-comentario input:focus, .form-comentario textarea:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 153, 221, 0.5);
+        }
+        .btn-enviar-comentario {
+            background: #000;
+            color: #FF99DD;
+            border: 2px solid var(--primary-pink);
+            padding: 8px 18px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            float: right;
+        }
+        .btn-enviar-comentario:hover {
+            background: rgba(255, 153, 221, 0.2);
+            box-shadow: 0 0 10px rgba(255, 153, 221, 0.6);
+            color: #fff;
+        }
+        .limpar-float { clear: both; }
+
+        .lista-comentarios {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .comentario-card {
+            background: #111;
+            border: 1px solid rgba(255, 153, 221, 0.15);
+            padding: 12px 14px;
+            border-radius: 10px;
+        }
+        .comentario-autor {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+        .comentario-texto {
+            font-size: 0.8rem;
+            color: #cccccc;
+            word-break: break-word;
+        }
+
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -258,10 +419,8 @@
     </div>
 
     <div class="leitor-topo">
-        <!-- Nome da obra centralizado -->
         <a class="obra-titulo-link" id="linkObraTopo" onclick="irParaDetalhes()">Carregando obra...</a>
         
-        <!-- Linha do Capítulo com a Casinha Rosa na lateral direita -->
         <div class="capitulo-container-topo">
             <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
             <a href="./" class="btn-casinha" title="Início">
@@ -289,16 +448,93 @@
         <a href="#" id="btnProximo" class="btn-navegacao disabled">próximo ›</a>
     </div>
 
+    <!-- PAINEL DE REAÇÕES -->
+    <div class="secao-reamoes" id="secaoReacoes">
+        <div class="titulo-secao">O que achou deste capítulo?</div>
+        <div class="grid-reamoes" id="gridReacoes">
+            <div class="item-reacao" onclick="votarReacao('amei')">
+                <img src="https://files.catbox.moe/fjfbc8.png" alt="Amei">
+                <span class="texto-reacao">ameei</span>
+                <span class="contador-reacao" id="cnt-amei">0</span>
+            </div>
+            <div class="item-reacao" onclick="votarReacao('surpresa')">
+                <img src="https://files.catbox.moe/fjfbc8.png" alt="Meu Deus">
+                <span class="texto-reacao">meu deus</span>
+                <span class="contador-reacao" id="cnt-surpresa">0</span>
+            </div>
+            <div class="item-reacao" onclick="votarReacao('chorando')">
+                <img src="https://files.catbox.moe/fjfbc8.png" alt="Chorei">
+                <span class="texto-reacao">chorei</span>
+                <span class="contador-reacao" id="cnt-chorando">0</span>
+            </div>
+            <div class="item-reacao" onclick="votarReacao('fogo')">
+                <img src="https://files.catbox.moe/fjfbc8.png" alt="Perfeito">
+                <span class="texto-reacao">perfeito</span>
+                <span class="contador-reacao" id="cnt-fogo">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO DE REGRAS E COMENTÁRIOS -->
+    <div class="secao-comentarios-container">
+        <div class="caixa-regras" id="caixaRegras">
+            <div class="regras-cabecalho" id="btnToggleRegras">
+                <span>🌸 Regras dos Comentários</span>
+                <span id="iconeSeta">▼</span>
+            </div>
+            <div class="regras-conteudo">
+                <ul>
+                    <li>Seja gentil e respeitoso com os tradutores e outros leitores.</li>
+                    <li>Sem spoilers de capítulos futuros ou de outras obras.</li>
+                    <li>Proibido qualquer tipo de ofensa, preconceito ou spam.</li>
+                    <li>Divirta-se comentando sobre o capítulo atual!</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-comentario">
+            <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 10px;">Deixe seu comentário</div>
+            <input type="text" id="nomeComentario" placeholder="Seu apelido / nome...">
+            <textarea id="textoComentario" placeholder="Escreva o que achou deste capítulo..."></textarea>
+            <button class="btn-enviar-comentario" onclick="enviarComentario()">Comentar</button>
+            <div class="limpar-float"></div>
+        </div>
+
+        <div class="lista-comentarios" id="listaComentarios">
+            <p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Carregando comentários...</p>
+        </div>
+    </div>
+
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
         <img src="https://files.catbox.moe/fjfbc8.png" alt="Voltar ao Topo">
     </a>
 
     <script>
+        const SUPABASE_URL = '';
+        const SUPABASE_ANON_KEY = '';
+        
+        let supabase = null;
+        try {
+            if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.log("Supabase não inicializado:", e);
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim();
         const capSlugUrl = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
 
         let obraGlobal = null;
+        let idCapituloUnico = `${obraSlugUrl}_${capSlugUrl}`;
+
+        // Controle para abrir/fechar as regras de comentários
+        document.getElementById('btnToggleRegras').addEventListener('click', function() {
+            const caixa = document.getElementById('caixaRegras');
+            caixa.classList.toggle('ativa');
+            document.getElementById('iconeSeta').textContent = caixa.classList.contains('ativa') ? '▲' : '▼';
+        });
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -370,6 +606,8 @@
             }
 
             let numCap = typeof capAtual === 'object' ? capAtual.numero : capAtual;
+            idCapituloUnico = `${obraSlugUrl}_${numCap}`;
+
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
@@ -422,6 +660,126 @@
                 btnProximo.href = '#';
                 btnProximo.classList.add('disabled');
             }
+
+            carregarReacoes();
+            carregarComentarios();
+        }
+
+        async function carregarReacoes() {
+            if (!supabase) return;
+            try {
+                let { data } = await supabase
+                    .from('reacoes_capitulos')
+                    .select('*')
+                    .eq('capitulo_id', idCapituloUnico);
+
+                if (data && data.length > 0) {
+                    data.forEach(row => {
+                        let el = document.getElementById(`cnt-${row.tipo}`);
+                        if (el) el.textContent = row.quantidade;
+                    });
+                }
+            } catch (e) {
+                console.log("Erro ao carregar reações:", e);
+            }
+        }
+
+        async function votarReacao(tipo) {
+            let chaveLocal = `voto_${idCapituloUnico}_${tipo}`;
+            if (localStorage.getItem(chaveLocal)) {
+                alert("Você já usou essa reação neste capítulo!");
+                return;
+            }
+            if (!supabase) {
+                let el = document.getElementById(`cnt-${tipo}`);
+                if (el) {
+                    let atual = parseInt(el.textContent) || 0;
+                    el.textContent = atual + 1;
+                    localStorage.setItem(chaveLocal, 'true');
+                }
+                return;
+            }
+
+            try {
+                let { data } = await supabase
+                    .from('reacoes_capitulos')
+                    .select('quantidade')
+                    .eq('capitulo_id', idCapituloUnico)
+                    .eq('tipo', tipo)
+                    .single();
+
+                let novaQtd = (data ? data.quantidade : 0) + 1;
+
+                let { error } = await supabase
+                    .from('reacoes_capitulos')
+                    .upsert({ capitulo_id: idCapituloUnico, tipo: tipo, quantidade: novaQtd }, { onConflict: 'capitulo_id,tipo' });
+
+                if (!error) {
+                    localStorage.setItem(chaveLocal, 'true');
+                    document.getElementById(`cnt-${tipo}`).textContent = novaQtd;
+                }
+            } catch (e) {
+                console.log("Erro ao registrar voto:", e);
+            }
+        }
+
+        async function carregarComentarios() {
+            const lista = document.getElementById('listaComentarios');
+            if (!supabase) {
+                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Supabase não configurado (adicione as chaves se desejar ativar na nuvem).</p>`;
+                return;
+            }
+
+            try {
+                let { data } = await supabase
+                    .from('comentarios_capitulos')
+                    .select('*')
+                    .eq('capitulo_id', idCapituloUnico)
+                    .order('created_at', { ascending: false });
+
+                if (!data || data.length === 0) {
+                    lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário ainda. Seja o primeiro a comentar!</p>`;
+                    return;
+                }
+
+                lista.innerHTML = data.map(c => `
+                    <div class="comentario-card">
+                        <div class="comentario-autor">🌸 ${escapeHtml(c.nome)}</div>
+                        <div class="comentario-texto">${escapeHtml(c.mensagem)}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                lista.innerHTML = `<p style="text-align: center; color: #FF99DD; font-size: 0.8rem; padding: 10px;">Erro ao carregar comentários do banco de dados.</p>`;
+            }
+        }
+
+        async function enviarComentario() {
+            let nome = document.getElementById('nomeComentario').value.trim();
+            let mensagem = document.getElementById('textoComentario').value.trim();
+
+            if (!nome || !mensagem) {
+                alert("Preencha seu apelido e sua mensagem!");
+                return;
+            }
+            if (!supabase) {
+                alert("O Supabase precisa estar configurado para salvar os comentários na nuvem!");
+                return;
+            }
+
+            let { error } = await supabase
+                .from('comentarios_capitulos')
+                .insert([{ capitulo_id: idCapituloUnico, nome: nome, mensagem: mensagem }]);
+
+            if (error) {
+                alert("Erro ao enviar comentário.");
+            } else {
+                document.getElementById('textoComentario').value = '';
+                carregarComentarios();
+            }
+        }
+
+        function escapeHtml(text) {
+            return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
         }
 
         function mudarCapitulo(slugCap) {
