@@ -253,7 +253,6 @@
             padding-bottom: 10px;
         }
         
-        /* TÍTULO CAPÍTULOS COM NOVA FONTE ELEGANTE */
         .section-title { 
             font-family: 'Playfair Display', serif;
             font-size: 1.6rem; 
@@ -269,14 +268,14 @@
             gap: 12px;
         }
 
-        /* BOTÃO DE ORDENAÇÃO (SETAS) */
+        /* BOTÃO DE ORDENAÇÃO COM SETAS MAIORES */
         .btn-ordenar {
             background: #181822;
-            border: 1px solid rgba(255, 153, 221, 0.4);
+            border: 1px solid rgba(255, 153, 221, 0.5);
             color: var(--primary-pink);
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -285,17 +284,18 @@
             transition: 0.2s;
             box-shadow: var(--shadow);
             padding: 0;
+            gap: 2px;
         }
         .btn-ordenar svg {
-            width: 14px;
-            height: 14px;
+            width: 18px;
+            height: 18px;
             fill: currentColor;
-            filter: drop-shadow(0 0 4px rgba(255, 153, 221, 0.6));
+            filter: drop-shadow(0 0 5px rgba(255, 153, 221, 0.7));
         }
         .btn-ordenar:hover {
             background: var(--primary-pink);
             color: #0b0b0e;
-            box-shadow: 0 0 12px var(--primary-pink);
+            box-shadow: 0 0 15px var(--primary-pink);
         }
 
         /* TÍTULO DA TEMPORADA */
@@ -338,7 +338,6 @@
             align-items: center;
             gap: 14px;
         }
-        /* CAPAS MAIORES E MAIS ALTAS */
         .cap-miniatura {
             width: 155px;
             height: 100px;
@@ -410,7 +409,7 @@
         const slugUrl = decodeURIComponent(urlParams.get('nome') || '').trim().toLowerCase();
 
         let obraGlobal = null;
-        let ordemInvertida = false; // Controla se a lista está invertida
+        let ordemInvertida = false;
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -468,7 +467,6 @@
             let totalCaps = obraGlobal.capitulos ? obraGlobal.capitulos.length : 0;
 
             if (obraGlobal.capitulos && obraGlobal.capitulos.length > 0) {
-                // Cria uma cópia dos capítulos para poder inverter sem alterar o original
                 let capsParaExibir = [...obraGlobal.capitulos];
                 if (ordemInvertida) {
                     capsParaExibir.reverse();
@@ -521,7 +519,6 @@
 
             let primeiroCapLink = '#';
             if (obraGlobal.capitulos && obraGlobal.capitulos.length > 0) {
-                // Pega o primeiro ou último dependendo da ordem atual lógica de leitura
                 let primeiro = obraGlobal.capitulos[obraGlobal.capitulos.length - 1]; 
                 let numPrimeiro = typeof primeiro === 'object' ? primeiro.numero : primeiro;
                 let slugPrimeiro = String(numPrimeiro).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
@@ -531,9 +528,9 @@
             let generosHtml = '<span class="info-value">Não informado</span>';
             if (obraGlobal.generos) {
                 if (Array.isArray(obraGlobal.generos)) {
-                    generosHtml = `<div class="generos-tags">${obraGlobal.generos.map(g => `<a href="./?aba=obras&genero=${encodeURIComponent(g)}" class="tag-genero">${g}</a>`).join('')}</div>`;
+                    generosHtml = `<div class="generos-tags">${obraGlobal.generos.map(g => `<a href="./?genero=${encodeURIComponent(g)}" class="tag-genero">${g}</a>`).join('')}</div>`;
                 } else {
-                    generosHtml = `<div class="generos-tags"><a href="./?aba=obras&genero=${encodeURIComponent(obraGlobal.generos)}" class="tag-genero">${obraGlobal.generos}</a></div>`;
+                    generosHtml = `<div class="generos-tags"><a href="./?genero=${encodeURIComponent(obraGlobal.generos)}" class="tag-genero">${obraGlobal.generos}</a></div>`;
                 }
             }
 
@@ -606,9 +603,7 @@
                         <h3 class="section-title">Capítulos</h3>
                         <div class="cabecalho-dir-container">
                             <button class="btn-ordenar" onclick="inverterOrdem()" title="Inverter Ordem">
-                                <!-- Seta para cima -->
                                 <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
-                                <!-- Seta para baixo -->
                                 <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                             </button>
                             <span style="font-size: 0.82rem; color: var(--text-muted);">${totalCaps} capítulos</span>
