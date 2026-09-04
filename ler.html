@@ -1,4 +1,4 @@
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -223,7 +223,7 @@
     <div class="leitor-topo">
         <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
         <div class="leitor-controles">
-            <!-- Usando diretamente o parâmetro que veio na URL para evitar falhas -->
+            <!-- Botão de voltar fixo que aponta diretamente para a página de detalhes da obra -->
             <a href="#" class="btn-voltar-obra" id="btnVoltarObra">voltar</a>
             
             <div class="dropdown-container">
@@ -258,17 +258,15 @@
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
 
-        // Força o botão voltar a usar exatamente o que veio na URL, garantindo que nunca dê 404
-        if (obraSlugUrl) {
-            document.getElementById('btnVoltarObra').href = `detalhes.html?nome=${encodeURIComponent(obraSlugUrl)}`;
-        } else {
-            document.getElementById('btnVoltarObra').href = './';
-        }
-
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                obraGlobal = obras.find(o => criarSlug(o.titulo) === obraSlugUrl.toLowerCase() || String(o.id).trim() === obraSlugUrl || String(o.titulo).trim().toLowerCase() === obraSlugUrl.toLowerCase());
+                // Tenta encontrar a obra no JSON usando o parâmetro que veio na URL
+                obraGlobal = obras.find(o => 
+                    criarSlug(o.titulo) === obraSlugUrl.toLowerCase() || 
+                    String(o.id).trim() === obraSlugUrl || 
+                    String(o.titulo).trim().toLowerCase() === obraSlugUrl.toLowerCase()
+                );
 
                 if (!obraGlobal) {
                     document.getElementById('paginasContainer').innerHTML = `
@@ -280,6 +278,11 @@
                     `;
                     return;
                 }
+
+                // DEFINIÇÃO GARANTIDA DO LINK DE VOLTAR:
+                // Usa o ID oficial da obra ou cria o slug seguro do título para combinar com detalhes.html?nome=
+                const identificadorObra = obraGlobal.id || criarSlug(obraGlobal.titulo);
+                document.getElementById('btnVoltarObra').href = `detalhes.html?nome=${encodeURIComponent(identificadorObra)}`;
 
                 carregarLeitor();
             })
@@ -391,4 +394,3 @@
     </script>
 </body>
 </html>
-  
