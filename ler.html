@@ -44,7 +44,6 @@
             z-index: 50;
         }
 
-        /* NOME DA OBRA NO TOPO (CENTRALIZADO) */
         .obra-titulo-link {
             font-size: 0.85rem;
             font-weight: 600;
@@ -66,7 +65,6 @@
             text-shadow: 0 0 8px var(--primary-pink);
         }
 
-        /* LINHA DO CAPÍTULO E A CASINHA NO CANTO DIREITO */
         .capitulo-container-topo {
             position: relative;
             width: 100%;
@@ -91,7 +89,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* CASINHA MAIOR E ENCOSTADA NA LATERAL DIREITA DO BLOCO */
         .btn-casinha {
             position: absolute;
             right: 4px;
@@ -225,7 +222,6 @@
             box-shadow: none;
         }
 
-        /* SEÇÃO DE REAÇÕES */
         .secao-reamoes {
             width: 100%;
             max-width: 600px;
@@ -293,7 +289,6 @@
             font-weight: bold;
         }
 
-        /* SEÇÃO DE COMENTÁRIOS E REGRAS */
         .secao-comentarios-container {
             width: 100%;
             max-width: 600px;
@@ -361,7 +356,6 @@
             box-shadow: 0 0 8px rgba(255, 153, 221, 0.5);
         }
 
-        /* BARRA DE FERRAMENTAS DO COMENTÁRIO (STICKERS E SPOILER) */
         .toolbar-comentario {
             display: flex;
             gap: 8px;
@@ -373,13 +367,13 @@
             background: #000;
             color: #FF99DD;
             border: 1px solid rgba(255, 153, 221, 0.4);
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.75rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             transition: all 0.2s;
         }
         .btn-toolbar:hover {
@@ -387,29 +381,32 @@
             border-color: #fff;
             color: #fff;
         }
-        .picker-stickers {
+
+        /* PRÉ-VISUALIZAÇÃO DA FIGURINHA SELECIONADA */
+        .preview-sticker-container {
             display: none;
-            background: #000;
-            border: 1px solid var(--primary-pink);
-            border-radius: 8px;
-            padding: 8px;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 10px;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .picker-stickers.ativo { display: flex; }
-        .sticker-opcao {
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            object-fit: contain;
-            border-radius: 6px;
-            transition: transform 0.2s;
-            background: #111;
-            padding: 4px;
+            background: #000;
+            padding: 6px 10px;
+            border-radius: 8px;
             border: 1px solid rgba(255,153,221,0.3);
+            width: fit-content;
         }
-        .sticker-opcao:hover { transform: scale(1.15); border-color: #fff; }
+        .preview-sticker-container.ativo { display: flex; }
+        .preview-sticker-container img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+        }
+        .btn-remover-sticker {
+            background: transparent;
+            border: none;
+            color: #ff6666;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
 
         .btn-enviar-comentario {
             background: #000;
@@ -464,14 +461,14 @@
             line-height: 1.4;
         }
         .comentario-texto img.sticker-render {
-            max-width: 60px;
-            max-height: 60px;
+            max-width: 65px;
+            max-height: 65px;
             display: block;
             margin-top: 6px;
             object-fit: contain;
+            border-radius: 6px;
         }
 
-        /* SPOILER BLUR */
         .spoiler {
             background: rgba(255, 153, 221, 0.2);
             color: transparent;
@@ -489,7 +486,6 @@
             user-select: text;
         }
 
-        /* AÇÕES DO COMENTÁRIO (CURTIDA E LIXEIRA) */
         .comentario-rodape {
             display: flex;
             justify-content: space-between;
@@ -517,14 +513,13 @@
             color: rgba(255, 100, 100, 0.7);
             font-size: 0.75rem;
             cursor: pointer;
-            display: none; /* Só aparece se o modo autor estiver ativo */
+            display: none;
             align-items: center;
             gap: 3px;
         }
         .btn-deletar-comentario:hover { color: #ff4444; }
         body.modo-autor .btn-deletar-comentario { display: inline-flex; }
 
-        /* BOTÃO DA FLOR COM SOMBRA ROSA SUAVE */
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -557,10 +552,8 @@
     </div>
 
     <div class="leitor-topo">
-        <!-- Nome da obra centralizado -->
         <a class="obra-titulo-link" id="linkObraTopo" onclick="irParaDetalhes()">Carregando obra...</a>
         
-        <!-- Linha do Capítulo com a Casinha Rosa na lateral direita -->
         <div class="capitulo-container-topo">
             <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
             <a href="./" class="btn-casinha" title="Início">
@@ -588,7 +581,6 @@
         <a href="#" id="btnProximo" class="btn-navegacao disabled">próximo ›</a>
     </div>
 
-    <!-- PAINEL DE REAÇÕES -->
     <div class="secao-reamoes" id="secaoReacoes">
         <div class="titulo-secao">O que achou deste capítulo?</div>
         <div class="grid-reamoes" id="gridReacoes">
@@ -615,7 +607,6 @@
         </div>
     </div>
 
-    <!-- SEÇÃO DE REGRAS E COMENTÁRIOS -->
     <div class="secao-comentarios-container">
         <div class="caixa-regras" id="caixaRegras">
             <div class="regras-cabecalho" id="btnToggleRegras">
@@ -637,12 +628,15 @@
             <input type="text" id="nomeComentario" placeholder="Seu apelido / nome...">
             
             <div class="toolbar-comentario">
-                <button type="button" class="btn-toolbar" onclick="toggleStickersPicker()">🌸 Sticker</button>
+                <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
+                <button type="button" class="btn-toolbar" onclick="document.getElementById('inputStickerFile').click()">🌸 Escolher Sticker</button>
                 <button type="button" class="btn-toolbar" onclick="inserirSpoilerTag()">⚠️ Spoiler</button>
             </div>
 
-            <div class="picker-stickers" id="pickerStickers">
-                <img src="https://files.catbox.moe/fjfbc8.png" class="sticker-opcao" onclick="selecionarSticker('https://files.catbox.moe/fjfbc8.png')" alt="Sticker 1">
+            <div class="preview-sticker-container" id="previewSticker">
+                <img id="imgStickerPreview" src="" alt="Sticker">
+                <span style="font-size: 0.75rem; color: #fff;">Sticker anexado</span>
+                <button type="button" class="btn-remover-sticker" onclick="removerSticker()">✕ Remover</button>
             </div>
 
             <textarea id="textoComentario" placeholder="Escreva o que achou deste capítulo... (Use [spoiler]texto[/spoiler] para ocultar spoilers)"></textarea>
@@ -660,7 +654,6 @@
     </a>
 
     <script>
-        // CONFIGURAÇÃO DO SUPABASE
         const SUPABASE_URL = 'https://rjqmaheyuattvsqocvku.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqcW1haGV5dWF0dHZzcW9jdmt1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMTQ0MDIsImV4cCI6MjEwMzc5MDQwMn0.EGnNvkrxSTyXmW-OlZcx4iAElQBFqu67qyHXLr7BMo4';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -671,13 +664,12 @@
 
         let obraGlobal = null;
         let idUnicoCapitulo = '';
-        let stickerSelecionadoUrl = '';
+        let stickerBase64 = '';
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
 
-        // Ativar modo autor se digitar ?autor=true na URL
         if (urlParams.get('autor') === 'true') {
             document.body.classList.add('modo-autor');
         }
@@ -751,10 +743,8 @@
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // ID único para salvar reações e comentários no Supabase por obra/capítulo
             idUnicoCapitulo = `${criarSlug(obraGlobal.titulo)}_${String(numCap).toLowerCase()}`;
 
-            // Carregar dados remotos do Supabase
             carregarReacoesDoSupabase();
             carregarComentariosDoSupabase();
 
@@ -809,7 +799,6 @@
             }
         }
 
-        // --- SISTEMA DE REAÇÕES SUPABASE & LOCALSTORAGE ---
         async function carregarReacoesDoSupabase() {
             verificarVotoSalvoLocal();
             const { data, error } = await supabaseClient
@@ -839,9 +828,8 @@
             const votoChave = `voto_${idUnicoCapitulo}`;
             const votoAnterior = localStorage.getItem(votoChave);
 
-            if (votoAnterior === tipo) return; // Já votou nisso
+            if (votoAnterior === tipo) return;
 
-            // Atualiza contagem local imediata
             if (votoAnterior) {
                 let elAntigo = document.getElementById(`cnt-${votoAnterior}`);
                 if (elAntigo) elAntigo.textContent = Math.max(0, parseInt(elAntigo.textContent) - 1);
@@ -853,7 +841,6 @@
             localStorage.setItem(votoChave, tipo);
             verificarVotoSalvoLocal();
 
-            // Sincroniza com Supabase
             const { data } = await supabaseClient
                 .from('reacoes_capitulos')
                 .select('quantidade')
@@ -890,7 +877,6 @@
             }
         }
 
-        // --- SISTEMA DE COMENTÁRIOS SUPABASE ---
         async function carregarComentariosDoSupabase() {
             const lista = document.getElementById('listaComentarios');
             const { data, error } = await supabaseClient
@@ -921,8 +907,11 @@
 
             let dataFormatada = new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             let textoFormatado = formatarTextoComentario(c.mensagem);
-            if (c.sticker) {
-                textoFormatado += `<img src="${c.sticker}" class="sticker-render" alt="Sticker">`;
+            
+            // Suporte retroativo a sticker salvo como coluna ou dentro da mensagem
+            let stickerUrl = c.sticker || '';
+            if (stickerUrl) {
+                textoFormatado += `<img src="${stickerUrl}" class="sticker-render" alt="Sticker">`;
             }
 
             let card = document.createElement('div');
@@ -950,8 +939,8 @@
             let nome = document.getElementById('nomeComentario').value.trim();
             let mensagem = document.getElementById('textoComentario').value.trim();
 
-            if (!nome || (!mensagem && !stickerSelecionadoUrl)) {
-                alert("Preencha seu apelido e escreva uma mensagem ou selecione um sticker!");
+            if (!nome || (!mensagem && !stickerBase64)) {
+                alert("Preencha seu apelido e escreva uma mensagem ou selecione uma figurinha!");
                 return;
             }
 
@@ -959,7 +948,7 @@
                 capitulo_id: idUnicoCapitulo,
                 nome: nome,
                 mensagem: mensagem || '',
-                sticker: stickerSelecionadoUrl || null,
+                sticker: stickerBase64 || null,
                 curtidas: 0,
                 created_at: new Date().toISOString()
             };
@@ -971,11 +960,11 @@
 
             if (!error && data) {
                 document.getElementById('textoComentario').value = '';
-                stickerSelecionadoUrl = '';
-                document.getElementById('pickerStickers').classList.remove('ativo');
+                removerSticker();
                 carregarComentariosDoSupabase();
             } else {
-                alert("Erro ao enviar comentário. Tente novamente.");
+                console.error("Erro Supabase:", error);
+                alert("Erro ao enviar comentário. Verifique se a tabela do Supabase possui as colunas 'sticker' e 'curtidas'.");
             }
         }
 
@@ -1007,15 +996,25 @@
             }
         }
 
-        // --- FERRAMENTAS DO FORMULÁRIO (STICKERS E SPOILERS) ---
-        function toggleStickersPicker() {
-            document.getElementById('pickerStickers').classList.toggle('ativo');
+        // --- ESCOLHER FIGURINHA DO NAVEGADOR / CELULAR ---
+        function processarStickerArquivo(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                stickerBase64 = e.target.result;
+                document.getElementById('imgStickerPreview').src = stickerBase64;
+                document.getElementById('previewSticker').classList.add('ativo');
+            };
+            reader.readAsDataURL(arquivo);
         }
 
-        function selecionarSticker(url) {
-            stickerSelecionadoUrl = url;
-            document.getElementById('pickerStickers').classList.remove('ativo');
-            enviarComentario(); // Envia automático ou deixa preenchido
+        function removerSticker() {
+            stickerBase64 = '';
+            document.getElementById('imgStickerPreview').src = '';
+            document.getElementById('previewSticker').classList.remove('ativo');
+            document.getElementById('inputStickerFile').value = '';
         }
 
         function inserirSpoilerTag() {
@@ -1029,12 +1028,10 @@
 
         function formatarTextoComentario(texto) {
             let seguro = escapeHtml(texto);
-            // Substitui [spoiler]texto[/spoiler] por span interativo
             seguro = seguro.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/g, '<span class="spoiler" onclick="this.classList.toggle(\'revelado\')">$1</span>');
             return seguro;
         }
 
-        // Lógica da caixa de regras dos comentários
         document.getElementById('btnToggleRegras').addEventListener('click', function() {
             const caixa = document.getElementById('caixaRegras');
             caixa.classList.toggle('ativa');
