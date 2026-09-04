@@ -21,7 +21,7 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; overflow-x: hidden; }
         p, span, a, h1, h2, h3, h4, div { color: var(--primary-pink); text-shadow: var(--neon-glow); }
 
-        /* BARRA DE PROGRESSO NO TOPO/FUNDO */
+        /* BARRA DE PROGRESSO NO FUNDO */
         .barra-progresso-container {
             position: fixed;
             bottom: 0;
@@ -39,7 +39,7 @@
             transition: width 0.1s linear;
         }
 
-        /* TOPO DO LEITOR */
+        /* TOPO DO LEITOR EXATAMENTE COMO NA REFERÊNCIA */
         .leitor-topo {
             background-color: var(--bg-color);
             padding: 15px 20px 20px 20px;
@@ -57,35 +57,48 @@
             text-shadow: var(--neon-glow);
             width: 100%;
             max-width: 700px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
         .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
 
+        /* TÍTULO DA OBRA COM ÍCONE DE FLOR IGUAL NA FOTO */
         .obra-titulo-topo {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--primary-pink);
-            text-shadow: var(--neon-glow);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .capitulo-titulo-topo {
             font-size: 1.45rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
-            letter-spacing: 0.5px;
-            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            text-align: center;
+            width: 100%;
+        }
+        .obra-titulo-topo svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-pink);
+            filter: drop-shadow(0 0 8px rgba(255, 153, 221, 0.9));
+            flex-shrink: 0;
         }
 
-        /* CONTROLES (BOTÃO VOLTAR E LISTA DE CAPÍTULOS) */
+        /* TÍTULO DO CAPÍTULO CENTRALIZADO E DESTACADO */
+        .capitulo-titulo-topo {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+
+        /* CONTROLES: BOTÃO "VOLTAR" ESTILIZADO EM Pílula E LISTA DE CAPÍTULOS */
         .leitor-controles {
             display: flex;
             justify-content: space-between;
@@ -95,15 +108,15 @@
             gap: 15px;
         }
 
-        /* BOTÃO VOLTAR ROSINHA ESTILIZADO */
+        /* BOTÃO VOLTAR ROSA EM PÍLULA IDÊNTICO AO PRINT */
         .btn-voltar-obra {
             background: #ff99dd;
             color: #0b0b0e;
             border: 2px solid #ff99dd;
-            padding: 10px 24px;
-            border-radius: 18px;
+            padding: 9px 24px;
+            border-radius: 20px;
             font-weight: 800;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             cursor: pointer;
             text-decoration: none;
             box-shadow: 0 0 15px rgba(255, 153, 221, 0.8);
@@ -113,6 +126,7 @@
             align-items: center;
             justify-content: center;
             letter-spacing: 0.5px;
+            text-transform: lowercase;
         }
         .btn-voltar-obra:hover {
             background: #ff77d5;
@@ -120,32 +134,35 @@
             transform: scale(1.03);
         }
 
-        /* DROPDOWN / SELECT DE CAPÍTULOS */
+        /* DROPDOWN / LISTA DE CAPÍTULOS ESTILIZADO */
         .dropdown-container {
             position: relative;
             flex: 1;
-            max-width: 250px;
+            max-width: 255px;
         }
         .select-capitulos {
             width: 100%;
-            background: #181822;
-            border: 1px solid rgba(255, 153, 221, 0.6);
-            color: var(--primary-pink);
-            padding: 10px 16px;
-            border-radius: 16px;
-            font-weight: 700;
+            background: #ff99dd;
+            border: 2px solid #ff99dd;
+            color: #0b0b0e;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-weight: 800;
             font-size: 0.95rem;
             cursor: pointer;
             outline: none;
-            box-shadow: var(--shadow);
-            text-shadow: var(--neon-glow);
+            box-shadow: 0 0 15px rgba(255, 153, 221, 0.8);
+            text-shadow: none;
             appearance: none;
             -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%23%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%23%22%20width%3D%22292.364%22%20height%3D%22292.364%22%3E%3Cpath%20fill%3D%23%22%23FF99DD%22%20d%3D%22M287.934%20197.935L146.123%2056.127%204.31%20197.935c-3.28%203.28-3.28%208.6-0.003%2011.88l19.52%2019.52c3.28%203.28%208.6%203.28%2011.88%200l110.4-110.4%20110.4%20110.4c3.28%203.28%208.6%203.28%2011.88%200l19.52-19.52c3.28-3.28%203.28-8.6%200.002-11.88z%22%2F%3E%3C%2Fsvg%3E");
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.364%22%20height%3D%22292.364%22%3E%3Cpath%20fill%3D%22%230b0b0e%22%20d%3D%22M287.934%20197.935L146.123%2056.127%204.31%20197.935c-3.28%203.28-3.28%208.6-0.003%2011.88l19.52%2019.52c3.28%203.28%208.6%203.28%2011.88%200l110.4-110.4%20110.4%20110.4c3.28%203.28%208.6%203.28%2011.88%200l19.52-19.52c3.28-3.28%203.28-8.6%200.002-11.88z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
-            background-position: right 14px center;
+            background-position: right 15px center;
             background-size: 10px;
             padding-right: 35px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .select-capitulos option {
             background: #14141a;
@@ -170,41 +187,41 @@
             background: #111;
         }
 
-        /* BOTÃO DE FLOR FLUTUANTE (VOLTAR AO TOPO) */
+        /* BOTÃO DE FLOR FLUTUANTE EXATAMENTE COMO NA FOTO (CANTO INFERIOR DIREITO) */
         .btn-flor-topo {
             position: fixed;
             bottom: 25px;
             right: 20px;
-            width: 55px;
-            height: 55px;
-            background: #181822;
-            border: 2px solid rgba(255, 153, 221, 0.8);
+            width: 60px;
+            height: 60px;
+            background: #ff99dd;
+            border: 2px solid #ff99dd;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), var(--neon-glow);
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.8), 0 0 18px rgba(255, 153, 221, 0.8);
             z-index: 999;
             transition: 0.2s;
             text-decoration: none;
         }
         .btn-flor-topo:hover {
             transform: scale(1.1);
-            background: rgba(255, 153, 221, 0.15);
-            box-shadow: 0 0 25px rgba(255, 153, 221, 1);
+            background: #ff77d5;
+            box-shadow: 0 0 28px rgba(255, 153, 221, 1);
         }
         .btn-flor-topo svg {
-            width: 32px;
-            height: 32px;
-            fill: var(--primary-pink);
-            filter: drop-shadow(0 0 8px rgba(255, 153, 221, 0.9));
+            width: 34px;
+            height: 34px;
+            fill: #0b0b0e;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.3));
         }
     </style>
 </head>
 <body>
 
-    <!-- BARRA DE PROGRESSO ROSA EM BAIXO -->
+    <!-- BARRA DE PROGRESSO ROSA EM BAIXO (ANDAMENTO DO CAPÍTULO) -->
     <div class="barra-progresso-container">
         <div class="barra-progresso-fill" id="barraProgresso"></div>
     </div>
@@ -215,20 +232,24 @@
             <a href="./">Início</a> / <a href="#" id="linkBreadcrumbObra">Obras</a> / <span id="nomeObraBreadcrumb">Carregando...</span>
         </div>
 
+        <!-- TÍTULO DA OBRA COM FLORZINHA -->
         <div class="obra-titulo-topo" id="tituloObraTopo">
-            🌸 Carregando Obra...
+            <svg viewBox="0 0 24 24"><path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.8 8.1 9 9 9.8V11C9.0 12.7 7.7 14 6 14C4.3 14 3 12.7 3 11C3 9.3 4.3 8 6 8C6.3 8 6.7 8.1 7 8.2V6.5C7 3.5 9.5 1 12.5 1C15.5 1 18 3.5 18 6.5V8.2C18.3 8.1 18.7 8 19 8C20.7 8 22 9.3 22 11C22 12.7 20.7 14 19 14C17.3 14 16 12.7 16 11V9.8C16.9 9 17.5 7.8 17.5 6.5C17.5 4 15.5 2 12 2ZM12 13C10.3 13 9 14.3 9 16V22H15V16C15 14.3 13.7 13 12 13Z"/></svg>
+            <span id="textoTituloObra">APÓS A REFEIÇÃO</span>
         </div>
 
+        <!-- TÍTULO DO CAPÍTULO -->
         <div class="capitulo-titulo-topo" id="tituloCapituloTopo">
             CAPÍTULO --
         </div>
 
+        <!-- CONTROLES -->
         <div class="leitor-controles">
             <a href="#" class="btn-voltar-obra" id="btnVoltarObra">voltar</a>
             
             <div class="dropdown-container">
                 <select class="select-capitulos" id="selectCapitulos" onchange="mudarCapitulo(this.value)">
-                    <option value="">Lista de Capítulos</option>
+                    <option value="">≡ Lista de Capítulos ∨</option>
                 </select>
             </div>
         </div>
@@ -239,12 +260,12 @@
         <p style="text-align: center; color: var(--text-muted); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DE FLOR PARA SUBIR AO TOPO -->
+    <!-- BOTÃO FLUTUANTE DE FLOR COM SETA PARA CIMA PARA VOLTAR AO TOPO -->
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
         <svg viewBox="0 0 24 24">
-            <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.8 8.1 9 9 9.8V11C9.0 12.7 7.7 14 6 14C4.3 14 3 12.7 3 11C3 9.3 4.3 8 6 8C6.3 8 6.7 8.1 7 8.2V6.5C7 3.5 9.5 1 12.5 1C15.5 1 18 3.5 18 6.5V8.2C18.3 8.1 18.7 8 19 8C20.7 8 22 9.3 22 11C22 12.7 20.7 14 19 14C17.3 14 16 12.7 16 11V9.8C16.9 9 17.5 7.8 17.5 6.5C17.5 4 15.5 2 12 2ZM12 13C10.3 13 9 14.3 9 16V22H15V16C15 14.3 13.7 13 12 13ZM12 15C12.6 15 13 15.4 13 16V20H11V16C11 15.4 11.4 15 12 15Z"/>
-            <!-- Ícone estilizado com setinha para cima dentro da flor -->
-            <path d="M12 4L8 9H11V14H13V9H16L12 4Z" fill="#0b0b0e"/>
+            <!-- Formato da flor arredondada com seta para cima dentro -->
+            <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.8 8.1 9 9 9.8V11C9.0 12.7 7.7 14 6 14C4.3 14 3 12.7 3 11C3 9.3 4.3 8 6 8C6.3 8 6.7 8.1 7 8.2V6.5C7 3.5 9.5 1 12.5 1C15.5 1 18 3.5 18 6.5V8.2C18.3 8.1 18.7 8 19 8C20.7 8 22 9.3 22 11C22 12.7 20.7 14 19 14C17.3 14 16 12.7 16 11V9.8C16.9 9 17.5 7.8 17.5 6.5C17.5 4 15.5 2 12 2Z"/>
+            <path d="M12 5L7 11H10V17H14V11H17L12 5Z"/>
         </svg>
     </a>
 
@@ -285,12 +306,12 @@
         function carregarLeitor() {
             const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
             
-            // Configurar links de retorno para a página de detalhes da obra
+            // Configurar links de retorno para a página de detalhes da obra correspondente
             const linkDetalhes = `detalhes.html?nome=${slugObraId}`;
             document.getElementById('btnVoltarObra').href = linkDetalhes;
             document.getElementById('linkBreadcrumbObra').href = linkDetalhes;
             document.getElementById('nomeObraBreadcrumb').textContent = obraGlobal.titulo;
-            document.getElementById('tituloObraTopo').innerHTML = `🌸 ${obraGlobal.titulo}`;
+            document.getElementById('textoTituloObra').textContent = obraGlobal.titulo;
 
             // Encontrar o capítulo atual
             let capitulos = obraGlobal.capitulos || [];
@@ -303,7 +324,6 @@
                 });
             }
 
-            // Se não encontrou pela URL, pega o primeiro capítulo disponível
             if (!capAtual && capitulos.length > 0) {
                 capAtual = capitulos[0];
             }
@@ -318,9 +338,9 @@
             document.getElementById('tituloCapituloTopo').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // Popular o select de Lista de Capítulos
+            // Popular o select de Lista de Capítulos com o formato idêntico
             const selectEl = document.getElementById('selectCapitulos');
-            selectEl.innerHTML = `<option value="">Lista de Capítulos (${capitulos.length})</option>`;
+            selectEl.innerHTML = `<option value="">≡ Lista de Capítulos ∨</option>`;
             
             capitulos.forEach(c => {
                 let num = typeof c === 'object' ? c.numero : c;
@@ -354,7 +374,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Lógica da barra de progresso inferior conforme o usuário rola a página
+        // Lógica da barra de progresso inferior conforme o usuário rola o capítulo
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const alturaTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
