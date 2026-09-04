@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -71,6 +71,7 @@
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
+                // Procura a obra por ID ou por título exato para manter compatibilidade
                 const obra = obras.find(o => String(o.id).trim().toLowerCase() === nomeObraUrl || String(o.titulo).trim().toLowerCase() === nomeObraUrl);
                 const container = document.getElementById('detalhes-conteudo');
 
@@ -128,7 +129,7 @@
                             </div>
                             <div class="acoes-obra">
                                 <a href="${primeiroCapLink}" class="btn-acao">Ler do Começo</a>
-                                <button class="btn-acao" id="btn-favorito" onclick="toggleFavorito('${obra.id}')">Salvar Favorito</button>
+                                <button class="btn-acao" id="btn-favorito" onclick="toggleFavorito('${obra.titulo}')">Salvar Favorito</button>
                             </div>
                         </div>
                     </div>
@@ -144,35 +145,35 @@
                     </div>
                 `;
 
-                atualizarTextoBotaoFavorito(obra.id);
+                atualizarTextoBotaoFavorito(obra.titulo);
             })
             .catch(err => {
                 console.error("Erro ao carregar detalhes:", err);
                 document.getElementById('detalhes-conteudo').innerHTML = `<p style="color:red; text-align:center;">Erro ao carregar os dados da obra.</p>`;
             });
 
-        function toggleFavorito(obraId) {
+        function toggleFavorito(obraTitulo) {
             let favoritos = [];
             try { favoritos = JSON.parse(localStorage.getItem('flowers_favoritos')) || []; } catch(e) { favoritos = []; }
 
-            const index = favoritos.indexOf(obraId);
+            const index = favoritos.indexOf(obraTitulo);
             if (index > -1) {
                 favoritos.splice(index, 1);
             } else {
-                favoritos.push(obraId);
+                favoritos.push(obraTitulo);
             }
 
             localStorage.setItem('flowers_favoritos', JSON.stringify(favoritos));
-            atualizarTextoBotaoFavorito(obraId);
+            atualizarTextoBotaoFavorito(obraTitulo);
         }
 
-        function atualizarTextoBotaoFavorito(obraId) {
+        function atualizarTextoBotaoFavorito(obraTitulo) {
             let favoritos = [];
             try { favoritos = JSON.parse(localStorage.getItem('flowers_favoritos')) || []; } catch(e) { favoritos = []; }
 
             const btn = document.getElementById('btn-favorito');
             if (btn) {
-                if (favoritos.includes(obraId)) {
+                if (favoritos.includes(obraTitulo)) {
                     btn.textContent = 'Remover Favorito';
                 } else {
                     btn.textContent = 'Salvar Favorito';
