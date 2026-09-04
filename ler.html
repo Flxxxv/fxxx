@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -44,6 +44,17 @@
             z-index: 50;
         }
 
+        /* LINHA SUPERIOR DO TOPO (Nome da obra + Casinha) */
+        .topo-cabecalho-linha {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 6px;
+        }
+
         .obra-titulo-link {
             font-size: 0.85rem;
             font-weight: 600;
@@ -51,10 +62,8 @@
             text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 6px;
             transition: color 0.2s ease, text-shadow 0.2s ease;
             text-align: center;
-            max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -63,6 +72,32 @@
         .obra-titulo-link:hover {
             color: #ffffff;
             text-shadow: 0 0 8px var(--primary-pink);
+        }
+
+        /* BOTÃO DA CASINHA ROSA PEQUENA */
+        .btn-casinha {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            flex-shrink: 0;
+        }
+        .btn-casinha:hover {
+            transform: scale(1.15);
+        }
+        .btn-casinha svg {
+            width: 18px;
+            height: 18px;
+            fill: #FF99DD;
+            filter: drop-shadow(0 0 5px rgba(255, 153, 221, 0.6));
+            transition: fill 0.2s ease;
+        }
+        .btn-casinha:hover svg {
+            fill: #ffffff;
         }
 
         .capitulo-titulo-topo {
@@ -185,12 +220,13 @@
             box-shadow: none;
         }
 
+        /* BOTÃO DA FLOR COM SOMBRA ROSA SUAVE (SEM SOMBRA PRETA) */
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
-            right: 4px;
-            width: 42px;
-            height: 42px;
+            right: 12px;
+            width: 44px;
+            height: 44px;
             background: transparent;
             border: none;
             display: flex;
@@ -206,7 +242,8 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 6px rgba(255, 153, 221, 0.45));
+            /* Substituída a sombra pesada preta por um brilho rosa suave e elegante */
+            filter: drop-shadow(0 0 8px rgba(255, 153, 221, 0.7)) drop-shadow(0 0 3px rgba(255, 153, 221, 0.5));
         }
     </style>
 </head>
@@ -217,8 +254,15 @@
     </div>
 
     <div class="leitor-topo">
-        <!-- Título da obra clicable que redireciona para obra.html -->
-        <a class="obra-titulo-link" id="linkObraTopo" onclick="irParaDetalhes()">Carregando obra...</a>
+        <!-- Linha contendo o nome da obra e a casinha rosa para ir ao início -->
+        <div class="topo-cabecalho-linha">
+            <a class="obra-titulo-link" id="linkObraTopo" onclick="irParaDetalhes()">Carregando obra...</a>
+            <a href="./" class="btn-casinha" title="Início">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </a>
+        </div>
         
         <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
 
@@ -283,7 +327,6 @@
                 document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
             });
 
-        // Aponta corretamente para obra.html
         function irParaDetalhes() {
             if (obraGlobal) {
                 const identificadorObra = obraGlobal.id || criarSlug(obraGlobal.titulo);
@@ -398,3 +441,4 @@
     </script>
 </body>
 </html>
+        
