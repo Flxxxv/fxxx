@@ -29,7 +29,7 @@
 
         .obra-container { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-        /* BANNER DE FUNDO MAIS ALTO PARA APARECER BEM */
+        /* BANNER DE FUNDO */
         .banner-topo {
             position: relative;
             width: 100%;
@@ -57,7 +57,7 @@
         .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
 
-        /* CAPA PRINCIPAL BEM MAIS ABAIXADA */
+        /* CAPA PRINCIPAL */
         .wrapper-capa-principal {
             display: flex;
             justify-content: center;
@@ -139,7 +139,7 @@
         }
         .btn-acao:hover { background: var(--primary-pink); color: #0b0b0e; box-shadow: 0 0 15px var(--primary-pink); }
 
-        /* BLOCOS GERAIS (INFORMAÇÕES E SINOPSE) */
+        /* BLOCOS GERAIS */
         .secao-bloco {
             background: var(--card-bg);
             border-radius: 16px;
@@ -198,19 +198,26 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* ÁREA DE CAPÍTULOS SOLTOS */
+        /* ÁREA DE CAPÍTULOS */
         .secao-capitulos-solta {
             width: calc(100% - 30px);
-            margin: 20px 15px 0 15px;
+            margin: 25px 15px 0 15px;
         }
         .secao-cabecalho-caps {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             padding: 0 5px;
         }
-        .section-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-pink); text-shadow: var(--neon-glow); }
+        /* TÍTULO CAPÍTULOS BEM MAIOR E DESTAQUE */
+        .section-title { 
+            font-size: 1.45rem; 
+            font-weight: 850; 
+            color: var(--primary-pink); 
+            text-shadow: var(--neon-glow); 
+            letter-spacing: 0.5px; 
+        }
         
         .lista-capitulos { display: flex; flex-direction: column; gap: 12px; }
         
@@ -219,7 +226,6 @@
             border: none;
             border-bottom: 1px solid rgba(255, 153, 221, 0.15);
             padding: 12px 5px;
-            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -237,7 +243,6 @@
             align-items: center;
             gap: 15px;
         }
-        /* CAPAS DOS CAPÍTULOS AINDA MAIORES E COM BORDA FINA SUAVE */
         .cap-miniatura {
             width: 170px;
             height: 105px;
@@ -275,15 +280,19 @@
             color: var(--text-muted);
             text-shadow: none;
         }
+        
+        /* SELO NOVO PERSONALIZADO E SUAVE */
         .selo-novo-cap {
-            background-color: var(--primary-pink);
+            background: linear-gradient(135deg, #ff99dd, #ff55bb);
             color: #0b0b0e;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
-            box-shadow: var(--neon-glow);
+            font-size: 0.68rem;
+            font-weight: 900;
+            padding: 3px 9px;
+            border-radius: 10px;
+            letter-spacing: 0.8px;
+            box-shadow: 0 0 10px rgba(255, 153, 221, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            text-shadow: none;
         }
     </style>
 </head>
@@ -308,6 +317,29 @@
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+        }
+
+        // Função para verificar se a data está dentro do limite de 5 dias
+        function ehCapituloNovo(dataStr) {
+            if (!dataStr) return false;
+            
+            // Tenta converter formatos comuns de data (ex: "DD/MM/YYYY" ou "YYYY-MM-DD")
+            let partes = dataStr.split('/');
+            let dataCap;
+            if (partes.length === 3) {
+                dataCap = new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
+            } else {
+                dataCap = new Date(dataStr);
+            }
+
+            if (isNaN(dataCap.getTime())) return false;
+
+            let agora = new Date();
+            let diferencaEmMilissegundos = agora - dataCap;
+            let diasPassados = diferencaEmMilissegundos / (1000 * 60 * 60 * 24);
+
+            // Retorna verdadeiro se tiver menos ou exatamente 5 dias
+            return diasPassados >= 0 && diasPassados <= 5;
         }
 
         fetch('obras.json?v=' + new Date().getTime())
@@ -351,7 +383,10 @@
                         }
 
                         let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                        let seloNovoHtml = (index === 0) ? `<span class="selo-novo-cap">NOVO</span>` : '';
+                        
+                        // Exibe o selo "NOVO" apenas se a data for de até 5 dias atrás (ou para o primeiro item caso não tenha data cadastrada)
+                        let exibirSelo = ehCapituloNovo(dataCap) || (!dataCap && index === 0);
+                        let seloNovoHtml = exibirSelo ? `<span class="selo-novo-cap">NOVO</span>` : '';
 
                         listaCapsHtml += `
                             <a href="ler.html?obra=${slugObraId}&cap=${slugCap}" class="capitulo-item">
@@ -398,7 +433,7 @@
                         </div>
                     </div>
 
-                    <!-- CAPA PRINCIPAL ABAIXADA -->
+                    <!-- CAPA PRINCIPAL -->
                     <div class="wrapper-capa-principal">
                         <img src="${capaFrente}" alt="${obra.titulo}" class="obra-capa-large">
                     </div>
@@ -450,7 +485,7 @@
                         <p class="sinopse-texto">${obra.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
                     </div>
 
-                    <!-- CAPÍTULOS COM MINIATURAS MAIORES -->
+                    <!-- CAPÍTULOS -->
                     <div class="secao-capitulos-solta">
                         <div class="secao-cabecalho-caps">
                             <h3 class="section-title">Capítulos</h3>
