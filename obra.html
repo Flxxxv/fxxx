@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,7 @@
 
         .obra-container { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-        /* BANNER DE FUNDO BEM CLARO (MENOS ESCURO) */
+        /* BANNER DE FUNDO MENOS ESCURO */
         .banner-topo {
             position: relative;
             width: 100%;
@@ -57,7 +57,7 @@
         .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
 
-        /* CAPA PRINCIPAL BEM MAIOR E CENTRALIZADA */
+        /* CAPA PRINCIPAL MAIOR E CENTRALIZADA */
         .wrapper-capa-principal {
             display: flex;
             justify-content: center;
@@ -198,28 +198,27 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* CAPÍTULOS NO FORMATO EXATO DA SUA IMAGEM */
+        /* CAPÍTULOS SEM CAIXAS INTERNAS E COM MINIATURA PEQUENA */
         .secao-cabecalho-caps {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .section-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-pink); text-shadow: var(--neon-glow); }
         
-        .lista-capitulos { display: flex; flex-direction: column; gap: 14px; }
+        .lista-capitulos { display: flex; flex-direction: column; gap: 8px; }
         
         .capitulo-item {
             background: #121219;
-            border: 1px solid rgba(255, 153, 221, 0.35);
-            padding: 10px 14px;
-            border-radius: 16px;
+            border: 1px solid rgba(255, 153, 221, 0.25);
+            padding: 8px 12px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             transition: 0.2s;
-            box-shadow: var(--shadow);
         }
         .capitulo-item:hover {
             background: rgba(255, 153, 221, 0.08);
@@ -230,14 +229,14 @@
         .cap-esquerda {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
         .cap-miniatura {
-            width: 110px;
-            height: 70px;
+            width: 55px;
+            height: 65px;
             object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 153, 221, 0.4);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 153, 221, 0.3);
             background: #1a1a24;
         }
         .cap-info-texto {
@@ -246,34 +245,28 @@
             gap: 2px;
         }
         .cap-num-principal {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
-        }
-        .cap-sub-label {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            text-shadow: none;
-            font-weight: 600;
         }
         .cap-direita {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 6px;
+            gap: 4px;
         }
         .cap-data {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
             text-shadow: none;
         }
         .selo-novo-cap {
             background-color: var(--primary-pink);
             color: #0b0b0e;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 800;
-            padding: 2px 7px;
+            padding: 2px 6px;
             border-radius: 4px;
             letter-spacing: 0.5px;
             box-shadow: var(--neon-glow);
@@ -352,7 +345,6 @@
                                     <img src="${capaCap}" alt="Cap ${numCap}" class="cap-miniatura">
                                     <div class="cap-info-texto">
                                         <span class="cap-num-principal">Cap. ${numCap}</span>
-                                        <span class="cap-sub-label">Capítulo ${numCap}</span>
                                     </div>
                                 </div>
                                 <div class="cap-direita">
@@ -497,4 +489,3 @@
     </script>
 </body>
 </html>
- 
