@@ -72,7 +72,7 @@
             gap: 12px;
         }
 
-        /* BOTÃO VOLTAR MAIS MENOR E ARREDONDADO */
+        /* BOTÃO VOLTAR ARREDONDADO */
         .btn-voltar-obra {
             background: #000000;
             color: #FF99DD;
@@ -96,7 +96,7 @@
             box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
         }
 
-        /* LISTA DE CAPÍTULOS MAIS MENOR E ARREDONDADA */
+        /* LISTA DE CAPÍTULOS ARREDONDADA */
         .dropdown-container {
             position: relative;
             flex: 1;
@@ -198,7 +198,7 @@
             box-shadow: none;
         }
 
-        /* BOTÃO FLUTUANTE DA FLOR: MAIS PARA BAIXO, DIREITA, COM SOMBRA ROSA LEVE */
+        /* BOTÃO FLUTUANTE DA FLOR */
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -307,7 +307,8 @@
         function carregarLeitor() {
             const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
             
-            const linkDetalhes = `detalhes.html?nome=${slugObraId}`;
+            // Corrige o link do botão voltar para a página de detalhes usando o identificador correto da obra
+            const linkDetalhes = `detalhes.html?obra=${slugObraId}`;
             document.getElementById('btnVoltarObra').href = linkDetalhes;
 
             let capitulos = obraGlobal.capitulos || [];
@@ -339,15 +340,14 @@
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // Configurar lista de capítulos
+            // Configurar lista de capítulos mantendo estritamente "Lista de Capítulos" no topo
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
             
-            capitulos.forEach((c, idx) => {
+            capitulos.forEach((c) => {
                 let num = typeof c === 'object' ? c.numero : c;
                 let slugC = String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                let selectedAttr = (idx === indexAtual) ? 'selected' : '';
-                selectEl.innerHTML += `<option value="${slugC}" ${selectedAttr}>Capítulo ${num}</option>`;
+                selectEl.innerHTML += `<option value="${slugC}">Capítulo ${num}</option>`;
             });
 
             let paginas = [];
@@ -368,11 +368,6 @@
             const btnProximo = document.getElementById('btnProximo');
             navFinal.style.display = 'flex';
 
-            // No JSON, geralmente o índice 0 é o capítulo 1 (mais antigo) e o último é o mais recente,
-            // ou vice-versa. Ajuste padrão de scan: próximo índice costuma ser capítulo mais avançado.
-            // Aqui assumimos que o array está em ordem crescente (ex: [Cap 1, Cap 2, Cap 3]).
-            // Logo, "Anterior" é o índice anterior e "Próximo" é o índice seguinte.
-            
             if (indexAtual > 0) {
                 let capAnt = capitulos[indexAtual - 1];
                 let numAnt = typeof capAnt === 'object' ? capAnt.numero : capAnt;
