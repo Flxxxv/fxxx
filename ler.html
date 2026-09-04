@@ -9,96 +9,89 @@
     <style>
         #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
         :root {
-            --bg-color: #0b0b0e;
-            --card-bg: #14141a;
+            --bg-color: #000000;
             --primary-pink: #FF99DD; 
-            --neon-glow: 0 0 12px rgba(255, 153, 221, 0.7), 0 0 25px rgba(255, 153, 221, 0.35);
-            --text-main: #FF99DD;
             --text-muted: #e69ac5;
-            --shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; overflow-x: hidden; }
-        p, span, a, h1, h2, h3, h4, div { color: var(--primary-pink); text-shadow: var(--neon-glow); }
+        body { background-color: var(--bg-color); color: var(--primary-pink); padding-bottom: 40px; overflow-x: hidden; }
 
-        /* BARRA DE PROGRESSO NO FUNDO */
+        /* BARRA DE PROGRESSO ROSA EM BAIXO (ANDAMENTO DO CAPÍTULO) */
         .barra-progresso-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 6px;
-            background: rgba(255, 153, 221, 0.15);
+            height: 8px;
+            background: rgba(255, 153, 221, 0.2);
             z-index: 1000;
         }
         .barra-progresso-fill {
             width: 0%;
             height: 100%;
-            background: var(--primary-pink);
-            box-shadow: var(--neon-glow);
+            background: #FF99DD;
+            box-shadow: 0 0 15px #FF99DD;
             transition: width 0.1s linear;
         }
 
         /* TOPO DO LEITOR EXATAMENTE COMO NA REFERÊNCIA */
         .leitor-topo {
-            background-color: var(--bg-color);
-            padding: 15px 20px 20px 20px;
+            background-color: #000000;
+            padding: 12px 20px 20px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 153, 221, 0.2);
+            border-bottom: 1px solid rgba(255, 153, 221, 0.15);
             position: relative;
             z-index: 50;
         }
 
         .caminho-breadcrumb {
             font-size: 0.85rem;
-            color: var(--text-muted);
-            text-shadow: var(--neon-glow);
+            color: var(--primary-pink);
             width: 100%;
             max-width: 700px;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
+            opacity: 0.85;
         }
-        .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
-        .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
+        .caminho-breadcrumb a { color: var(--primary-pink); text-decoration: none; }
+        .caminho-breadcrumb a:hover { text-decoration: underline; }
 
         /* TÍTULO DA OBRA COM ÍCONE DE FLOR IGUAL NA FOTO */
         .obra-titulo-topo {
-            font-size: 1.45rem;
+            font-size: 1.35rem;
             font-weight: 800;
             color: var(--primary-pink);
-            text-shadow: var(--neon-glow);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             text-align: center;
             width: 100%;
         }
         .obra-titulo-topo svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--primary-pink);
-            filter: drop-shadow(0 0 8px rgba(255, 153, 221, 0.9));
+            width: 22px;
+            height: 22px;
+            fill: #FF99DD;
+            filter: drop-shadow(0 0 6px rgba(255, 153, 221, 0.8));
             flex-shrink: 0;
         }
 
         /* TÍTULO DO CAPÍTULO CENTRALIZADO E DESTACADO */
         .capitulo-titulo-topo {
-            font-size: 1.55rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: var(--primary-pink);
-            text-shadow: var(--neon-glow);
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             margin-bottom: 22px;
             text-align: center;
         }
 
-        /* CONTROLES: BOTÃO "VOLTAR" ESTILIZADO EM Pílula E LISTA DE CAPÍTULOS */
+        /* CONTROLES: BOTÕES EM PÍLULA ROSA IDÊNTICOS À IMAGEM */
         .leitor-controles {
             display: flex;
             justify-content: space-between;
@@ -108,20 +101,19 @@
             gap: 15px;
         }
 
-        /* BOTÃO VOLTAR ROSA EM PÍLULA IDÊNTICO AO PRINT */
+        /* BOTÃO VOLTAR ROSA EM PÍLULA */
         .btn-voltar-obra {
-            background: #ff99dd;
+            background: #FF99DD;
             color: #0b0b0e;
-            border: 2px solid #ff99dd;
-            padding: 9px 24px;
-            border-radius: 20px;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 25px;
             font-weight: 800;
             font-size: 1.1rem;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 0 15px rgba(255, 153, 221, 0.8);
+            box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
             transition: 0.2s;
-            text-shadow: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -130,43 +122,39 @@
         }
         .btn-voltar-obra:hover {
             background: #ff77d5;
-            box-shadow: 0 0 22px rgba(255, 153, 221, 1);
             transform: scale(1.03);
         }
 
-        /* DROPDOWN / LISTA DE CAPÍTULOS ESTILIZADO */
+        /* BOTÃO LISTA DE CAPÍTULOS EM PÍLULA ROSA (SELECT ESTILIZADO) */
         .dropdown-container {
             position: relative;
             flex: 1;
-            max-width: 255px;
+            max-width: 260px;
         }
         .select-capitulos {
             width: 100%;
-            background: #ff99dd;
-            border: 2px solid #ff99dd;
+            background: #FF99DD;
+            border: none;
             color: #0b0b0e;
-            padding: 9px 18px;
-            border-radius: 20px;
+            padding: 10px 18px;
+            border-radius: 25px;
             font-weight: 800;
             font-size: 0.95rem;
             cursor: pointer;
             outline: none;
-            box-shadow: 0 0 15px rgba(255, 153, 221, 0.8);
-            text-shadow: none;
+            box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
             appearance: none;
             -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.364%22%20height%3D%22292.364%22%3E%3Cpath%20fill%3D%22%230b0b0e%22%20d%3D%22M287.934%20197.935L146.123%2056.127%204.31%20197.935c-3.28%203.28-3.28%208.6-0.003%2011.88l19.52%2019.52c3.28%203.28%208.6%203.28%2011.88%200l110.4-110.4%20110.4%20110.4c3.28%203.28%208.6%203.28%2011.88%200l19.52-19.52c3.28-3.28%203.28-8.6%200.002-11.88z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
-            background-position: right 15px center;
+            background-position: right 16px center;
             background-size: 10px;
-            padding-right: 35px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            padding-right: 38px;
+            text-align-last: left;
         }
         .select-capitulos option {
             background: #14141a;
-            color: var(--primary-pink);
+            color: #FF99DD;
         }
 
         /* ÁREA DE LEITURA DAS PÁGINAS */
@@ -184,24 +172,24 @@
             width: 100%;
             display: block;
             object-fit: contain;
-            background: #111;
+            background: #000;
         }
 
-        /* BOTÃO DE FLOR FLUTUANTE EXATAMENTE COMO NA FOTO (CANTO INFERIOR DIREITO) */
+        /* BOTÃO DE FLOR FLUTUANTE IDÊNTICO AO PRINT (CANTO INFERIOR DIREITO) */
         .btn-flor-topo {
             position: fixed;
             bottom: 25px;
             right: 20px;
-            width: 60px;
-            height: 60px;
-            background: #ff99dd;
-            border: 2px solid #ff99dd;
+            width: 62px;
+            height: 62px;
+            background: #FF99DD;
+            border: none;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.8), 0 0 18px rgba(255, 153, 221, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 153, 221, 0.8);
             z-index: 999;
             transition: 0.2s;
             text-decoration: none;
@@ -209,19 +197,18 @@
         .btn-flor-topo:hover {
             transform: scale(1.1);
             background: #ff77d5;
-            box-shadow: 0 0 28px rgba(255, 153, 221, 1);
+            box-shadow: 0 0 25px rgba(255, 153, 221, 1);
         }
         .btn-flor-topo svg {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             fill: #0b0b0e;
-            filter: drop-shadow(0 0 2px rgba(0,0,0,0.3));
         }
     </style>
 </head>
 <body>
 
-    <!-- BARRA DE PROGRESSO ROSA EM BAIXO (ANDAMENTO DO CAPÍTULO) -->
+    <!-- BARRA DE PROGRESSO ROSA EM BAIXO -->
     <div class="barra-progresso-container">
         <div class="barra-progresso-fill" id="barraProgresso"></div>
     </div>
@@ -257,13 +244,12 @@
 
     <!-- PÁGINAS DO CAPÍTULO -->
     <div class="paginas-leitor" id="paginasContainer">
-        <p style="text-align: center; color: var(--text-muted); padding: 80px 20px;">Carregando páginas do capítulo...</p>
+        <p style="text-align: center; color: var(--primary-pink); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DE FLOR COM SETA PARA CIMA PARA VOLTAR AO TOPO -->
+    <!-- BOTÃO FLUTUANTE DE FLOR COM SETA PARA CIMA -->
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
         <svg viewBox="0 0 24 24">
-            <!-- Formato da flor arredondada com seta para cima dentro -->
             <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.8 8.1 9 9 9.8V11C9.0 12.7 7.7 14 6 14C4.3 14 3 12.7 3 11C3 9.3 4.3 8 6 8C6.3 8 6.7 8.1 7 8.2V6.5C7 3.5 9.5 1 12.5 1C15.5 1 18 3.5 18 6.5V8.2C18.3 8.1 18.7 8 19 8C20.7 8 22 9.3 22 11C22 12.7 20.7 14 19 14C17.3 14 16 12.7 16 11V9.8C16.9 9 17.5 7.8 17.5 6.5C17.5 4 15.5 2 12 2Z"/>
             <path d="M12 5L7 11H10V17H14V11H17L12 5Z"/>
         </svg>
@@ -289,7 +275,7 @@
                     document.getElementById('paginasContainer').innerHTML = `
                         <div style="text-align:center; padding: 60px 20px;">
                             <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
-                            <p style="color:var(--text-muted); margin-top: 10px;">Não foi possível carregar os dados desta obra.</p>
+                            <p style="color:var(--primary-pink); margin-top: 10px; opacity:0.8;">Não foi possível carregar os dados desta obra.</p>
                             <a href="./" class="btn-voltar-obra" style="display:inline-flex; margin-top:20px;">Voltar ao Início</a>
                         </div>
                     `;
@@ -300,7 +286,7 @@
             })
             .catch(err => {
                 console.error("Erro ao carregar dados:", err);
-                document.getElementById('paginasContainer').innerHTML = `<p style="color:red; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
+                document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
             });
 
         function carregarLeitor() {
@@ -330,7 +316,7 @@
 
             if (!capAtual) {
                 document.getElementById('tituloCapituloTopo').textContent = `CAPÍTULO --`;
-                document.getElementById('paginasContainer').innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 50px;">Capítulo não encontrado.</p>`;
+                document.getElementById('paginasContainer').innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 50px;">Capítulo não encontrado.</p>`;
                 return;
             }
 
@@ -338,7 +324,7 @@
             document.getElementById('tituloCapituloTopo').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // Popular o select de Lista de Capítulos com o formato idêntico
+            // Popular o select de Lista de Capítulos com o formato exato da imagem
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="">≡ Lista de Capítulos ∨</option>`;
             
@@ -359,7 +345,7 @@
             if (paginas.length > 0) {
                 containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
             } else {
-                containerPaginas.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
+                containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
             }
         }
 
@@ -374,7 +360,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Lógica da barra de progresso inferior conforme o usuário rola o capítulo
+        // Lógica da barra de progresso inferior conforme o usuário rola a página
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
             const alturaTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
