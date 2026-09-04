@@ -44,6 +44,7 @@
             z-index: 50;
         }
 
+        /* NOME DA OBRA NO TOPO (CENTRALIZADO) */
         .obra-titulo-link {
             font-size: 0.85rem;
             font-weight: 600;
@@ -65,6 +66,7 @@
             text-shadow: 0 0 8px var(--primary-pink);
         }
 
+        /* LINHA DO CAPÍTULO E A CASINHA NO CANTO DIREITO */
         .capitulo-container-topo {
             position: relative;
             width: 100%;
@@ -89,6 +91,7 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* CASINHA MAIOR E ENCOSTADA NA LATERAL DIREITA DO BLOCO */
         .btn-casinha {
             position: absolute;
             right: 4px;
@@ -103,7 +106,9 @@
             text-decoration: none;
             transition: transform 0.2s ease, filter 0.2s ease;
         }
-        .btn-casinha:hover { transform: translateY(-50%) scale(1.15); }
+        .btn-casinha:hover {
+            transform: translateY(-50%) scale(1.15);
+        }
         .btn-casinha svg {
             width: 24px;
             height: 24px;
@@ -111,7 +116,9 @@
             filter: drop-shadow(0 0 6px rgba(255, 153, 221, 0.7));
             transition: fill 0.2s ease;
         }
-        .btn-casinha:hover svg { fill: #ffffff; }
+        .btn-casinha:hover svg {
+            fill: #ffffff;
+        }
 
         .leitor-controles {
             display: flex;
@@ -154,7 +161,11 @@
             background: rgba(255, 153, 221, 0.15);
             box-shadow: 0 0 15px rgba(255, 153, 221, 0.6);
         }
-        .select-capitulos option { background: #000000; color: #FF99DD; padding: 8px; }
+        .select-capitulos option {
+            background: #000000;
+            color: #FF99DD;
+            padding: 8px;
+        }
 
         .paginas-leitor {
             width: 100%;
@@ -163,7 +174,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 50vh;
+            min-height: 70vh;
         }
         .pagina-manga {
             width: 100%;
@@ -179,7 +190,7 @@
             gap: 15px;
             width: 100%;
             max-width: 500px;
-            margin: 30px auto;
+            margin: 40px auto 20px auto;
             padding: 0 16px;
         }
         .btn-navegacao {
@@ -387,6 +398,7 @@
             word-break: break-word;
         }
 
+        /* BOTÃO DA FLOR COM SOMBRA ROSA SUAVE */
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -419,8 +431,10 @@
     </div>
 
     <div class="leitor-topo">
+        <!-- Nome da obra centralizado -->
         <a class="obra-titulo-link" id="linkObraTopo" onclick="irParaDetalhes()">Carregando obra...</a>
         
+        <!-- Linha do Capítulo com a Casinha Rosa na lateral direita -->
         <div class="capitulo-container-topo">
             <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
             <a href="./" class="btn-casinha" title="Início">
@@ -548,11 +562,23 @@
                     String(o.titulo).trim().toLowerCase() === obraSlugUrl.toLowerCase()
                 );
 
+                if (!obraGlobal) {
+                    document.getElementById('paginasContainer').innerHTML = `
+                        <div style="text-align:center; padding: 60px 20px;">
+                            <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
+                            <p style="color:var(--primary-pink); margin-top: 10px; opacity:0.8;">Não foi possível carregar os dados desta obra.</p>
+                            <a href="./" class="obra-titulo-link" style="display:inline-block; margin-top:20px; font-size:1rem;">Voltar ao Início</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                document.getElementById('linkObraTopo').textContent = obraGlobal.titulo;
                 carregarLeitor();
             })
             .catch(err => {
-                console.error("Erro ao carregar obras.json:", err);
-                document.getElementById('paginasContainer').innerHTML = `<p style="text-align: center; color: #FF99DD; padding: 50px;">Erro ao carregar as informações da obra.</p>`;
+                console.error("Erro ao carregar dados:", err);
+                document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
             });
 
         function irParaDetalhes() {
@@ -567,11 +593,6 @@
         }
 
         function carregarLeitor() {
-            if (!obraGlobal) {
-                document.getElementById('paginasContainer').innerHTML = `<p style="text-align: center; color: #FF99DD; padding: 50px;">Obra não encontrada.</p>`;
-                return;
-            }
-
             let capitulos = obraGlobal.capitulos || [];
             let indexAtual = -1;
             let capAtual = null;
@@ -591,21 +612,17 @@
                 capAtual = capitulos[0];
             }
 
-            let numCapReal = capSlugUrl.toUpperCase();
-            let paginas = [];
-
-            if (capAtual) {
-                numCapReal = typeof capAtual === 'object' ? capAtual.numero : capAtual;
-                if (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) {
-                    paginas = capAtual.paginas;
-                }
+            if (!capAtual) {
+                document.getElementById('textoCapituloReal').textContent = `CAPÍTULO --`;
+                document.getElementById('paginasContainer').innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 50px;">Capítulo não encontrado.</p>`;
+                return;
             }
 
-            idCapituloUnico = `${obraSlugUrl}_${String(numCapReal).toLowerCase()}`;
+            let numCap = typeof capAtual === 'object' ? capAtual.numero : capAtual;
+            idCapituloUnico = `${obraSlugUrl}_${String(numCap).toLowerCase()}`;
 
-            document.getElementById('linkObraTopo').textContent = obraGlobal.titulo;
-            document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCapReal}`;
-            document.title = `Capítulo ${numCapReal} - Flower's Nenascan 🌸`;
+            document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
+            document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
@@ -616,11 +633,16 @@
                 selectEl.innerHTML += `<option value="${slugC}">Capítulo ${num}</option>`;
             });
 
+            let paginas = [];
+            if (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) {
+                paginas = capAtual.paginas;
+            }
+
             const containerPaginas = document.getElementById('paginasContainer');
             if (paginas.length > 0) {
                 containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
             } else {
-                containerPaginas.innerHTML = `<p style="text-align: center; color: var(--primary-pink); padding: 50px 20px;">Nenhuma página encontrada para este capítulo.</p>`;
+                containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
             }
 
             const navFinal = document.getElementById('navegacaoFinal');
@@ -774,9 +796,9 @@
         }
 
         function mudarCapitulo(slugCap) {
-            if (!slugCap) return;
+            if (!slugCap || !obraGlobal) return;
             const slugObraId = encodeURIComponent(obraSlugUrl);
-            window.location.href = `ler.html?obra=${slugOburaId || slugObraId}&cap=${slugCap}`;
+            window.location.href = `ler.html?obra=${slugObraId}&cap=${slugCap}`;
         }
 
         function voltarAoTopo(e) {
