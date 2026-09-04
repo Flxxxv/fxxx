@@ -139,6 +139,32 @@
         }
         .btn-acao:hover { background: var(--primary-pink); color: #0b0b0e; box-shadow: 0 0 15px var(--primary-pink); }
 
+        /* BOTÃO FAVORITO COM CORAÇÃO */
+        .btn-favorito {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-favorito svg {
+            width: 18px;
+            height: 18px;
+            transition: 0.2s;
+            fill: none;
+            stroke: var(--primary-pink);
+            stroke-width: 2.2;
+            filter: drop-shadow(0 0 5px rgba(255, 153, 221, 0.5));
+        }
+        .btn-favorito.favoritado svg {
+            fill: var(--primary-pink);
+            stroke: var(--primary-pink);
+            filter: drop-shadow(0 0 10px var(--primary-pink));
+        }
+        .btn-favorito.favoritado {
+            background: rgba(255, 153, 221, 0.15);
+            border-color: var(--primary-pink);
+        }
+
         /* BLOCOS GERAIS */
         .secao-bloco {
             background: var(--card-bg);
@@ -188,14 +214,24 @@
             gap: 6px;
             margin-top: 4px;
         }
+        /* GÊNEROS CLICÁVEIS */
         .tag-genero {
             background: rgba(255, 153, 221, 0.1);
-            border: 1px solid rgba(255, 153, 221, 0.3);
-            padding: 3px 10px;
+            border: 1px solid rgba(255, 153, 221, 0.35);
+            padding: 4px 12px;
             border-radius: 12px;
             font-size: 0.78rem;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-block;
+        }
+        .tag-genero:hover {
+            background: var(--primary-pink);
+            color: #0b0b0e;
+            box-shadow: 0 0 12px var(--primary-pink);
+            text-shadow: none;
         }
 
         /* ÁREA DE CAPÍTULOS */
@@ -207,64 +243,93 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             padding: 0 5px;
+            border-bottom: 1px solid rgba(255, 153, 221, 0.2);
+            padding-bottom: 10px;
         }
-        /* TÍTULO CAPÍTULOS BEM MAIOR E DESTAQUE */
+        
+        /* TÍTULO CAPÍTULOS PERSONALIZADO BONITO */
         .section-title { 
-            font-size: 1.45rem; 
-            font-weight: 850; 
+            font-size: 1.3rem; 
+            font-weight: 800; 
             color: var(--primary-pink); 
             text-shadow: var(--neon-glow); 
-            letter-spacing: 0.5px; 
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::before {
+            content: '🌸';
+            font-size: 1rem;
+        }
+
+        /* TÍTULO DA TEMPORADA / ARCO EM CIMA DOS CAPÍTULOS */
+        .temporada-titulo {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--primary-pink);
+            margin: 18px 0 8px 5px;
+            text-shadow: var(--neon-glow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+        .temporada-titulo span {
+            font-size: 0.75rem;
+            background: rgba(255, 153, 221, 0.15);
+            padding: 2px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 153, 221, 0.3);
         }
         
-        .lista-capitulos { display: flex; flex-direction: column; gap: 12px; }
+        .lista-capitulos { display: flex; flex-direction: column; gap: 10px; }
         
         .capitulo-item {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255, 153, 221, 0.15);
-            padding: 12px 5px;
+            background: rgba(20, 20, 26, 0.6);
+            border: 1px solid rgba(255, 153, 221, 0.12);
+            border-radius: 12px;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             transition: 0.2s;
         }
-        .capitulo-item:last-child {
-            border-bottom: none;
-        }
         .capitulo-item:hover {
+            border-color: rgba(255, 153, 221, 0.4);
+            background: rgba(255, 153, 221, 0.04);
             transform: translateX(4px);
         }
         .cap-esquerda {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 14px;
         }
         .cap-miniatura {
-            width: 170px;
-            height: 105px;
+            width: 130px;
+            height: 80px;
             object-fit: cover;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 153, 221, 0.45);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 153, 221, 0.35);
             background: #1a1a24;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
         .cap-info-texto {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
         .cap-num-principal {
-            font-size: 1.12rem;
+            font-size: 1.02rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
         }
         .cap-sub-label {
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             color: var(--text-muted);
             text-shadow: none;
             font-weight: 600;
@@ -276,23 +341,22 @@
             gap: 6px;
         }
         .cap-data {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
             text-shadow: none;
         }
         
-        /* SELO NOVO PERSONALIZADO E SUAVE */
+        /* SELO NOVO LIMPO E MODERNO */
         .selo-novo-cap {
-            background: linear-gradient(135deg, #ff99dd, #ff55bb);
-            color: #0b0b0e;
-            font-size: 0.68rem;
-            font-weight: 900;
-            padding: 3px 9px;
-            border-radius: 10px;
-            letter-spacing: 0.8px;
-            box-shadow: 0 0 10px rgba(255, 153, 221, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            text-shadow: none;
+            background: rgba(255, 153, 221, 0.2);
+            color: var(--primary-pink);
+            font-size: 0.62rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.6px;
+            border: 1px solid rgba(255, 153, 221, 0.5);
+            box-shadow: 0 0 8px rgba(255, 153, 221, 0.3);
         }
     </style>
 </head>
@@ -319,11 +383,8 @@
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
 
-        // Função para verificar se a data está dentro do limite de 5 dias
         function ehCapituloNovo(dataStr) {
             if (!dataStr) return false;
-            
-            // Tenta converter formatos comuns de data (ex: "DD/MM/YYYY" ou "YYYY-MM-DD")
             let partes = dataStr.split('/');
             let dataCap;
             if (partes.length === 3) {
@@ -331,14 +392,10 @@
             } else {
                 dataCap = new Date(dataStr);
             }
-
             if (isNaN(dataCap.getTime())) return false;
-
             let agora = new Date();
             let diferencaEmMilissegundos = agora - dataCap;
             let diasPassados = diferencaEmMilissegundos / (1000 * 60 * 60 * 24);
-
-            // Retorna verdadeiro se tiver menos ou exatamente 5 dias
             return diasPassados >= 0 && diasPassados <= 5;
         }
 
@@ -369,9 +426,18 @@
                 let totalCaps = obra.capitulos ? obra.capitulos.length : 0;
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
+                    let temporadaAtual = null;
+
                     obra.capitulos.forEach((cap, index) => {
                         let numCap = typeof cap === 'object' ? cap.numero : cap;
                         let dataCap = typeof cap === 'object' && cap.data ? cap.data : '';
+                        let temporadaCap = typeof cap === 'object' && cap.temporada ? cap.temporada : null;
+
+                        // Se a obra tem divisão por temporadas no JSON, insere o título correspondente
+                        if (temporadaCap && temporadaCap !== temporadaAtual) {
+                            temporadaAtual = temporadaCap;
+                            listaCapsHtml += `<div class="temporada-titulo">📁 ${temporadaAtual}</div>`;
+                        }
                         
                         let capaCap = obra.capa;
                         if (typeof cap === 'object') {
@@ -383,8 +449,6 @@
                         }
 
                         let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                        
-                        // Exibe o selo "NOVO" apenas se a data for de até 5 dias atrás (ou para o primeiro item caso não tenha data cadastrada)
                         let exibirSelo = ehCapituloNovo(dataCap) || (!dataCap && index === 0);
                         let seloNovoHtml = exibirSelo ? `<span class="selo-novo-cap">NOVO</span>` : '';
 
@@ -419,9 +483,9 @@
                 let generosHtml = '<span class="info-value">Não informado</span>';
                 if (obra.generos) {
                     if (Array.isArray(obra.generos)) {
-                        generosHtml = `<div class="generos-tags">${obra.generos.map(g => `<span class="tag-genero">${g}</span>`).join('')}</div>`;
+                        generosHtml = `<div class="generos-tags">${obra.generos.map(g => `<a href="./?genero=${encodeURIComponent(g)}" class="tag-genero">${g}</a>`).join('')}</div>`;
                     } else {
-                        generosHtml = `<span class="info-value">${obra.generos}</span>`;
+                        generosHtml = `<div class="generos-tags"><a href="./?genero=${encodeURIComponent(obra.generos)}" class="tag-genero">${obra.generos}</a></div>`;
                     }
                 }
 
@@ -446,10 +510,13 @@
                         </div>
                     </div>
 
-                    <!-- BOTÕES DE AÇÃO -->
+                    <!-- BOTÕES DE AÇÃO COM CORAÇÃO NO FAVORITO -->
                     <div class="acoes-obra">
                         <a href="${primeiroCapLink}" class="btn-acao">Ler do Começo</a>
-                        <button class="btn-acao" id="btn-favorito" onclick="toggleFavorito('${obra.titulo}')">Favoritar</button>
+                        <button class="btn-acao btn-favorito" id="btn-favorito" onclick="toggleFavorito('${obra.titulo}')">
+                            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span id="texto-favorito">Favoritar</span>
+                        </button>
                     </div>
 
                     <!-- INFORMAÇÕES DA OBRA -->
@@ -489,7 +556,7 @@
                     <div class="secao-capitulos-solta">
                         <div class="secao-cabecalho-caps">
                             <h3 class="section-title">Capítulos</h3>
-                            <span style="font-size: 0.85rem; color: var(--text-muted);">${totalCaps} capítulos</span>
+                            <span style="font-size: 0.82rem; color: var(--text-muted);">${totalCaps} capítulos</span>
                         </div>
                         <div class="lista-capitulos">
                             ${listaCapsHtml}
@@ -497,7 +564,7 @@
                     </div>
                 `;
 
-                atualizarTextoBotaoFavorito(obra.titulo);
+                atualizarEstadoFavorito(obra.titulo);
             })
             .catch(err => {
                 console.error("Erro ao carregar detalhes:", err);
@@ -516,23 +583,22 @@
             }
 
             localStorage.setItem('flowers_favoritos', JSON.stringify(favoritos));
-            atualizarTextoBotaoFavorito(obraTitulo);
+            atualizarEstadoFavorito(obraTitulo);
         }
 
-        function atualizarTextoBotaoFavorito(obraTitulo) {
+        function atualizarEstadoFavorito(obraTitulo) {
             let favoritos = [];
             try { favoritos = JSON.parse(localStorage.getItem('flowers_favoritos')) || []; } catch(e) { favoritos = []; }
 
             const btn = document.getElementById('btn-favorito');
-            if (btn) {
+            const texto = document.getElementById('texto-favorito');
+            if (btn && texto) {
                 if (favoritos.includes(obraTitulo)) {
-                    btn.textContent = 'Favoritado';
-                    btn.style.background = 'var(--primary-pink)';
-                    btn.style.color = '#0b0b0e';
+                    btn.classList.add('favoritado');
+                    texto.textContent = 'Favoritado';
                 } else {
-                    btn.textContent = 'Favoritar';
-                    btn.style.background = '#181822';
-                    btn.style.color = 'var(--primary-pink)';
+                    btn.classList.remove('favoritado');
+                    texto.textContent = 'Favoritar';
                 }
             }
         }
