@@ -1,88 +1,230 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leitor - Flower's Nenasscan</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Leitor - Flower's Nenascan 🌸</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background: #111; color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
-        .leitor-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; align-items: center; }
-        .leitor-container img { width: 100%; height: auto; display: block; margin: 0; padding: 0; }
-        .voltar { position: fixed; top: 10px; left: 10px; background: #FF99DD; color: #0b0b0e; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; z-index: 100; box-shadow: 0 0 10px rgba(255,153,221,0.7); }
-        .erro { margin-top: 100px; text-align: center; color: #FF99DD; padding: 20px; text-shadow: 0 0 10px rgba(255,153,221,0.7); }
+        #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
+        :root {
+            --bg-color: #0b0b0e;
+            --primary-pink: #FF99DD;
+            --neon-glow: 0 0 12px rgba(255, 153, 221, 0.7), 0 0 25px rgba(255, 153, 221, 0.35);
+            --text-main: #FF99DD;
+            --text-muted: #e69ac5;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        p, span, a, h1, h2, h3, div { color: var(--primary-pink); text-shadow: var(--neon-glow); }
+
+        /* Barra Superior do Leitor */
+        .leitor-topo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(11, 11, 14, 0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 153, 221, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            z-index: 1000;
+        }
+        .btn-voltar-obra {
+            background: #181822;
+            border: 1px solid rgba(255, 153, 221, 0.5);
+            color: var(--primary-pink);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s;
+            text-shadow: var(--neon-glow);
+        }
+        .btn-voltar-obra:hover {
+            background: var(--primary-pink);
+            color: #0b0b0e;
+            box-shadow: 0 0 12px var(--primary-pink);
+        }
+        .titulo-capitulo-topo {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 50%;
+        }
+
+        /* Container das Páginas do Webtoon */
+        .paginas-container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #000;
+        }
+        .pagina-webtoon {
+            width: 100%;
+            display: block;
+            height: auto;
+            object-fit: contain;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Controles Inferiores (Navegação de Capítulos) */
+        .leitor-rodape {
+            width: 100%;
+            max-width: 800px;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-color);
+            border-top: 1px solid rgba(255, 153, 221, 0.2);
+            margin-top: auto;
+        }
+        .btn-navegacao {
+            background: #181822;
+            border: 1px solid var(--primary-pink);
+            color: var(--primary-pink);
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+            text-shadow: var(--neon-glow);
+        }
+        .btn-navegacao:hover {
+            background: var(--primary-pink);
+            color: #0b0b0e;
+            box-shadow: 0 0 12px var(--primary-pink);
+        }
+        .btn-navegacao.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            border-color: rgba(255, 153, 221, 0.2);
+        }
     </style>
 </head>
 <body>
-    <a href="index.html" class="voltar">← Voltar</a>
-    <div class="leitor-container" id="painel-imagens"></div>
+
+    <div class="leitor-topo">
+        <a href="#" id="link-voltar" class="btn-voltar-obra">← Voltar à Obra</a>
+        <span class="titulo-capitulo-topo" id="info-cap-topo">Carregando...</span>
+        <div style="width: 80px;"></div> <!-- Espaçador para centralizar o título -->
+    </div>
+
+    <div class="paginas-container" id="container-paginas">
+        <p style="color: var(--text-muted); padding: 60px 0; text-align: center;">Carregando páginas...</p>
+    </div>
+
+    <div class="leitor-rodape" id="rodape-navegacao" style="display: none;">
+        <a href="#" id="btn-cap-anterior" class="btn-navegacao">← Capítulo Anterior</a>
+        <a href="#" id="btn-cap-proximo" class="btn-navegacao">Próximo Capítulo →</a>
+    </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const obraIdUrl = decodeURIComponent(urlParams.get('obra') || '').trim().toLowerCase();
-        const capParamUrl = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
-        const container = document.getElementById('painel-imagens');
+        const obraSlug = decodeURIComponent(urlParams.get('obra') || '').trim().toLowerCase();
+        const capParam = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
 
-        async function carregarLeitor() {
-            if (!obraIdUrl || !capParamUrl) {
-                container.innerHTML = '<h2 class="erro">Erro: Obra ou capítulo não encontrados na URL.</h2>';
-                return;
-            }
-
-            try {
-                const resposta = await fetch('obras.json?v=' + new Date().getTime());
-                const obras = await resposta.json();
-
-                const obra = obras.find(o => String(o.id).trim().toLowerCase() === obraIdUrl);
-                if (!obra) {
-                    container.innerHTML = '<h2 class="erro">Obra não encontrada no sistema!</h2>';
-                    return;
-                }
-
-                if (!obra.capitulos || obra.capitulos.length === 0) {
-                    container.innerHTML = '<h2 class="erro">Esta obra não possui capítulos cadastrados.</h2>';
-                    return;
-                }
-
-                const capitulo = obra.capitulos.find(c => {
-                    const numBruto = typeof c === 'object' ? String(c.numero) : String(c);
-                    const slugCadastrado = numBruto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                    return slugCadastrado === capParamUrl || numBruto.toLowerCase() === capParamUrl;
-                });
-                
-                if (!capitulo) {
-                    container.innerHTML = `<h2 class="erro">Capítulo não encontrado!</h2>`;
-                    return;
-                }
-
-                const dadosLink = capitulo.link || capitulo.paginas || capitulo.pages;
-                if (!dadosLink) {
-                    container.innerHTML = '<h2 class="erro">Este capítulo ainda não possui páginas cadastradas no JSON!</h2>';
-                    return;
-                }
-
-                container.innerHTML = '';
-
-                if (Array.isArray(dadosLink)) {
-                    dadosLink.forEach((urlImg, index) => {
-                        let img = document.createElement('img');
-                        img.src = urlImg;
-                        img.alt = `Página ${index + 1}`;
-                        container.appendChild(img);
-                    });
-                } else if (typeof dadosLink === 'string') {
-                    let img = document.createElement('img');
-                    img.src = dadosLink;
-                    img.alt = "Página do Capítulo";
-                    container.appendChild(img);
-                }
-
-            } catch (erro) {
-                console.error(erro);
-                container.innerHTML = '<h2 class="erro">Erro ao carregar os dados do capítulo.</h2>';
-            }
+        function criarSlug(texto) {
+            return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
         }
 
-        carregarLeitor();
+        fetch('obras.json?v=' + new Date().getTime())
+            .then(res => res.json())
+            .then(obras => {
+                const obra = obras.find(o => criarSlug(o.titulo) === obraSlug || String(o.id).trim().toLowerCase() === obraSlug);
+                
+                if (!obra || !obra.capitulos) {
+                    document.getElementById('container-paginas').innerHTML = `<p style="color:red; text-align:center; padding:50px;">Obra ou capítulos não encontrados.</p>`;
+                    return;
+                }
+
+                // Configura botão de voltar para a página da obra
+                document.getElementById('link-voltar').href = `obra.html?nome=${encodeURIComponent(obraSlug)}`;
+
+                // Acha o capítulo atual
+                const indexCap = obra.capitulos.findIndex(c => {
+                    let num = typeof c === 'object' ? c.numero : c;
+                    return String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-') === capParam;
+                });
+
+                if (indexCap === -1) {
+                    document.getElementById('container-paginas').innerHTML = `<p style="color:red; text-align:center; padding:50px;">Capítulo não encontrado.</p>`;
+                    return;
+                }
+
+                const capituloAtual = obra.capitulos[indexCap];
+                let numCapitulo = typeof capituloAtual === 'object' ? capituloAtual.numero : capituloAtual;
+                
+                document.title = `${obra.titulo} - Cap. ${numCapitulo} - Flower's Nenascan 🌸`;
+                document.getElementById('info-cap-topo').textContent = `${obra.titulo} - Cap. ${numCapitulo}`;
+
+                // Pega a lista de imagens do capítulo
+                let imagens = [];
+                if (typeof capituloAtual === 'object' && Array.isArray(capituloAtual.paginas)) {
+                    imagens = capituloAtual.paginas;
+                }
+
+                // 🛑 AQUI ESTÁ A MÁGICA: Remove a primeira imagem se houver mais de 1 página,
+                // pois ela serve exclusivamente como capa na listagem do site!
+                if (imagens.length > 1) {
+                    imagens = imagens.slice(1);
+                }
+
+                const containerPaginas = document.getElementById('container-paginas');
+                if (imagens.length > 0) {
+                    containerPaginas.innerHTML = imagens.map(imgSrc => `<img src="${imgSrc}" class="pagina-webtoon" loading="lazy" alt="Página do capítulo">`).join('');
+                } else {
+                    containerPaginas.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 50px;">Nenhuma página cadastrada para este capítulo.</p>`;
+                }
+
+                // Configurar botões de Próximo / Anterior
+                // No array do JSON, os capítulos costumam vir do mais recente para o mais antigo (ex: 30, 29, 28)
+                const btnAnterior = document.getElementById('btn-cap-anterior');
+                const btnProximo = document.getElementById('btn-cap-proximo');
+                document.getElementById('rodape-navegacao').style.display = 'flex';
+
+                // Capítulo Anterior na ordem lógica (ex: indo do 28 para o 29 -> índice menor)
+                if (indexCap > 0) {
+                    let capAnt = obra.capitulos[indexCap - 1];
+                    let numAnt = typeof capAnt === 'object' ? capAnt.numero : capAnt;
+                    let slugAnt = String(numAnt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    btnAnterior.href = `ler.html?obra=${obraSlug}&cap=${slugAnt}`;
+                } else {
+                    btnAnterior.classList.add('disabled');
+                    btnAnterior.href = '#';
+                }
+
+                // Próximo Capítulo na ordem lógica (ex: indo do 28 para o 27 -> índice maior)
+                if (indexCap < obra.capitulos.length - 1) {
+                    let capProx = obra.capitulos[indexCap + 1];
+                    let numProx = typeof capProx === 'object' ? capProx.numero : capProx;
+                    let slugProx = String(numProx).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    btnProximo.href = `ler.html?obra=${obraSlug}&cap=${slugProx}`;
+                } else {
+                    btnProximo.classList.add('disabled');
+                    btnProximo.href = '#';
+                }
+
+            })
+            .catch(err => {
+                console.error("Erro ao carregar leitor:", err);
+                document.getElementById('container-paginas').innerHTML = `<p style="color:red; text-align:center; padding:50px;">Erro ao carregar o capítulo.</p>`;
+            });
     </script>
 </body>
 </html>
