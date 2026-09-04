@@ -46,7 +46,7 @@
             z-index: 50;
         }
 
-        /* TÍTULO DO CAPÍTULO (MANTIDO EXATAMENTE COMO VOCÊ GOSTOU) */
+        /* TÍTULO DO CAPÍTULO */
         .capitulo-titulo-topo {
             font-size: 1.5rem;
             font-weight: 800;
@@ -62,7 +62,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* CONTROLES */
+        /* CONTROLES DO TOPO */
         .leitor-controles {
             display: flex;
             justify-content: center;
@@ -155,7 +155,50 @@
             background: #000;
         }
 
-        /* BOTÃO FLUTUANTE DA FLOR: BEM MAIS PARA BAIXO, UM POUCO PRA DIREITA E COM SOMBRA ROSA LEVE */
+        /* NAVEGAÇÃO DO FINAL DO CAPÍTULO */
+        .navegacao-final {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            margin: 40px auto 20px auto;
+            padding: 0 16px;
+        }
+        .btn-navegacao {
+            background: #000000;
+            color: #FF99DD;
+            border: 2px solid var(--primary-pink);
+            padding: 10px 22px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 0 12px rgba(255, 153, 221, 0.35);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: lowercase;
+            flex: 1;
+            max-width: 220px;
+            text-align: center;
+        }
+        .btn-navegacao:hover:not(.disabled) {
+            background: rgba(255, 153, 221, 0.2);
+            box-shadow: 0 0 18px rgba(255, 153, 221, 0.7);
+            transform: translateY(-2px);
+        }
+        .btn-navegacao.disabled {
+            border-color: rgba(255, 153, 221, 0.3);
+            color: rgba(255, 153, 221, 0.3);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* BOTÃO FLUTUANTE DA FLOR: MAIS PARA BAIXO, DIREITA, COM SOMBRA ROSA LEVE */
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -216,6 +259,12 @@
         <p style="text-align: center; color: var(--primary-pink); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
+    <!-- BOTÕES DE NAVEGAÇÃO NO FINAL DO CAPÍTULO -->
+    <div class="navegacao-final" id="navegacaoFinal" style="display: none;">
+        <a href="#" id="btnAnterior" class="btn-navegacao disabled">‹ anterior</a>
+        <a href="#" id="btnProximo" class="btn-navegacao disabled">próximo ›</a>
+    </div>
+
     <!-- BOTÃO FLUTUANTE DA FLOR -->
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
         <img src="https://files.catbox.moe/fjfbc8.png" alt="Voltar ao Topo">
@@ -262,16 +311,21 @@
             document.getElementById('btnVoltarObra').href = linkDetalhes;
 
             let capitulos = obraGlobal.capitulos || [];
+            let indexAtual = -1;
             let capAtual = null;
 
             if (capSlugUrl) {
-                capAtual = capitulos.find(c => {
+                indexAtual = capitulos.findIndex(c => {
                     let num = typeof c === 'object' ? c.numero : c;
                     return String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-') === capSlugUrl;
                 });
+                if (indexAtual !== -1) {
+                    capAtual = capitulos[indexAtual];
+                }
             }
 
             if (!capAtual && capitulos.length > 0) {
+                indexAtual = 0;
                 capAtual = capitulos[0];
             }
 
@@ -285,14 +339,15 @@
             document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
             document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
 
-            // Configurar lista de capítulos mantendo o texto fixo "Lista de Capítulos"
+            // Configurar lista de capítulos
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
             
-            capitulos.forEach(c => {
+            capitulos.forEach((c, idx) => {
                 let num = typeof c === 'object' ? c.numero : c;
                 let slugC = String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                selectEl.innerHTML += `<option value="${slugC}">Capítulo ${num}</option>`;
+                let selectedAttr = (idx === indexAtual) ? 'selected' : '';
+                selectEl.innerHTML += `<option value="${slugC}" ${selectedAttr}>Capítulo ${num}</option>`;
             });
 
             let paginas = [];
@@ -305,6 +360,39 @@
                 containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
             } else {
                 containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
+            }
+
+            // Configurar botões de Anterior e Próximo no final do capítulo
+            const navFinal = document.getElementById('navegacaoFinal');
+            const btnAnterior = document.getElementById('btnAnterior');
+            const btnProximo = document.getElementById('btnProximo');
+            navFinal.style.display = 'flex';
+
+            // No JSON, geralmente o índice 0 é o capítulo 1 (mais antigo) e o último é o mais recente,
+            // ou vice-versa. Ajuste padrão de scan: próximo índice costuma ser capítulo mais avançado.
+            // Aqui assumimos que o array está em ordem crescente (ex: [Cap 1, Cap 2, Cap 3]).
+            // Logo, "Anterior" é o índice anterior e "Próximo" é o índice seguinte.
+            
+            if (indexAtual > 0) {
+                let capAnt = capitulos[indexAtual - 1];
+                let numAnt = typeof capAnt === 'object' ? capAnt.numero : capAnt;
+                let slugAnt = String(numAnt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                btnAnterior.href = `ler.html?obra=${slugObraId}&cap=${slugAnt}`;
+                btnAnterior.classList.remove('disabled');
+            } else {
+                btnAnterior.href = '#';
+                btnAnterior.classList.add('disabled');
+            }
+
+            if (indexAtual < capitulos.length - 1 && indexAtual !== -1) {
+                let capProx = capitulos[indexAtual + 1];
+                let numProx = typeof capProx === 'object' ? capProx.numero : capProx;
+                let slugProx = String(numProx).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                btnProximo.href = `ler.html?obra=${slugObraId}&cap=${slugProx}`;
+                btnProximo.classList.remove('disabled');
+            } else {
+                btnProximo.href = '#';
+                btnProximo.classList.add('disabled');
             }
         }
 
