@@ -29,11 +29,11 @@
 
         .obra-container { max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 
-        /* BANNER DE FUNDO */
+        /* BANNER DE FUNDO MAIS ALTO PARA APARECER BEM */
         .banner-topo {
             position: relative;
             width: 100%;
-            height: 260px;
+            height: 310px;
             background-size: cover;
             background-position: center;
             overflow: hidden;
@@ -42,7 +42,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(11,11,14,0.05), rgba(11,11,14,0.45) 85%, #0b0b0e);
+            background: linear-gradient(to bottom, rgba(11,11,14,0.02), rgba(11,11,14,0.35) 80%, #0b0b0e);
         }
         .caminho-breadcrumb {
             position: relative;
@@ -57,12 +57,12 @@
         .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
         .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
 
-        /* CAPA PRINCIPAL */
+        /* CAPA PRINCIPAL BEM MAIS ABAIXADA */
         .wrapper-capa-principal {
             display: flex;
             justify-content: center;
             width: 100%;
-            margin-top: -145px;
+            margin-top: -95px;
             position: relative;
             z-index: 5;
             padding: 0 15px;
@@ -198,7 +198,7 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* ÁREA DE CAPÍTULOS SEM O QUADRADO GRANDE EM VOLTA */
+        /* ÁREA DE CAPÍTULOS SOLTOS */
         .secao-capitulos-solta {
             width: calc(100% - 30px);
             margin: 20px 15px 0 15px;
@@ -212,13 +212,13 @@
         }
         .section-title { font-size: 1.15rem; font-weight: 800; color: var(--primary-pink); text-shadow: var(--neon-glow); }
         
-        .lista-capitulos { display: flex; flex-direction: column; gap: 10px; }
+        .lista-capitulos { display: flex; flex-direction: column; gap: 12px; }
         
         .capitulo-item {
             background: transparent;
             border: none;
             border-bottom: 1px solid rgba(255, 153, 221, 0.15);
-            padding: 10px 5px;
+            padding: 12px 5px;
             border-radius: 0;
             display: flex;
             align-items: center;
@@ -237,29 +237,29 @@
             align-items: center;
             gap: 15px;
         }
-        /* CAPA MAIOR E COM BORDA ROSA MAIS FINA E SUAVE */
+        /* CAPAS DOS CAPÍTULOS AINDA MAIORES E COM BORDA FINA SUAVE */
         .cap-miniatura {
-            width: 145px;
-            height: 90px;
+            width: 170px;
+            height: 105px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid rgba(255, 153, 221, 0.45);
             background: #1a1a24;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
         }
         .cap-info-texto {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
         .cap-num-principal {
-            font-size: 1.05rem;
+            font-size: 1.12rem;
             font-weight: 800;
             color: var(--primary-pink);
             text-shadow: var(--neon-glow);
         }
         .cap-sub-label {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
             text-shadow: none;
             font-weight: 600;
@@ -398,7 +398,7 @@
                         </div>
                     </div>
 
-                    <!-- CAPA PRINCIPAL -->
+                    <!-- CAPA PRINCIPAL ABAIXADA -->
                     <div class="wrapper-capa-principal">
                         <img src="${capaFrente}" alt="${obra.titulo}" class="obra-capa-large">
                     </div>
@@ -450,7 +450,7 @@
                         <p class="sinopse-texto">${obra.sinopse || 'Nenhuma sinopse cadastrada.'}</p>
                     </div>
 
-                    <!-- CAPÍTULOS SOLTOS SEM CAIXA GRANDE -->
+                    <!-- CAPÍTULOS COM MINIATURAS MAIORES -->
                     <div class="secao-capitulos-solta">
                         <div class="secao-cabecalho-caps">
                             <h3 class="section-title">Capítulos</h3>
