@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -44,7 +44,6 @@
             z-index: 50;
         }
 
-        /* NOME DA OBRA EM CIMA (PEQUENO E CLICÁVEL) */
         .obra-titulo-link {
             font-size: 0.85rem;
             font-weight: 600;
@@ -59,13 +58,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            cursor: pointer;
         }
         .obra-titulo-link:hover {
             color: #ffffff;
             text-shadow: 0 0 8px var(--primary-pink);
         }
 
-        /* TÍTULO DO CAPÍTULO */
         .capitulo-titulo-topo {
             font-size: 1.4rem;
             font-weight: 800;
@@ -81,7 +80,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* CONTROLES DO TOPO (AGORA SÓ COM O SELECT CENTRALIZADO) */
         .leitor-controles {
             display: flex;
             justify-content: center;
@@ -219,10 +217,9 @@
     </div>
 
     <div class="leitor-topo">
-        <!-- Nome da obra pequeno e clicável em cima -->
-        <a href="#" class="obra-titulo-link" id="linkObraTopo">Carregando obra...</a>
+        <!-- Título da obra clicable que redireciona para obra.html -->
+        <a class="obra-titulo-link" id="linkObraTopo" onclick="irParaDetalhes()">Carregando obra...</a>
         
-        <!-- Título do Capítulo -->
         <div class="capitulo-titulo-topo" id="textoCapituloReal">CAPÍTULO --</div>
 
         <div class="leitor-controles">
@@ -278,18 +275,25 @@
                     return;
                 }
 
-                // Configura o nome da obra e o link direto para a página de detalhes
-                const identificadorObra = obraGlobal.id || criarSlug(obraGlobal.titulo);
-                const linkObraEl = document.getElementById('linkObraTopo');
-                linkObraEl.textContent = obraGlobal.titulo;
-                linkObraEl.href = `detalhes.html?nome=${encodeURIComponent(identificadorObra)}`;
-
+                document.getElementById('linkObraTopo').textContent = obraGlobal.titulo;
                 carregarLeitor();
             })
             .catch(err => {
                 console.error("Erro ao carregar dados:", err);
                 document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
             });
+
+        // Aponta corretamente para obra.html
+        function irParaDetalhes() {
+            if (obraGlobal) {
+                const identificadorObra = obraGlobal.id || criarSlug(obraGlobal.titulo);
+                window.location.href = `obra.html?nome=${encodeURIComponent(identificadorObra)}`;
+            } else if (obraSlugUrl) {
+                window.location.href = `obra.html?nome=${encodeURIComponent(obraSlugUrl)}`;
+            } else {
+                window.location.href = './';
+            }
+        }
 
         function carregarLeitor() {
             let capitulos = obraGlobal.capitulos || [];
