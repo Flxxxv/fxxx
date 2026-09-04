@@ -305,11 +305,9 @@
             });
 
         function carregarLeitor() {
-            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
-            
-            // Corrige o link para apontar corretamente para detalhes.html com o parâmetro correto (nome)
-            const linkDetalhes = `detalhes.html?nome=${slugObraId}`;
-            document.getElementById('btnVoltarObra').href = linkDetalhes;
+            // Usa o parâmetro exato que a sua página de detalhes usa (nome ou id)
+            const paramDetalhes = obraGlobal.id || criarSlug(obraGlobal.titulo);
+            document.getElementById('btnVoltarObra').href = `detalhes.html?nome=${paramDetalhes}`;
 
             let capitulos = obraGlobal.capitulos || [];
             let indexAtual = -1;
@@ -367,6 +365,8 @@
             const btnAnterior = document.getElementById('btnAnterior');
             const btnProximo = document.getElementById('btnProximo');
             navFinal.style.display = 'flex';
+
+            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
 
             if (indexAtual > 0) {
                 let capAnt = capitulos[indexAtual - 1];
