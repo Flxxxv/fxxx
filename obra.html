@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -66,13 +66,16 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const nomeObraUrl = decodeURIComponent(urlParams.get('nome') || '').trim().toLowerCase();
+        const slugUrl = decodeURIComponent(urlParams.get('nome') || '').trim().toLowerCase();
+
+        function criarSlug(texto) {
+            return String(texto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+        }
 
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                // Procura a obra por ID ou por título exato para manter compatibilidade
-                const obra = obras.find(o => String(o.id).trim().toLowerCase() === nomeObraUrl || String(o.titulo).trim().toLowerCase() === nomeObraUrl);
+                const obra = obras.find(o => criarSlug(o.titulo) === slugUrl || String(o.id).trim().toLowerCase() === slugUrl || String(o.titulo).trim().toLowerCase() === slugUrl);
                 const container = document.getElementById('detalhes-conteudo');
 
                 if (!obra) {
@@ -96,7 +99,7 @@
                         let slugCap = String(numCap).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
                         
                         listaCapsHtml += `
-                            <a href="ler.html?obra=${obra.id}&cap=${slugCap}" class="capitulo-item">
+                            <a href="ler.html?obra=${obra.id || criarSlug(obra.titulo)}&cap=${slugCap}" class="capitulo-item">
                                 <span class="capitulo-numero">${numCap}</span>
                                 <span class="capitulo-data">${dataCap}</span>
                             </a>
@@ -111,7 +114,7 @@
                     let primeiro = obra.capitulos[obra.capitulos.length - 1]; 
                     let numPrimeiro = typeof primeiro === 'object' ? primeiro.numero : primeiro;
                     let slugPrimeiro = String(numPrimeiro).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                    primeiroCapLink = `ler.html?obra=${obra.id}&cap=${slugPrimeiro}`;
+                    primeiroCapLink = `ler.html?obra=${obra.id || criarSlug(obra.titulo)}&cap=${slugPrimeiro}`;
                 }
 
                 container.innerHTML = `
