@@ -88,6 +88,7 @@
             transition: 0.2s;
             font-size: 1.3rem;
             text-shadow: var(--neon-glow);
+            text-decoration: none;
         }
 
         .icon-btn svg {
@@ -460,7 +461,7 @@
 
     <!-- TOPO -->
     <header>
-        <a href="index.html" class="logo-img-container">
+        <a href="./" class="logo-img-container">
             <span style="font-size:1.15rem; font-weight:800; color:var(--primary-pink);">flower's nenasscan 🌸</span>
         </a>
         
@@ -484,11 +485,11 @@
             <button class="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <div class="sidebar-links">
-            <a href="index.html">Início</a>
-            <a href="index.html?aba=obras">Obras</a>
-            <a href="index.html?aba=favoritos">Biblioteca</a>
-            <a href="index.html?aba=avisos">Avisos</a>
-            <a href="index.html?aba=generos">Gêneros</a>
+            <a href="./">Início</a>
+            <a href="./?aba=obras">Obras</a>
+            <a href="./?aba=favoritos">Biblioteca</a>
+            <a href="./?aba=avisos">Avisos</a>
+            <a href="./?aba=generos">Gêneros</a>
             <a href="javascript:void(0)" onclick="alert('Chave Pix / Apoio em breve!'); toggleMenu();">Apoie a Scan</a>
             <a href="javascript:void(0)" onclick="alert('Pedidos abertos no Discord/Telegram!'); toggleMenu();">Pedidos</a>
         </div>
@@ -571,19 +572,19 @@
 
     <!-- BARRA INFERIOR FIXA -->
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active" id="nav-inicio" onclick="event.preventDefault(); mudarAbaVisual('inicio'); history.pushState({}, '', 'index.html');">
+        <a href="./" class="nav-item active" id="nav-inicio" onclick="event.preventDefault(); mudarAbaVisual('inicio'); history.pushState({}, '', './');">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             Início
         </a>
-        <a href="index.html?aba=obras" class="nav-item" id="nav-obras" onclick="event.preventDefault(); mudarAbaVisual('obras'); history.pushState({}, '', 'index.html?aba=obras');">
+        <a href="./?aba=obras" class="nav-item" id="nav-obras" onclick="event.preventDefault(); mudarAbaVisual('obras'); history.pushState({}, '', './?aba=obras');">
             <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
             Obras
         </a>
-        <a href="index.html?aba=favoritos" class="nav-item" id="nav-favoritos" onclick="event.preventDefault(); mudarAbaVisual('favoritos'); history.pushState({}, '', 'index.html?aba=favoritos'); renderizarBiblioteca();">
+        <a href="./?aba=favoritos" class="nav-item" id="nav-favoritos" onclick="event.preventDefault(); mudarAbaVisual('favoritos'); history.pushState({}, '', './?aba=favoritos'); renderizarBiblioteca();">
             <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6  12V4z"/></svg>
             Biblioteca
         </a>
-        <a href="index.html?aba=avisos" class="nav-item" id="nav-avisos" onclick="event.preventDefault(); mudarAbaVisual('avisos'); history.pushState({}, '', 'index.html?aba=avisos');">
+        <a href="./?aba=avisos" class="nav-item" id="nav-avisos" onclick="event.preventDefault(); mudarAbaVisual('avisos'); history.pushState({}, '', './?aba=avisos');">
             <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
             Avisos
         </a>
@@ -591,7 +592,11 @@
 
     <script>
         let listaObras = [];
-        let obraCarrosselAtualId = '';
+        let obraCarrosselAtualSlug = '';
+
+        function criarSlug(texto) {
+            return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+        }
 
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
@@ -639,10 +644,11 @@
 
             destaques.forEach((obra, index) => {
                 const ativa = index === 0 ? 'active' : '';
-                if (index === 0) obraCarrosselAtualId = obra.titulo;
+                const slugObra = obra.id || criarSlug(obra.titulo);
+                if (index === 0) obraCarrosselAtualSlug = slugObra;
 
                 carousel.innerHTML += `
-                    <div class="hero-slide ${ativa}" style="background-image: url('${obra.capa}');" data-titulo="${obra.titulo}">
+                    <div class="hero-slide ${ativa}" style="background-image: url('${obra.capa}');" data-slug="${slugObra}">
                         <div class="hero-content">
                             <div class="hero-title">${obra.titulo}</div>
                             <div class="hero-synopsis">${obra.sinopse || 'Sem sinopse informada.'}</div>
@@ -658,14 +664,14 @@
                     slides[slideIndex].classList.remove('active');
                     slideIndex = (slideIndex + 1) % slides.length;
                     slides[slideIndex].classList.add('active');
-                    obraCarrosselAtualId = slides[slideIndex].dataset.titulo;
+                    obraCarrosselAtualSlug = slides[slideIndex].dataset.slug;
                 }, 4500);
             }
         }
 
         function abrirObraDoCarrossel() {
-            if (obraCarrosselAtualId) {
-                window.location.href = `obra.html?nome=${encodeURIComponent(obraCarrosselAtualId)}`;
+            if (obraCarrosselAtualSlug) {
+                window.location.href = `obra.html?nome=${obraCarrosselAtualSlug}`;
             }
         }
 
@@ -676,22 +682,25 @@
             const recentes = listaObras.slice(0, 10);
 
             recentes.forEach(obra => {
+                const slugObra = obra.id || criarSlug(obra.titulo);
                 let ultimoCapNum = 'Em breve';
+                let slugCap = '';
                 let linkLeitor = '#';
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     let capObj = obra.capitulos[0];
                     ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
-                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.titulo)}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    slugCap = String(ultimoCapNum).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    linkLeitor = `ler.html?obra=${slugObra}&cap=${slugCap}`;
                 }
                 
                 grid.innerHTML += `
                     <div class="manga-card">
-                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box">
+                        <a href="obra.html?nome=${slugObra}" class="manga-capa-box">
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                         </a>
                         <div class="manga-info">
-                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
+                            <a href="obra.html?nome=${slugObra}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                                 <span class="selo-novo">NOVO</span>
@@ -706,22 +715,25 @@
             const grid = document.getElementById('grid-todas-obras');
             grid.innerHTML = '';
             listaObras.forEach(obra => {
+                const slugObra = obra.id || criarSlug(obra.titulo);
                 let ultimoCapNum = 'Em breve';
+                let slugCap = '';
                 let linkLeitor = '#';
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     let capObj = obra.capitulos[0];
                     ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
-                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.titulo)}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    slugCap = String(ultimoCapNum).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    linkLeitor = `ler.html?obra=${slugObra}&cap=${slugCap}`;
                 }
 
                 grid.innerHTML += `
                     <div class="manga-card">
-                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box">
+                        <a href="obra.html?nome=${slugObra}" class="manga-capa-box">
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                         </a>
                         <div class="manga-info">
-                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
+                            <a href="obra.html?nome=${slugObra}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                             </div>
@@ -751,13 +763,14 @@
             }
 
             obrasFavs.forEach(obra => {
+                const slugObra = obra.id || criarSlug(obra.titulo);
                 container.innerHTML += `
                     <div class="manga-card">
-                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box">
+                        <a href="obra.html?nome=${slugObra}" class="manga-capa-box">
                             <img src="${obra.capa}" alt="${obra.titulo}" class="manga-capa">
                         </a>
                         <div class="manga-info">
-                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
+                            <a href="obra.html?nome=${slugObra}" class="manga-titulo" title="${obra.titulo}">${obra.titulo}</a>
                         </div>
                     </div>
                 `;
@@ -784,20 +797,23 @@
             
             grid.innerHTML = '';
             filtradas.forEach(obra => {
+                const slugObra = obra.id || criarSlug(obra.titulo);
                 let ultimoCapNum = 'Em breve';
+                let slugCap = '';
                 let linkLeitor = '#';
 
                 if (obra.capitulos && obra.capitulos.length > 0) {
                     let capObj = obra.capitulos[0];
                     ultimoCapNum = typeof capObj === 'object' ? capObj.numero : capObj;
-                    linkLeitor = `ler.html?obra=${encodeURIComponent(obra.titulo)}&cap=${encodeURIComponent(ultimoCapNum)}`;
+                    slugCap = String(ultimoCapNum).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    linkLeitor = `ler.html?obra=${slugObra}&cap=${slugCap}`;
                 }
 
                 grid.innerHTML += `
                     <div class="manga-card">
-                        <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-capa-box"><img src="${obra.capa}" class="manga-capa"></a>
+                        <a href="obra.html?nome=${slugObra}" class="manga-capa-box"><img src="${obra.capa}" class="manga-capa"></a>
                         <div class="manga-info">
-                            <a href="obra.html?nome=${encodeURIComponent(obra.titulo)}" class="manga-titulo">${obra.titulo}</a>
+                            <a href="obra.html?nome=${slugObra}" class="manga-titulo">${obra.titulo}</a>
                             <div class="capitulo-recente-row">
                                 <a href="${linkLeitor}" class="capitulo-link">${ultimoCapNum}</a>
                             </div>
