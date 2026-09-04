@@ -4,140 +4,256 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Leitor - Flower's Nenascan 🌸</title>
+    <title>Flower's Nenascan 🌸 - Leitor</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         #netlify-badge, div[id*="netlify-badge"] { display: none !important; }
         :root {
             --bg-color: #0b0b0e;
-            --primary-pink: #FF99DD;
+            --card-bg: #14141a;
+            --primary-pink: #FF99DD; 
             --neon-glow: 0 0 12px rgba(255, 153, 221, 0.7), 0 0 25px rgba(255, 153, 221, 0.35);
             --text-main: #FF99DD;
             --text-muted: #e69ac5;
+            --shadow: 0 4px 22px rgba(0, 0, 0, 0.7);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        p, span, a, h1, h2, h3, div { color: var(--primary-pink); text-shadow: var(--neon-glow); }
+        body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 30px; overflow-x: hidden; }
+        p, span, a, h1, h2, h3, h4, div { color: var(--primary-pink); text-shadow: var(--neon-glow); }
 
-        /* Barra Superior do Leitor */
-        .leitor-topo {
+        /* BARRA DE PROGRESSO NO TOPO/FUNDO */
+        .barra-progresso-container {
             position: fixed;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(11, 11, 14, 0.92);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(255, 153, 221, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
+            height: 6px;
+            background: rgba(255, 153, 221, 0.15);
             z-index: 1000;
         }
-        .btn-voltar-obra {
-            background: #181822;
-            border: 1px solid rgba(255, 153, 221, 0.5);
-            color: var(--primary-pink);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: 0.2s;
-            text-shadow: var(--neon-glow);
-        }
-        .btn-voltar-obra:hover {
+        .barra-progresso-fill {
+            width: 0%;
+            height: 100%;
             background: var(--primary-pink);
-            color: #0b0b0e;
-            box-shadow: 0 0 12px var(--primary-pink);
-        }
-        .titulo-capitulo-topo {
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 50%;
+            box-shadow: var(--neon-glow);
+            transition: width 0.1s linear;
         }
 
-        /* Container das Páginas do Webtoon */
-        .paginas-container {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 65px;
+        /* TOPO DO LEITOR */
+        .leitor-topo {
+            background-color: var(--bg-color);
+            padding: 15px 20px 20px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #000;
-        }
-        .pagina-webtoon {
-            width: 100%;
-            display: block;
-            height: auto;
-            object-fit: contain;
-            margin: 0;
-            padding: 0;
+            border-bottom: 1px solid rgba(255, 153, 221, 0.2);
+            position: relative;
+            z-index: 50;
         }
 
-        /* Controles Inferiores (Navegação de Capítulos) */
-        .leitor-rodape {
+        .caminho-breadcrumb {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-shadow: var(--neon-glow);
             width: 100%;
-            max-width: 800px;
-            padding: 25px 15px;
+            max-width: 700px;
+            margin-bottom: 12px;
+        }
+        .caminho-breadcrumb a { color: var(--text-muted); text-decoration: none; }
+        .caminho-breadcrumb a:hover { color: var(--primary-pink); text-decoration: underline; }
+
+        .obra-titulo-topo {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .capitulo-titulo-topo {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--primary-pink);
+            text-shadow: var(--neon-glow);
+            letter-spacing: 0.5px;
+            margin-bottom: 18px;
+        }
+
+        /* CONTROLES (BOTÃO VOLTAR E LISTA DE CAPÍTULOS) */
+        .leitor-controles {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--bg-color);
-            border-top: 1px solid rgba(255, 153, 221, 0.2);
-            margin-top: auto;
+            width: 100%;
+            max-width: 700px;
+            gap: 15px;
         }
-        .btn-navegacao {
-            background: #181822;
-            border: 1px solid var(--primary-pink);
-            color: var(--primary-pink);
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.85rem;
+
+        /* BOTÃO VOLTAR ROSINHA ESTILIZADO */
+        .btn-voltar-obra {
+            background: #ff99dd;
+            color: #0b0b0e;
+            border: 2px solid #ff99dd;
+            padding: 10px 24px;
+            border-radius: 18px;
+            font-weight: 800;
+            font-size: 1.05rem;
             cursor: pointer;
             text-decoration: none;
+            box-shadow: 0 0 15px rgba(255, 153, 221, 0.8);
             transition: 0.2s;
+            text-shadow: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
+        }
+        .btn-voltar-obra:hover {
+            background: #ff77d5;
+            box-shadow: 0 0 22px rgba(255, 153, 221, 1);
+            transform: scale(1.03);
+        }
+
+        /* DROPDOWN / SELECT DE CAPÍTULOS */
+        .dropdown-container {
+            position: relative;
+            flex: 1;
+            max-width: 250px;
+        }
+        .select-capitulos {
+            width: 100%;
+            background: #181822;
+            border: 1px solid rgba(255, 153, 221, 0.6);
+            color: var(--primary-pink);
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            outline: none;
+            box-shadow: var(--shadow);
             text-shadow: var(--neon-glow);
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%23%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%23%22%20width%3D%22292.364%22%20height%3D%22292.364%22%3E%3Cpath%20fill%3D%23%22%23FF99DD%22%20d%3D%22M287.934%20197.935L146.123%2056.127%204.31%20197.935c-3.28%203.28-3.28%208.6-0.003%2011.88l19.52%2019.52c3.28%203.28%208.6%203.28%2011.88%200l110.4-110.4%20110.4%20110.4c3.28%203.28%208.6%203.28%2011.88%200l19.52-19.52c3.28-3.28%203.28-8.6%200.002-11.88z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 10px;
+            padding-right: 35px;
         }
-        .btn-navegacao:hover {
-            background: var(--primary-pink);
-            color: #0b0b0e;
-            box-shadow: 0 0 12px var(--primary-pink);
+        .select-capitulos option {
+            background: #14141a;
+            color: var(--primary-pink);
         }
-        .btn-navegacao.disabled {
-            opacity: 0.4;
-            pointer-events: none;
-            border-color: rgba(255, 153, 221, 0.2);
+
+        /* ÁREA DE LEITURA DAS PÁGINAS */
+        .paginas-leitor {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0px;
+            min-height: 70vh;
+        }
+        .pagina-manga {
+            width: 100%;
+            display: block;
+            object-fit: contain;
+            background: #111;
+        }
+
+        /* BOTÃO DE FLOR FLUTUANTE (VOLTAR AO TOPO) */
+        .btn-flor-topo {
+            position: fixed;
+            bottom: 25px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            background: #181822;
+            border: 2px solid rgba(255, 153, 221, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), var(--neon-glow);
+            z-index: 999;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        .btn-flor-topo:hover {
+            transform: scale(1.1);
+            background: rgba(255, 153, 221, 0.15);
+            box-shadow: 0 0 25px rgba(255, 153, 221, 1);
+        }
+        .btn-flor-topo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--primary-pink);
+            filter: drop-shadow(0 0 8px rgba(255, 153, 221, 0.9));
         }
     </style>
 </head>
 <body>
 
+    <!-- BARRA DE PROGRESSO ROSA EM BAIXO -->
+    <div class="barra-progresso-container">
+        <div class="barra-progresso-fill" id="barraProgresso"></div>
+    </div>
+
+    <!-- TOPO DO LEITOR -->
     <div class="leitor-topo">
-        <a href="#" id="link-voltar" class="btn-voltar-obra">← Voltar à Obra</a>
-        <span class="titulo-capitulo-topo" id="info-cap-topo">Carregando...</span>
-        <div style="width: 80px;"></div> <!-- Espaçador para centralizar o título -->
+        <div class="caminho-breadcrumb" id="breadcrumb">
+            <a href="./">Início</a> / <a href="#" id="linkBreadcrumbObra">Obras</a> / <span id="nomeObraBreadcrumb">Carregando...</span>
+        </div>
+
+        <div class="obra-titulo-topo" id="tituloObraTopo">
+            🌸 Carregando Obra...
+        </div>
+
+        <div class="capitulo-titulo-topo" id="tituloCapituloTopo">
+            CAPÍTULO --
+        </div>
+
+        <div class="leitor-controles">
+            <a href="#" class="btn-voltar-obra" id="btnVoltarObra">voltar</a>
+            
+            <div class="dropdown-container">
+                <select class="select-capitulos" id="selectCapitulos" onchange="mudarCapitulo(this.value)">
+                    <option value="">Lista de Capítulos</option>
+                </select>
+            </div>
+        </div>
     </div>
 
-    <div class="paginas-container" id="container-paginas">
-        <p style="color: var(--text-muted); padding: 60px 0; text-align: center;">Carregando páginas...</p>
+    <!-- PÁGINAS DO CAPÍTULO -->
+    <div class="paginas-leitor" id="paginasContainer">
+        <p style="text-align: center; color: var(--text-muted); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
-    <div class="leitor-rodape" id="rodape-navegacao" style="display: none;">
-        <a href="#" id="btn-cap-anterior" class="btn-navegacao">← Capítulo Anterior</a>
-        <a href="#" id="btn-cap-proximo" class="btn-navegacao">Próximo Capítulo →</a>
-    </div>
+    <!-- BOTÃO FLUTUANTE DE FLOR PARA SUBIR AO TOPO -->
+    <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.8 8.1 9 9 9.8V11C9.0 12.7 7.7 14 6 14C4.3 14 3 12.7 3 11C3 9.3 4.3 8 6 8C6.3 8 6.7 8.1 7 8.2V6.5C7 3.5 9.5 1 12.5 1C15.5 1 18 3.5 18 6.5V8.2C18.3 8.1 18.7 8 19 8C20.7 8 22 9.3 22 11C22 12.7 20.7 14 19 14C17.3 14 16 12.7 16 11V9.8C16.9 9 17.5 7.8 17.5 6.5C17.5 4 15.5 2 12 2ZM12 13C10.3 13 9 14.3 9 16V22H15V16C15 14.3 13.7 13 12 13ZM12 15C12.6 15 13 15.4 13 16V20H11V16C11 15.4 11.4 15 12 15Z"/>
+            <!-- Ícone estilizado com setinha para cima dentro da flor -->
+            <path d="M12 4L8 9H11V14H13V9H16L12 4Z" fill="#0b0b0e"/>
+        </svg>
+    </a>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const obraSlug = decodeURIComponent(urlParams.get('obra') || '').trim().toLowerCase();
-        const capParam = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
+        const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim().toLowerCase();
+        const capSlugUrl = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
+
+        let obraGlobal = null;
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -146,85 +262,107 @@
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                const obra = obras.find(o => criarSlug(o.titulo) === obraSlug || String(o.id).trim().toLowerCase() === obraSlug);
-                
-                if (!obra || !obra.capitulos) {
-                    document.getElementById('container-paginas').innerHTML = `<p style="color:red; text-align:center; padding:50px;">Obra ou capítulos não encontrados.</p>`;
+                obraGlobal = obras.find(o => criarSlug(o.titulo) === obraSlugUrl || String(o.id).trim().toLowerCase() === obraSlugUrl || String(o.titulo).trim().toLowerCase() === obraSlugUrl);
+
+                if (!obraGlobal) {
+                    document.getElementById('paginasContainer').innerHTML = `
+                        <div style="text-align:center; padding: 60px 20px;">
+                            <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
+                            <p style="color:var(--text-muted); margin-top: 10px;">Não foi possível carregar os dados desta obra.</p>
+                            <a href="./" class="btn-voltar-obra" style="display:inline-flex; margin-top:20px;">Voltar ao Início</a>
+                        </div>
+                    `;
                     return;
                 }
 
-                // Configura botão de voltar para a página da obra
-                document.getElementById('link-voltar').href = `obra.html?nome=${encodeURIComponent(obraSlug)}`;
-
-                // Acha o capítulo atual
-                const indexCap = obra.capitulos.findIndex(c => {
-                    let num = typeof c === 'object' ? c.numero : c;
-                    return String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-') === capParam;
-                });
-
-                if (indexCap === -1) {
-                    document.getElementById('container-paginas').innerHTML = `<p style="color:red; text-align:center; padding:50px;">Capítulo não encontrado.</p>`;
-                    return;
-                }
-
-                const capituloAtual = obra.capitulos[indexCap];
-                let numCapitulo = typeof capituloAtual === 'object' ? capituloAtual.numero : capituloAtual;
-                
-                document.title = `${obra.titulo} - Cap. ${numCapitulo} - Flower's Nenascan 🌸`;
-                document.getElementById('info-cap-topo').textContent = `${obra.titulo} - Cap. ${numCapitulo}`;
-
-                // Pega a lista de imagens do capítulo
-                let imagens = [];
-                if (typeof capituloAtual === 'object' && Array.isArray(capituloAtual.paginas)) {
-                    imagens = capituloAtual.paginas;
-                }
-
-                // 🛑 AQUI ESTÁ A MÁGICA: Remove a primeira imagem se houver mais de 1 página,
-                // pois ela serve exclusivamente como capa na listagem do site!
-                if (imagens.length > 1) {
-                    imagens = imagens.slice(1);
-                }
-
-                const containerPaginas = document.getElementById('container-paginas');
-                if (imagens.length > 0) {
-                    containerPaginas.innerHTML = imagens.map(imgSrc => `<img src="${imgSrc}" class="pagina-webtoon" loading="lazy" alt="Página do capítulo">`).join('');
-                } else {
-                    containerPaginas.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 50px;">Nenhuma página cadastrada para este capítulo.</p>`;
-                }
-
-                // Configurar botões de Próximo / Anterior
-                // No array do JSON, os capítulos costumam vir do mais recente para o mais antigo (ex: 30, 29, 28)
-                const btnAnterior = document.getElementById('btn-cap-anterior');
-                const btnProximo = document.getElementById('btn-cap-proximo');
-                document.getElementById('rodape-navegacao').style.display = 'flex';
-
-                // Capítulo Anterior na ordem lógica (ex: indo do 28 para o 29 -> índice menor)
-                if (indexCap > 0) {
-                    let capAnt = obra.capitulos[indexCap - 1];
-                    let numAnt = typeof capAnt === 'object' ? capAnt.numero : capAnt;
-                    let slugAnt = String(numAnt).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                    btnAnterior.href = `ler.html?obra=${obraSlug}&cap=${slugAnt}`;
-                } else {
-                    btnAnterior.classList.add('disabled');
-                    btnAnterior.href = '#';
-                }
-
-                // Próximo Capítulo na ordem lógica (ex: indo do 28 para o 27 -> índice maior)
-                if (indexCap < obra.capitulos.length - 1) {
-                    let capProx = obra.capitulos[indexCap + 1];
-                    let numProx = typeof capProx === 'object' ? capProx.numero : capProx;
-                    let slugProx = String(numProx).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
-                    btnProximo.href = `ler.html?obra=${obraSlug}&cap=${slugProx}`;
-                } else {
-                    btnProximo.classList.add('disabled');
-                    btnProximo.href = '#';
-                }
-
+                carregarLeitor();
             })
             .catch(err => {
-                console.error("Erro ao carregar leitor:", err);
-                document.getElementById('container-paginas').innerHTML = `<p style="color:red; text-align:center; padding:50px;">Erro ao carregar o capítulo.</p>`;
+                console.error("Erro ao carregar dados:", err);
+                document.getElementById('paginasContainer').innerHTML = `<p style="color:red; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
             });
+
+        function carregarLeitor() {
+            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
+            
+            // Configurar links de retorno para a página de detalhes da obra
+            const linkDetalhes = `detalhes.html?nome=${slugObraId}`;
+            document.getElementById('btnVoltarObra').href = linkDetalhes;
+            document.getElementById('linkBreadcrumbObra').href = linkDetalhes;
+            document.getElementById('nomeObraBreadcrumb').textContent = obraGlobal.titulo;
+            document.getElementById('tituloObraTopo').innerHTML = `🌸 ${obraGlobal.titulo}`;
+
+            // Encontrar o capítulo atual
+            let capitulos = obraGlobal.capitulos || [];
+            let capAtual = null;
+
+            if (capSlugUrl) {
+                capAtual = capitulos.find(c => {
+                    let num = typeof c === 'object' ? c.numero : c;
+                    return String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-') === capSlugUrl;
+                });
+            }
+
+            // Se não encontrou pela URL, pega o primeiro capítulo disponível
+            if (!capAtual && capitulos.length > 0) {
+                capAtual = capitulos[0];
+            }
+
+            if (!capAtual) {
+                document.getElementById('tituloCapituloTopo').textContent = `CAPÍTULO --`;
+                document.getElementById('paginasContainer').innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 50px;">Capítulo não encontrado.</p>`;
+                return;
+            }
+
+            let numCap = typeof capAtual === 'object' ? capAtual.numero : capAtual;
+            document.getElementById('tituloCapituloTopo').textContent = `CAPÍTULO ${numCap}`;
+            document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
+
+            // Popular o select de Lista de Capítulos
+            const selectEl = document.getElementById('selectCapitulos');
+            selectEl.innerHTML = `<option value="">Lista de Capítulos (${capitulos.length})</option>`;
+            
+            capitulos.forEach(c => {
+                let num = typeof c === 'object' ? c.numero : c;
+                let slugC = String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                let selecionado = String(num).toLowerCase() === String(numCap).toLowerCase() ? 'selected' : '';
+                selectEl.innerHTML += `<option value="${slugC}" ${selecionado}>Capítulo ${num}</option>`;
+            });
+
+            // Carregar páginas do capítulo
+            let paginas = [];
+            if (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) {
+                paginas = capAtual.paginas;
+            }
+
+            const containerPaginas = document.getElementById('paginasContainer');
+            if (paginas.length > 0) {
+                containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
+            } else {
+                containerPaginas.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
+            }
+        }
+
+        function mudarCapitulo(slugCap) {
+            if (!slugCap || !obraGlobal) return;
+            const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
+            window.location.href = `ler.html?obra=${slugObraId}&cap=${slugCap}`;
+        }
+
+        function voltarAoTopo(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Lógica da barra de progresso inferior conforme o usuário rola a página
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const alturaTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (alturaTotal > 0) {
+                const progresso = (scrollTop / alturaTotal) * 100;
+                document.getElementById('barraProgresso').style.width = `${progresso}%`;
+            }
+        });
     </script>
 </body>
 </html>
