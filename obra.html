@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -79,7 +79,7 @@
             background: #14141a;
         }
 
-        /* TÍTULO E STATUS */
+        /* TÍTULO DA OBRA */
         .info-principal-central {
             text-align: center;
             padding: 20px 20px 10px 20px;
@@ -96,19 +96,6 @@
             text-shadow: var(--neon-glow);
             letter-spacing: 0.5px;
         }
-        .tag-status {
-            background: #14141a;
-            border: 1px solid rgba(255, 153, 221, 0.5);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: var(--neon-glow);
-        }
-        .tag-status span { width: 7px; height: 7px; background: var(--primary-pink); border-radius: 50%; display: inline-block; box-shadow: var(--neon-glow); }
 
         /* BOTÕES DE AÇÃO */
         .acoes-obra {
@@ -425,7 +412,6 @@
         function obterBandeiraTipo(tipo) {
             if (!tipo) return '';
             let t = String(tipo).toLowerCase().trim();
-            // Mapeamento de bandeiras por país de origem do formato
             let sigla = '';
             if (t.includes('manhwa')) sigla = 'kr'; // Coreia do Sul
             else if (t.includes('manga')) sigla = 'jp'; // Japão
@@ -571,12 +557,9 @@
                     <img src="${capaFrente}" alt="${obraGlobal.titulo}" class="obra-capa-large">
                 </div>
 
-                <!-- TÍTULO E STATUS -->
+                <!-- TÍTULO DA OBRA -->
                 <div class="info-principal-central">
                     <h1 class="obra-titulo-principal">${obraGlobal.titulo}</h1>
-                    <div class="tag-status">
-                        <span></span> ${obraGlobal.status || 'Em andamento'}
-                    </div>
                 </div>
 
                 <!-- BOTÕES DE AÇÃO -->
@@ -689,4 +672,3 @@
     </script>
 </body>
 </html>
-        
