@@ -214,7 +214,7 @@
             box-shadow: none;
         }
 
-        /* SEÇÃO DE REAÇÕES PERSONALIZADAS */
+        /* SEÇÃO DE REAÇÕES */
         .secao-reamoes {
             width: 100%;
             max-width: 600px;
@@ -529,7 +529,6 @@
         let obraGlobal = null;
         let idCapituloUnico = `${obraSlugUrl}_${capSlugUrl}`;
 
-        // Controle para abrir/fechar as regras de comentários
         document.getElementById('btnToggleRegras').addEventListener('click', function() {
             const caixa = document.getElementById('caixaRegras');
             caixa.classList.toggle('ativa');
@@ -549,23 +548,11 @@
                     String(o.titulo).trim().toLowerCase() === obraSlugUrl.toLowerCase()
                 );
 
-                if (!obraGlobal) {
-                    document.getElementById('paginasContainer').innerHTML = `
-                        <div style="text-align:center; padding: 60px 20px;">
-                            <h2 style="color:var(--primary-pink);">Obra não encontrada!</h2>
-                            <p style="color:var(--primary-pink); margin-top: 10px; opacity:0.8;">Não foi possível carregar os dados desta obra.</p>
-                            <a href="./" class="obra-titulo-link" style="display:inline-block; margin-top:20px; font-size:1rem;">Voltar ao Início</a>
-                        </div>
-                    `;
-                    return;
-                }
-
-                document.getElementById('linkObraTopo').textContent = obraGlobal.titulo;
                 carregarLeitor();
             })
             .catch(err => {
-                console.error("Erro ao carregar dados:", err);
-                document.getElementById('paginasContainer').innerHTML = `<p style="color:#FF99DD; text-align:center; padding: 40px;">Erro ao carregar o capítulo.</p>`;
+                console.error("Erro ao carregar obras.json:", err);
+                document.getElementById('paginasContainer').innerHTML = `<p style="text-align: center; color: #FF99DD; padding: 50px;">Erro ao carregar as informações da obra.</p>`;
             });
 
         function irParaDetalhes() {
@@ -580,6 +567,11 @@
         }
 
         function carregarLeitor() {
+            if (!obraGlobal) {
+                document.getElementById('paginasContainer').innerHTML = `<p style="text-align: center; color: #FF99DD; padding: 50px;">Obra não encontrada.</p>`;
+                return;
+            }
+
             let capitulos = obraGlobal.capitulos || [];
             let indexAtual = -1;
             let capAtual = null;
@@ -599,17 +591,21 @@
                 capAtual = capitulos[0];
             }
 
-            if (!capAtual) {
-                document.getElementById('textoCapituloReal').textContent = `CAPÍTULO --`;
-                document.getElementById('paginasContainer').innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 50px;">Capítulo não encontrado.</p>`;
-                return;
+            let numCapReal = capSlugUrl.toUpperCase();
+            let paginas = [];
+
+            if (capAtual) {
+                numCapReal = typeof capAtual === 'object' ? capAtual.numero : capAtual;
+                if (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) {
+                    paginas = capAtual.paginas;
+                }
             }
 
-            let numCap = typeof capAtual === 'object' ? capAtual.numero : capAtual;
-            idCapituloUnico = `${obraSlugUrl}_${numCap}`;
+            idCapituloUnico = `${obraSlugUrl}_${String(numCapReal).toLowerCase()}`;
 
-            document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCap}`;
-            document.title = `Capítulo ${numCap} - ${obraGlobal.titulo} - Flower's Nenascan 🌸`;
+            document.getElementById('linkObraTopo').textContent = obraGlobal.titulo;
+            document.getElementById('textoCapituloReal').textContent = `CAPÍTULO ${numCapReal}`;
+            document.title = `Capítulo ${numCapReal} - Flower's Nenascan 🌸`;
 
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
@@ -620,16 +616,11 @@
                 selectEl.innerHTML += `<option value="${slugC}">Capítulo ${num}</option>`;
             });
 
-            let paginas = [];
-            if (typeof capAtual === 'object' && Array.isArray(capAtual.paginas)) {
-                paginas = capAtual.paginas;
-            }
-
             const containerPaginas = document.getElementById('paginasContainer');
             if (paginas.length > 0) {
                 containerPaginas.innerHTML = paginas.map(img => `<img src="${img}" alt="Página do capítulo" class="pagina-manga" loading="lazy">`).join('');
             } else {
-                containerPaginas.innerHTML = `<p style="color: var(--primary-pink); text-align: center; padding: 60px;">Nenhuma imagem cadastrada para este capítulo.</p>`;
+                containerPaginas.innerHTML = `<p style="text-align: center; color: var(--primary-pink); padding: 50px 20px;">Nenhuma página encontrada para este capítulo.</p>`;
             }
 
             const navFinal = document.getElementById('navegacaoFinal');
@@ -726,7 +717,7 @@
         async function carregarComentarios() {
             const lista = document.getElementById('listaComentarios');
             if (!supabase) {
-                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Supabase não configurado (adicione as chaves se desejar ativar na nuvem).</p>`;
+                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Supabase não configurado.</p>`;
                 return;
             }
 
@@ -783,9 +774,9 @@
         }
 
         function mudarCapitulo(slugCap) {
-            if (!slugCap || !obraGlobal) return;
+            if (!slugCap) return;
             const slugObraId = encodeURIComponent(obraSlugUrl);
-            window.location.href = `ler.html?obra=${slugObraId}&cap=${slugCap}`;
+            window.location.href = `ler.html?obra=${slugOburaId || slugObraId}&cap=${slugCap}`;
         }
 
         function voltarAoTopo(e) {
