@@ -307,8 +307,8 @@
         function carregarLeitor() {
             const slugObraId = obraGlobal.id || criarSlug(obraGlobal.titulo);
             
-            // Corrige o link do botão voltar para a página de detalhes usando o identificador correto da obra
-            const linkDetalhes = `detalhes.html?obra=${slugObraId}`;
+            // Corrige o link para apontar corretamente para detalhes.html com o parâmetro correto (nome)
+            const linkDetalhes = `detalhes.html?nome=${slugObraId}`;
             document.getElementById('btnVoltarObra').href = linkDetalhes;
 
             let capitulos = obraGlobal.capitulos || [];
