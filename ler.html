@@ -11,119 +11,133 @@
         :root {
             --bg-color: #000000;
             --primary-pink: #FF99DD; 
+            --pink-glow: rgba(255, 153, 221, 0.4);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-pink); padding-bottom: 40px; overflow-x: hidden; }
 
-        /* BARRA DE PROGRESSO ROSA EM BAIXO */
+        /* BARRA DE PROGRESSO MAIS FINA */
         .barra-progresso-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 6px;
-            background: rgba(255, 153, 221, 0.2);
+            height: 3px;
+            background: rgba(255, 153, 221, 0.15);
             z-index: 1000;
         }
         .barra-progresso-fill {
             width: 0%;
             height: 100%;
             background: #FF99DD;
-            box-shadow: 0 0 12px #FF99DD;
+            box-shadow: 0 0 8px #FF99DD;
             transition: width 0.1s linear;
         }
 
-        /* TOPO DO LEITOR (SEM BREADCRUMB/CAMINHO) */
+        /* TOPO DO LEITOR */
         .leitor-topo {
             background-color: #000000;
-            padding: 18px 16px;
+            padding: 20px 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 153, 221, 0.2);
+            border-bottom: 1px solid rgba(255, 153, 221, 0.15);
             position: relative;
             z-index: 50;
         }
 
-        /* TÍTULO DO CAPÍTULO CENTRALIZADO EXATAMENTE NO MEIO */
+        /* TÍTULO DO CAPÍTULO PERSONALIZADO E ELEGANTE */
         .capitulo-titulo-topo {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            color: var(--primary-pink);
-            letter-spacing: 1px;
+            color: #ffffff;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             text-align: center;
             width: 100%;
-            text-shadow: 0 0 10px rgba(255, 153, 221, 0.5);
+            text-shadow: 0 0 12px var(--primary-pink);
+            background: linear-gradient(135deg, #ffffff 30%, var(--primary-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* CONTROLES: BOTÕES RETOS PERSONALIZADOS */
+        /* CONTROLES */
         .leitor-controles {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-width: 550px;
+            max-width: 580px;
             gap: 15px;
         }
 
-        /* BOTÃO VOLTAR PERSONALIZADO (RETRO, BORDA E SOMBRA ROSA) */
+        /* BOTÃO VOLTAR PERSONALIZADO E SOFISTICADO */
         .btn-voltar-obra {
-            background: #000000;
-            color: #FF99DD;
-            border: 2px solid #FF99DD;
-            padding: 10px 28px;
+            background: linear-gradient(180deg, #111111 0%, #050505 100%);
+            color: #ffffff;
+            border: 2px solid var(--primary-pink);
+            padding: 11px 26px;
             border-radius: 0px;
-            font-weight: 800;
-            font-size: 1rem;
+            font-weight: 700;
+            font-size: 0.95rem;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 0 12px rgba(255, 153, 221, 0.5);
-            transition: 0.2s;
+            box-shadow: 0 0 12px var(--pink-glow), inset 0 0 8px rgba(255, 153, 221, 0.1);
+            transition: all 0.25s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-transform: lowercase;
             white-space: nowrap;
+            letter-spacing: 0.5px;
         }
         .btn-voltar-obra:hover {
-            background: rgba(255, 153, 221, 0.1);
+            background: var(--primary-pink);
+            color: #000000;
+            box-shadow: 0 0 20px var(--primary-pink);
+            transform: translateY(-1px);
         }
 
-        /* BOTÃO LISTA DE CAPÍTULOS PERSONALIZADO (RETO, BORDA E SOMBRA ROSA) */
+        /* LISTA DE CAPÍTULOS PERSONALIZADA E SOFISTICADA */
         .dropdown-container {
             position: relative;
             flex: 1;
-            max-width: 260px;
+            max-width: 280px;
         }
         .select-capitulos {
             width: 100%;
-            background: #000000;
-            border: 2px solid #FF99DD;
-            color: #FF99DD;
-            padding: 10px 16px;
+            background: linear-gradient(180deg, #111111 0%, #050505 100%);
+            border: 2px solid var(--primary-pink);
+            color: #ffffff;
+            padding: 11px 18px;
             border-radius: 0px;
-            font-weight: 800;
+            font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
             outline: none;
-            box-shadow: 0 0 12px rgba(255, 153, 221, 0.5);
+            box-shadow: 0 0 12px var(--pink-glow), inset 0 0 8px rgba(255, 153, 221, 0.1);
             appearance: none;
             -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.364%22%20height%3D%22292.364%22%3E%3Cpath%20fill%3D%22%23FF99DD%22%20d%3D%22M287.934%20197.935L146.123%2056.127%204.31%20197.935c-3.28%203.28-3.28%208.6-0.003%2011.88l19.52%2019.52c3.28%203.28%208.6%203.28%2011.88%200l110.4-110.4%20110.4%20110.4c3.28%203.28%208.6%203.28%2011.88%200l19.52-19.52c3.28-3.28%203.28-8.6%200.002-11.88z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat;
             background-position: right 14px center;
             background-size: 10px;
-            padding-right: 32px;
+            padding-right: 36px;
             text-align-last: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            transition: all 0.25s ease;
+        }
+        .select-capitulos:hover {
+            border-color: #ffffff;
+            box-shadow: 0 0 18px var(--primary-pink);
         }
         .select-capitulos option {
-            background: #000000;
+            background: #111111;
             color: #FF99DD;
+            padding: 10px;
         }
 
         /* ÁREA DE LEITURA */
@@ -144,13 +158,13 @@
             background: #000;
         }
 
-        /* BOTÃO FLUTUANTE DA FLOR: MENOR, MAIS PARA BAIXO E BEM ENCOSTADO NA LATERAL DIREITA */
+        /* BOTÃO FLUTUANTE DA FLOR: MAIS PARA BAIXO E MAIS ENCOSTADO NA DIREITA */
         .btn-flor-topo {
             position: fixed;
-            bottom: 35px;
-            right: 8px;
-            width: 45px;
-            height: 45px;
+            bottom: 60px;
+            right: 4px;
+            width: 42px;
+            height: 42px;
             background: transparent;
             border: none;
             border-radius: 0;
@@ -160,17 +174,17 @@
             cursor: pointer;
             box-shadow: none;
             z-index: 999;
-            transition: 0.2s;
+            transition: transform 0.2s ease;
             text-decoration: none;
         }
         .btn-flor-topo:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         .btn-flor-topo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 8px rgba(255, 153, 221, 0.8));
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(255, 153, 221, 0.9));
         }
     </style>
 </head>
@@ -181,9 +195,9 @@
         <div class="barra-progresso-fill" id="barraProgresso"></div>
     </div>
 
-    <!-- TOPO DO LEITOR (SEM NENHUM TÍTULO ANTERIOR) -->
+    <!-- TOPO DO LEITOR -->
     <div class="leitor-topo">
-        <!-- TÍTULO DO CAPÍTULO CENTRALIZADO -->
+        <!-- TÍTULO DO CAPÍTULO -->
         <div class="capitulo-titulo-topo" id="textoCapituloReal">
             CAPÍTULO --
         </div>
@@ -205,7 +219,7 @@
         <p style="text-align: center; color: var(--primary-pink); padding: 80px 20px;">Carregando páginas do capítulo...</p>
     </div>
 
-    <!-- BOTÃO FLUTUANTE DA FLOR (MENOR, MAIS BAIXO E ENCOSTADO NA DIREITA) -->
+    <!-- BOTÃO FLUTUANTE DA FLOR -->
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
         <img src="https://files.catbox.moe/fjfbc8.png" alt="Voltar ao Topo">
     </a>
