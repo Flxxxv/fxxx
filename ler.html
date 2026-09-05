@@ -880,7 +880,7 @@
         async function carregarComentariosDoSupabase() {
             const lista = document.getElementById('listaComentarios');
             const { data, error } = await supabaseClient
-                .from('comentarios_capitulos')
+                .from('Comentárioss')
                 .select('*')
                 .eq('capitulo_id', idUnicoCapitulo)
                 .order('created_at', { ascending: false });
@@ -908,7 +908,6 @@
             let dataFormatada = new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             let textoFormatado = formatarTextoComentario(c.mensagem);
             
-            // Suporte retroativo a sticker salvo como coluna ou dentro da mensagem
             let stickerUrl = c.sticker || '';
             if (stickerUrl) {
                 textoFormatado += `<img src="${stickerUrl}" class="sticker-render" alt="Sticker">`;
@@ -954,7 +953,7 @@
             };
 
             const { data, error } = await supabaseClient
-                .from('comentarios_capitulos')
+                .from('Comentárioss')
                 .insert([novoComentario])
                 .select();
 
@@ -975,7 +974,7 @@
             el.textContent = novoValor;
 
             await supabaseClient
-                .from('comentarios_capitulos')
+                .from('Comentárioss')
                 .update({ curtidas: novoValor })
                 .eq('id', id);
         }
@@ -984,7 +983,7 @@
             if (!confirm("Deseja realmente apagar este comentário?")) return;
 
             const { error } = await supabaseClient
-                .from('comentarios_capitulos')
+                .from('Comentárioss')
                 .delete()
                 .eq('id', id);
 
@@ -996,7 +995,6 @@
             }
         }
 
-        // --- ESCOLHER FIGURINHA DO NAVEGADOR / CELULAR ---
         function processarStickerArquivo(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
