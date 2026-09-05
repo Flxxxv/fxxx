@@ -920,7 +920,6 @@
                 if (prev) prev.src = savedAvatar;
             }
 
-            // Fecha popups de emoji ao clicar fora
             window.addEventListener('click', function(e) {
                 if (!e.target.closest('.emoji-picker-wrapper')) {
                     document.querySelectorAll('.emoji-picker-popup').forEach(p => {
@@ -932,7 +931,6 @@
 
         function togglePopupEmoji(e, popupId) {
             e.stopPropagation();
-            // Fecha todos os outros popups abertos
             document.querySelectorAll('.emoji-picker-popup').forEach(p => {
                 if (p.id !== popupId) p.classList.remove('ativo');
             });
@@ -953,7 +951,6 @@
             campo.selectionStart = campo.selectionEnd = startPos + emoji.length;
             campo.focus();
 
-            // Fecha o popup após escolher
             document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('ativo'));
         }
 
@@ -1280,7 +1277,7 @@
             let mensagem = document.getElementById(inputId).value.trim();
 
             if (!nomeInput || !mensagem) {
-                alert("Preencha seu apelido e digite a resposta!");
+                alert("Preencha seu apelido principal e digite a resposta!");
                 return;
             }
 
@@ -1305,7 +1302,8 @@
             if (!error) {
                 carregarComentariosDoSupabase();
             } else {
-                alert("Erro ao enviar resposta.");
+                console.error("Erro Supabase resposta:", error);
+                alert("Erro ao enviar resposta. Verifique a conexão.");
             }
         }
 
