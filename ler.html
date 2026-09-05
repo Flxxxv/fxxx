@@ -466,7 +466,7 @@
         .emoji-picker-popup {
             display: none;
             position: absolute;
-            bottom: 35px;
+            bottom: 38px;
             left: 0;
             background: #111;
             border: 1px solid var(--primary-pink);
@@ -1355,8 +1355,14 @@
             let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
             let cardId = `resp-input-${c.id}`;
             let popupRespId = `popup-resp-${c.id}`;
+            let popupReacaoCardId = `popup-reac-${c.id}`;
             let r = c.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
+            
             let totalCoracao = r.coracao || 0;
+            let totalRindo = r.rindo || 0;
+            let totalSurpreso = r.surpreso || 0;
+            let totalChorando = r.chorando || 0;
+            let totalFogo = r.fogo || 0;
 
             let card = document.createElement('div');
             card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
@@ -1375,6 +1381,28 @@
                     <div class="acoes-esq">
                         <div class="reacoes-comentario-grupo">
                             <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir">❤️ <span id="reac-coracao-${c.id}">${totalCoracao}</span></button>
+                            ${totalRindo > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'rindo')">😂 <span id="reac-rindo-${c.id}">${totalRindo}</span></button>` : ''}
+                            ${totalSurpreso > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'surpreso')">😮 <span id="reac-surpreso-${c.id}">${totalSurpreso}</span></button>` : ''}
+                            ${totalChorando > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'chorando')">😭 <span id="reac-chorando-${c.id}">${totalChorando}</span></button>` : ''}
+                            ${totalFogo > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'fogo')">🔥 <span id="reac-fogo-${c.id}">${totalFogo}</span></button>` : ''}
+                            
+                            <div class="emoji-picker-wrapper" style="margin-left: 2px;">
+                                <button class="btn-emoji-reacao" onclick="togglePopupEmoji(event, '${popupReacaoCardId}')" style="font-weight: bold; border-left: 1px solid rgba(255,153,221,0.2); padding-left: 4px;">+</button>
+                                <div class="emoji-picker-popup" id="${popupReacaoCardId}">
+                                    <div class="emoji-grid">
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'coracao')">❤️</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'rindo')">😂</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'surpreso')">😮</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'chorando')">😭</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'fogo')">🔥</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'coracao')">🌸</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'surpreso')">✨</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'chorando')">🥺</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'fogo')">💀</span>
+                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'rindo')">👀</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
@@ -1448,15 +1476,14 @@
                 reacoes[tipoEmoji] = (reacoes[tipoEmoji] || 0) + 1;
             }
 
-            let spanCoracao = document.getElementById(`reac-coracao-${id}`);
-            if (spanCoracao) spanCoracao.textContent = reacoes.coracao || 0;
-
             localStorage.setItem(chaveLocal, tipoEmoji);
 
             await supabaseClient
                 .from('comentarios')
                 .update({ reacoes: reacoes })
                 .eq('id', id);
+
+            carregarComentariosDoSupabase();
         }
 
         async function deletarComentario(id) {
