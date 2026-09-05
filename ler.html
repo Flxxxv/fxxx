@@ -295,6 +295,18 @@
             margin: 20px auto;
             padding: 0 16px;
         }
+        
+        .comentarios-contador-titulo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 6px var(--primary-pink);
+            text-align: left;
+        }
+
         .caixa-regras {
             background: #111111;
             border: 1px solid rgba(255, 153, 221, 0.3);
@@ -658,7 +670,7 @@
             box-shadow: 0 0 12px rgba(255, 153, 221, 0.5);
             margin-bottom: 6px;
             flex-wrap: wrap;
-            max-width: 290px;
+            max-width: 320px;
         }
         .tabela-emojis-popup.ativa { display: flex; }
         .tabela-emojis-popup span {
@@ -784,6 +796,8 @@
     </div>
 
     <div class="secao-comentarios-container">
+        <div class="comentarios-contador-titulo" id="contadorComentariosTitulo">💬 Comentários (0)</div>
+
         <div class="caixa-regras" id="caixaRegras">
             <div class="regras-cabecalho" id="btnToggleRegras">
                 <span>🌸 Regras dos Comentários</span>
@@ -1117,11 +1131,11 @@
             if (!validacao.valido) return;
 
             let novoComentario = {
-                capitulo_id: idUnicoCapitulo,
-                nome: validacao.nomeFinal,
-                mensagem: mensagem || '',
+                capitulo_id: String(idUnicoCapitulo).trim(),
+                nome: String(validacao.nomeFinal).trim(),
+                mensagem: String(mensagem || '').trim(),
                 sticker: stickerBase64 || null,
-                avatar: avatarBase64Usuario,
+                avatar: avatarBase64Usuario || 'https://files.catbox.moe/p5mdn7.png',
                 reacoes: {},
                 parent_id: null
             };
@@ -1153,11 +1167,11 @@
             if (!validacao.valido) return;
 
             let novaResposta = {
-                capitulo_id: idUnicoCapitulo,
-                nome: validacao.nomeFinal,
-                mensagem: mensagem,
+                capitulo_id: String(idUnicoCapitulo).trim(),
+                nome: String(validacao.nomeFinal).trim(),
+                mensagem: String(mensagem).trim(),
                 sticker: null,
-                avatar: avatarBase64Usuario,
+                avatar: avatarBase64Usuario || 'https://files.catbox.moe/p5mdn7.png',
                 reacoes: {},
                 parent_id: parentId
             };
@@ -1176,17 +1190,21 @@
 
         async function carregarComentariosDoSupabase() {
             const lista = document.getElementById('listaComentarios');
+            const contadorTitulo = document.getElementById('contadorComentariosTitulo');
+            
             const { data, error } = await supabaseClient
                 .from('comentarios')
                 .select('*')
-                .eq('capitulo_id', idUnicoCapitulo)
+                .eq('capitulo_id', String(idUnicoCapitulo).trim())
                 .order('created_at', { ascending: true });
 
             if (error || !data || data.length === 0) {
+                contadorTitulo.textContent = `💬 Comentários (0)`;
                 lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário ainda. Seja o primeiro!</p>`;
                 return;
             }
 
+            contadorTitulo.textContent = `💬 Comentários (${data.length})`;
             lista.innerHTML = '';
             
             let principais = data.filter(c => !c.parent_id);
@@ -1244,20 +1262,64 @@
                     <div class="acoes-esq">
                         <button class="btn-acao-comentario" onclick="toggleTabelaEmojis(${c.id})" title="Adicionar Reação">😀 Reagir</button>
                         <div class="tabela-emojis-popup" id="emojis-${c.id}">
-                            <span onclick="reagirEmoji(${c.id}, '❤️')">❤️</span>
-                            <span onclick="reagirEmoji(${c.id}, '👍')">👍</span>
-                            <span onclick="reagirEmoji(${c.id}, '🔥')">🔥</span>
                             <span onclick="reagirEmoji(${c.id}, '😂')">😂</span>
-                            <span onclick="reagirEmoji(${c.id}, '🌸')">🌸</span>
-                            <span onclick="reagirEmoji(${c.id}, '😢')">😢</span>
+                            <span onclick="reagirEmoji(${c.id}, '😅')">😅</span>
                             <span onclick="reagirEmoji(${c.id}, '😍')">😍</span>
-                            <span onclick="reagirEmoji(${c.id}, '✨')">✨</span>
+                            <span onclick="reagirEmoji(${c.id}, '🥰')">🥰</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤣')">🤣</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤩')">🤩</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤗')">🤗</span>
+                            <span onclick="reagirEmoji(${c.id}, '🙂')">🙂</span>
+                            <span onclick="reagirEmoji(${c.id}, '🙃')">🙃</span>
+                            <span onclick="reagirEmoji(${c.id}, '☺')">☺</span>
+                            <span onclick="reagirEmoji(${c.id}, '😇')">😇</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤭')">🤭</span>
+                            <span onclick="reagirEmoji(${c.id}, '🥳')">🥳</span>
+                            <span onclick="reagirEmoji(${c.id}, '😛')">😛</span>
+                            <span onclick="reagirEmoji(${c.id}, '😋')">😋</span>
+                            <span onclick="reagirEmoji(${c.id}, '🥲')">🥲</span>
+                            <span onclick="reagirEmoji(${c.id}, '😝')">😝</span>
+                            <span onclick="reagirEmoji(${c.id}, '😏')">😏</span>
+                            <span onclick="reagirEmoji(${c.id}, '😭')">😭</span>
+                            <span onclick="reagirEmoji(${c.id}, '🥺')">🥺</span>
+                            <span onclick="reagirEmoji(${c.id}, '😢')">😢</span>
+                            <span onclick="reagirEmoji(${c.id}, '🥵')">🥵</span>
+                            <span onclick="reagirEmoji(${c.id}, '😤')">😤</span>
+                            <span onclick="reagirEmoji(${c.id}, '😡')">😡</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤡')">🤡</span>
                             <span onclick="reagirEmoji(${c.id}, '😱')">😱</span>
-                            <span onclick="reagirEmoji(${c.id}, '💀')">💀</span>
+                            <span onclick="reagirEmoji(${c.id}, '😰')">😰</span>
+                            <span onclick="reagirEmoji(${c.id}, '😳')">😳</span>
+                            <span onclick="reagirEmoji(${c.id}, '😓')">😓</span>
+                            <span onclick="reagirEmoji(${c.id}, '😈')">😈</span>
+                            <span onclick="reagirEmoji(${c.id}, '🔥')">🔥</span>
+                            <span onclick="reagirEmoji(${c.id}, '🌚')">🌚</span>
+                            <span onclick="reagirEmoji(${c.id}, '💦')">💦</span>
+                            <span onclick="reagirEmoji(${c.id}, '🌹')">🌹</span>
+                            <span onclick="reagirEmoji(${c.id}, '🙏')">🙏</span>
                             <span onclick="reagirEmoji(${c.id}, '👏')">👏</span>
-                            <span onclick="reagirEmoji(${c.id}, '🎉')">🎉</span>
+                            <span onclick="reagirEmoji(${c.id}, '👍')">👍</span>
+                            <span onclick="reagirEmoji(${c.id}, '👎')">👎</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤞')">🤞</span>
+                            <span onclick="reagirEmoji(${c.id}, '🤟')">🤟</span>
+                            <span onclick="reagirEmoji(${c.id}, '💋')">💋</span>
+                            <span onclick="reagirEmoji(${c.id}, '👄')">👄</span>
+                            <span onclick="reagirEmoji(${c.id}, '👅')">👅</span>
                             <span onclick="reagirEmoji(${c.id}, '👀')">👀</span>
-                            <span onclick="reagirEmoji(${c.id}, '💖')">💖</span>
+                            <span onclick="reagirEmoji(${c.id}, '💅')">💅</span>
+                            <span onclick="reagirEmoji(${c.id}, '🩷')">🩷</span>
+                            <span onclick="reagirEmoji(${c.id}, '🫣')">🫣</span>
+                            <span onclick="reagirEmoji(${c.id}, '🫢')">🫢</span>
+                            <span onclick="reagirEmoji(${c.id}, '🫦')">🫦</span>
+                            <span onclick="reagirEmoji(${c.id}, '❤️‍🔥')">❤️‍🔥</span>
+                            <span onclick="reagirEmoji(${c.id}, '❤️‍🩹')">❤️‍🩹</span>
+                            <span onclick="reagirEmoji(${c.id}, '🥹')">🥹</span>
+                            <span onclick="reagirEmoji(${c.id}, '❤')">❤</span>
+                            <span onclick="reagirEmoji(${c.id}, '💟')">💟</span>
+                            <span onclick="reagirEmoji(${c.id}, '💯')">💯</span>
+                            <span onclick="reagirEmoji(${c.id}, '👌')">👌</span>
+                            <span onclick="reagirEmoji(${c.id}, '🌸')">🌸</span>
+                            <span onclick="reagirEmoji(${c.id}, '🌈')">🌈</span>
                         </div>
                         <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
