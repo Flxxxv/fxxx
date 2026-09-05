@@ -459,38 +459,45 @@
             color: #fff;
         }
 
-        .picker-emojis-container {
+        .emoji-picker-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .emoji-picker-popup {
             display: none;
             position: absolute;
-            bottom: 40px;
+            bottom: 35px;
             left: 0;
             background: #111;
             border: 1px solid var(--primary-pink);
             border-radius: 8px;
             padding: 8px;
-            gap: 6px;
             z-index: 100;
             box-shadow: 0 0 12px rgba(255, 153, 221, 0.4);
-            flex-wrap: wrap;
-            max-width: 220px;
+            width: 220px;
         }
-        .picker-emojis-container.ativo {
-            display: flex;
+        .emoji-picker-popup.ativo {
+            display: block;
         }
-        .btn-emoji-opcao {
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+        .emoji-option {
             background: #000;
             border: 1px solid rgba(255, 153, 221, 0.3);
             border-radius: 6px;
             font-size: 1.1rem;
-            width: 32px;
-            height: 32px;
+            padding: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.15s, background 0.15s;
         }
-        .btn-emoji-opcao:hover {
+        .emoji-option:hover {
             transform: scale(1.2);
             background: rgba(255, 153, 221, 0.2);
         }
@@ -720,6 +727,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 6px;
+            align-items: center;
         }
         .btn-enviar-resp {
             background: #000;
@@ -856,20 +864,24 @@
             <div class="toolbar-comentario">
                 <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
                 <button type="button" class="btn-toolbar" onclick="document.getElementById('inputStickerFile').click()">🌸 Escolher Sticker</button>
-                <button type="button" class="btn-toolbar" onclick="inserirSpoilerTag()">⚠️ Spoiler</button>
-                <button type="button" class="btn-toolbar" onclick="togglePickerEmojis(event)">😊 +</button>
-
-                <div class="picker-emojis-container" id="pickerEmojis">
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('🌸')">🌸</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('✨')">✨</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('💖')">💖</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('🥺')">🥺</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('😭')">😭</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('🔥')">🔥</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('💀')">💀</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('👀')">👀</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('❤️')">❤️</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('⭐')">⭐</button>
+                <button type="button" class="btn-toolbar" onclick="inserirSpoilerTagPrincipal()">⚠️ Spoiler</button>
+                
+                <div class="emoji-picker-wrapper">
+                    <button type="button" class="btn-toolbar emoji-toggle-btn">😊 +</button>
+                    <div class="emoji-picker-popup">
+                        <div class="emoji-grid">
+                            <span class="emoji-option" data-emoji="🌸">🌸</span>
+                            <span class="emoji-option" data-emoji="✨">✨</span>
+                            <span class="emoji-option" data-emoji="💖">💖</span>
+                            <span class="emoji-option" data-emoji="🥺">🥺</span>
+                            <span class="emoji-option" data-emoji="😭">😭</span>
+                            <span class="emoji-option" data-emoji="🔥">🔥</span>
+                            <span class="emoji-option" data-emoji="💀">💀</span>
+                            <span class="emoji-option" data-emoji="👀">👀</span>
+                            <span class="emoji-option" data-emoji="❤️">❤️</span>
+                            <span class="emoji-option" data-emoji="⭐">⭐</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -920,36 +932,71 @@
                 if (prev) prev.src = savedAvatar;
             }
 
-            document.addEventListener('click', (e) => {
-                const picker = document.getElementById('pickerEmojis');
-                const btnMais = e.target.closest('button');
-                if (picker && picker.classList.contains('ativo')) {
-                    if (!picker.contains(e.target) && (!btnMais || !btnMais.getAttribute('onclick')?.includes('togglePickerEmojis'))) {
-                        picker.classList.remove('ativo');
+            // Delegação global segura para os popups de emojis (tanto na caixa principal quanto nas respostas aninhadas)
+            document.addEventListener('click', function(e) {
+                const toggleBtn = e.target.closest('.emoji-toggle-btn');
+                if (toggleBtn) {
+                    e.preventDefault();
+                    const wrapper = toggleBtn.closest('.emoji-picker-wrapper');
+                    const popup = wrapper.querySelector('.emoji-picker-popup');
+                    
+                    document.querySelectorAll('.emoji-picker-popup').forEach(p => {
+                        if (p !== popup) p.classList.remove('ativo');
+                    });
+
+                    popup.classList.toggle('ativo');
+                    return;
+                }
+
+                const emojiOpt = e.target.closest('.emoji-option');
+                if (emojiOpt) {
+                    e.preventDefault();
+                    const emoji = emojiOpt.getAttribute('data-emoji');
+                    const wrapper = emojiOpt.closest('.emoji-picker-wrapper');
+                    
+                    const formContainer = wrapper.closest('.form-comentario, .caixa-resposta-inline') || wrapper.parentElement;
+                    const commentBox = formContainer.querySelector('textarea');
+
+                    if (commentBox) {
+                        const startPos = commentBox.selectionStart || 0;
+                        const endPos = commentBox.selectionEnd || 0;
+                        const text = commentBox.value || '';
+
+                        commentBox.value = text.substring(0, startPos) + emoji + text.substring(endPos);
+                        commentBox.selectionStart = commentBox.selectionEnd = startPos + emoji.length;
+                        commentBox.focus();
                     }
+
+                    const popup = wrapper.querySelector('.emoji-picker-popup');
+                    if (popup) popup.classList.remove('ativo');
+                    return;
+                }
+
+                if (!e.target.closest('.emoji-picker-wrapper')) {
+                    document.querySelectorAll('.emoji-picker-popup').forEach(p => {
+                        p.classList.remove('ativo');
+                    });
                 }
             });
         });
 
-        function togglePickerEmojis(e) {
-            e.stopPropagation();
-            const picker = document.getElementById('pickerEmojis');
-            if (picker) {
-                picker.classList.toggle('ativo');
-            }
-        }
-
-        function inserirEmojiNoTexto(emoji) {
+        function inserirSpoilerTagPrincipal() {
             const txt = document.getElementById('textoComentario');
             if (!txt) return;
             let inicio = txt.selectionStart;
             let fim = txt.selectionEnd;
-            txt.value = txt.value.substring(0, inicio) + emoji + txt.value.substring(fim);
+            let textoSelecionado = txt.value.substring(inicio, fim);
+            txt.value = txt.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + txt.value.substring(fim);
             txt.focus();
-            txt.selectionStart = txt.selectionEnd = inicio + emoji.length;
-            
-            const picker = document.getElementById('pickerEmojis');
-            if (picker) picker.classList.remove('ativo');
+        }
+
+        function inserirSpoilerTagResposta(textareaEl) {
+            if (!textareaEl) return;
+            let inicio = textareaEl.selectionStart;
+            let fim = textareaEl.selectionEnd;
+            let textoSelecionado = textareaEl.value.substring(inicio, fim);
+            textareaEl.value = textareaEl.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + textareaEl.value.substring(fim);
+            textareaEl.focus();
         }
 
         function focarEdicaoPerfil() {
@@ -1360,6 +1407,26 @@
                 </div>
 
                 <div class="caixa-resposta-inline" id="caixa-${c.id}">
+                    <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                        <button type="button" class="btn-toolbar" onclick="inserirSpoilerTagResposta(document.getElementById('${cardId}'))">⚠️ Spoiler</button>
+                        <div class="emoji-picker-wrapper">
+                            <button type="button" class="btn-toolbar emoji-toggle-btn">😊 +</button>
+                            <div class="emoji-picker-popup">
+                                <div class="emoji-grid">
+                                    <span class="emoji-option" data-emoji="🌸">🌸</span>
+                                    <span class="emoji-option" data-emoji="✨">✨</span>
+                                    <span class="emoji-option" data-emoji="💖">💖</span>
+                                    <span class="emoji-option" data-emoji="🥺">🥺</span>
+                                    <span class="emoji-option" data-emoji="😭">😭</span>
+                                    <span class="emoji-option" data-emoji="🔥">🔥</span>
+                                    <span class="emoji-option" data-emoji="💀">💀</span>
+                                    <span class="emoji-option" data-emoji="👀">👀</span>
+                                    <span class="emoji-option" data-emoji="❤️">❤️</span>
+                                    <span class="emoji-option" data-emoji="⭐">⭐</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
                     <div class="botoes-resposta-inline">
                         <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
@@ -1382,7 +1449,6 @@
         }
 
         function abrirSeletorReacao(id) {
-            const tipos = ['coracao', 'rindo', 'surpreso', 'chorando', 'fogo'];
             let escolha = prompt("Escolha a reação:\n1 - ❤️ Coração\n2 - 😂 Rindo\n3 - 😲 Surpreso\n4 - 😢 Chorando\n5 - 🔥 Fogo");
             if (!escolha) return;
             const mapaIdx = { '1': 'coracao', '2': 'rindo', '3': 'surpreso', '4': 'chorando', '5': 'fogo' };
@@ -1477,15 +1543,6 @@
             document.getElementById('inputStickerFile').value = '';
         }
 
-        function inserirSpoilerTag() {
-            const txt = document.getElementById('textoComentario');
-            let inicio = txt.selectionStart;
-            let fim = txt.selectionEnd;
-            let textoSelecionado = txt.value.substring(inicio, fim);
-            txt.value = txt.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + txt.value.substring(fim);
-            txt.focus();
-        }
-
         function formatarTextoComentario(texto) {
             let seguro = escapeHtml(texto);
             seguro = seguro.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/g, '<span class="spoiler" onclick="this.classList.toggle(\'revelado\')">$1</span>');
@@ -1524,3 +1581,4 @@
     </script>
 </body>
 </html>
+ 
