@@ -339,32 +339,6 @@
             border-radius: 12px;
             margin-bottom: 20px;
         }
-        
-        .dica-perfil-aviso {
-            font-size: 0.78rem;
-            color: rgba(255, 153, 221, 0.85);
-            background: rgba(255, 153, 221, 0.08);
-            border: 1px dashed rgba(255, 153, 221, 0.3);
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            line-height: 1.3;
-        }
-        .dica-perfil-aviso span {
-            color: #ffffff;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: underline;
-            transition: color 0.2s;
-        }
-        .dica-perfil-aviso span:hover {
-            color: var(--primary-pink);
-            text-shadow: 0 0 6px var(--primary-pink);
-        }
-
         .autor-container {
             display: flex;
             align-items: center;
@@ -438,7 +412,6 @@
             margin-bottom: 10px;
             flex-wrap: wrap;
             align-items: center;
-            position: relative;
         }
         .btn-toolbar {
             background: #000;
@@ -457,49 +430,6 @@
             background: rgba(255, 153, 221, 0.2);
             border-color: #fff;
             color: #fff;
-        }
-
-        .emoji-picker-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        .emoji-picker-popup {
-            display: none;
-            position: absolute;
-            bottom: 38px;
-            left: 0;
-            background: #111;
-            border: 1px solid var(--primary-pink);
-            border-radius: 8px;
-            padding: 8px;
-            z-index: 9999;
-            box-shadow: 0 0 12px rgba(255, 153, 221, 0.4);
-            width: 220px;
-        }
-        .emoji-picker-popup.ativo {
-            display: block !important;
-        }
-        .emoji-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
-        .emoji-option {
-            background: #000;
-            border: 1px solid rgba(255, 153, 221, 0.3);
-            border-radius: 6px;
-            font-size: 1.1rem;
-            padding: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.15s, background 0.15s;
-        }
-        .emoji-option:hover {
-            transform: scale(1.2);
-            background: rgba(255, 153, 221, 0.2);
         }
 
         .preview-sticker-container {
@@ -653,6 +583,7 @@
         }
         .btn-acao-comentario:hover { transform: scale(1.1); color: #fff; }
 
+        /* Grupo de emojis de reação em cada comentário */
         .reacoes-comentario-grupo {
             display: inline-flex;
             gap: 6px;
@@ -660,7 +591,6 @@
             padding: 2px 6px;
             border-radius: 12px;
             border: 1px solid rgba(255, 153, 221, 0.2);
-            align-items: center;
         }
         .btn-emoji-reacao {
             background: transparent;
@@ -675,7 +605,7 @@
         }
         .btn-emoji-reacao:hover { transform: scale(1.2); }
         .contador-emoji { font-size: 0.65rem; color: var(--primary-pink); font-weight: bold; }
-
+        
         .btn-deletar-comentario {
             background: transparent;
             border: none;
@@ -715,7 +645,6 @@
             display: flex;
             justify-content: flex-end;
             gap: 6px;
-            align-items: center;
         }
         .btn-enviar-resp {
             background: #000;
@@ -833,14 +762,10 @@
         </div>
 
         <div class="form-comentario">
-            <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 8px;">Deixe seu comentário</div>
+            <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 10px;">Deixe seu comentário</div>
             
-            <div class="dica-perfil-aviso">
-                <span onclick="focarEdicaoPerfil()">Edite seu perfil</span>
-            </div>
-
             <div class="autor-container">
-                <div class="avatar-escolha-container" id="containerAvatarPerfil" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
+                <div class="avatar-escolha-container" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
                     <img id="previewAvatarEscolhido" src="https://files.catbox.moe/p5mdn7.png" alt="Avatar" class="avatar-preview-img">
                     <div class="avatar-overlay-texto">Trocar</div>
                 </div>
@@ -852,25 +777,7 @@
             <div class="toolbar-comentario">
                 <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
                 <button type="button" class="btn-toolbar" onclick="document.getElementById('inputStickerFile').click()">🌸 Escolher Sticker</button>
-                <button type="button" class="btn-toolbar" onclick="inserirSpoilerTagPrincipal()">⚠️ Spoiler</button>
-                
-                <div class="emoji-picker-wrapper">
-                    <button type="button" class="btn-toolbar" onclick="togglePopupEmoji(event, 'popupEmojiPrincipal')">😊 +</button>
-                    <div class="emoji-picker-popup" id="popupEmojiPrincipal">
-                        <div class="emoji-grid">
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '🌸')">🌸</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '✨')">✨</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '💖')">💖</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '🥺')">🥺</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '😭')">😭</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '🔥')">🔥</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '💀')">💀</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '👀')">👀</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '❤️')">❤️</span>
-                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '⭐')">⭐</span>
-                        </div>
-                    </div>
-                </div>
+                <button type="button" class="btn-toolbar" onclick="inserirSpoilerTag()">⚠️ Spoiler</button>
             </div>
 
             <div class="preview-sticker-container" id="previewSticker">
@@ -919,74 +826,7 @@
                 const prev = document.getElementById('previewAvatarEscolhido');
                 if (prev) prev.src = savedAvatar;
             }
-
-            window.addEventListener('click', function(e) {
-                if (!e.target.closest('.emoji-picker-wrapper')) {
-                    document.querySelectorAll('.emoji-picker-popup').forEach(p => {
-                        p.classList.remove('ativo');
-                    });
-                }
-            });
         });
-
-        function togglePopupEmoji(e, popupId) {
-            e.stopPropagation();
-            document.querySelectorAll('.emoji-picker-popup').forEach(p => {
-                if (p.id !== popupId) p.classList.remove('ativo');
-            });
-            const popup = document.getElementById(popupId);
-            if (popup) {
-                popup.classList.toggle('ativo');
-            }
-        }
-
-        function inserirEmojiNoCampo(campoId, emoji) {
-            const campo = document.getElementById(campoId);
-            if (!campo) return;
-            const startPos = campo.selectionStart || 0;
-            const endPos = campo.selectionEnd || 0;
-            const text = campo.value || '';
-
-            campo.value = text.substring(0, startPos) + emoji + text.substring(endPos);
-            campo.selectionStart = campo.selectionEnd = startPos + emoji.length;
-            campo.focus();
-
-            document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('ativo'));
-        }
-
-        function inserirSpoilerTagPrincipal() {
-            const txt = document.getElementById('textoComentario');
-            if (!txt) return;
-            let inicio = txt.selectionStart;
-            let fim = txt.selectionEnd;
-            let textoSelecionado = txt.value.substring(inicio, fim);
-            txt.value = txt.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + txt.value.substring(fim);
-            txt.focus();
-        }
-
-        function inserirSpoilerTagResposta(textareaEl) {
-            if (!textareaEl) return;
-            let inicio = textareaEl.selectionStart;
-            let fim = textareaEl.selectionEnd;
-            let textoSelecionado = textareaEl.value.substring(inicio, fim);
-            textareaEl.value = textareaEl.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + textareaEl.value.substring(fim);
-            textareaEl.focus();
-        }
-
-        function focarEdicaoPerfil() {
-            const inputNome = document.getElementById('nomeComentario');
-            const containerAvatar = document.getElementById('containerAvatarPerfil');
-            if (inputNome) {
-                inputNome.focus();
-                inputNome.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                if (containerAvatar) {
-                    containerAvatar.style.boxShadow = '0 0 15px #FF99DD';
-                    setTimeout(() => {
-                        containerAvatar.style.boxShadow = 'none';
-                    }, 1500);
-                }
-            }
-        }
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -1277,7 +1117,7 @@
             let mensagem = document.getElementById(inputId).value.trim();
 
             if (!nomeInput || !mensagem) {
-                alert("Preencha seu apelido principal e digite a resposta!");
+                alert("Preencha seu apelido e digite a resposta!");
                 return;
             }
 
@@ -1302,8 +1142,7 @@
             if (!error) {
                 carregarComentariosDoSupabase();
             } else {
-                console.error("Erro Supabase resposta:", error);
-                alert("Erro ao enviar resposta. Verifique a conexão.");
+                alert("Erro ao enviar resposta.");
             }
         }
 
@@ -1322,6 +1161,7 @@
 
             lista.innerHTML = '';
             
+            // Monta árvore completa de comentários de forma recursiva (suporta respostas de respostas ilimitadas)
             let mapa = {};
             data.forEach(item => {
                 item.filhos = [];
@@ -1337,6 +1177,7 @@
                 }
             });
 
+            // Ordena principais por mais recente
             raizes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
             raizes.forEach(raiz => {
@@ -1354,15 +1195,7 @@
 
             let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
             let cardId = `resp-input-${c.id}`;
-            let popupRespId = `popup-resp-${c.id}`;
-            let popupReacaoCardId = `popup-reac-${c.id}`;
             let r = c.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
-            
-            let totalCoracao = r.coracao || 0;
-            let totalRindo = r.rindo || 0;
-            let totalSurpreso = r.surpreso || 0;
-            let totalChorando = r.chorando || 0;
-            let totalFogo = r.fogo || 0;
 
             let card = document.createElement('div');
             card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
@@ -1380,29 +1213,11 @@
                 <div class="comentario-rodape">
                     <div class="acoes-esq">
                         <div class="reacoes-comentario-grupo">
-                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir">❤️ <span id="reac-coracao-${c.id}">${totalCoracao}</span></button>
-                            ${totalRindo > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'rindo')">😂 <span id="reac-rindo-${c.id}">${totalRindo}</span></button>` : ''}
-                            ${totalSurpreso > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'surpreso')">😮 <span id="reac-surpreso-${c.id}">${totalSurpreso}</span></button>` : ''}
-                            ${totalChorando > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'chorando')">😭 <span id="reac-chorando-${c.id}">${totalChorando}</span></button>` : ''}
-                            ${totalFogo > 0 ? `<button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'fogo')">🔥 <span id="reac-fogo-${c.id}">${totalFogo}</span></button>` : ''}
-                            
-                            <div class="emoji-picker-wrapper" style="margin-left: 2px;">
-                                <button class="btn-emoji-reacao" onclick="togglePopupEmoji(event, '${popupReacaoCardId}')" style="font-weight: bold; border-left: 1px solid rgba(255,153,221,0.2); padding-left: 4px;">+</button>
-                                <div class="emoji-picker-popup" id="${popupReacaoCardId}">
-                                    <div class="emoji-grid">
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'coracao')">❤️</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'rindo')">😂</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'surpreso')">😮</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'chorando')">😭</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'fogo')">🔥</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'coracao')">🌸</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'surpreso')">✨</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'chorando')">🥺</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'fogo')">💀</span>
-                                        <span class="emoji-option" onclick="reagirComentario(${c.id}, 'rindo')">👀</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir com Coração">❤️ <span id="reac-coracao-${c.id}">${r.coracao || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'rindo')" title="Rindo">😂 <span id="reac-rindo-${c.id}">${r.rindo || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'surpreso')" title="Surpreso">😲 <span id="reac-surpreso-${c.id}">${r.surpreso || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'chorando')" title="Chorando">😢 <span id="reac-chorando-${c.id}">${r.chorando || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'fogo')" title="Fogo">🔥 <span id="reac-fogo-${c.id}">${r.fogo || 0}</span></button>
                         </div>
                         <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
@@ -1410,27 +1225,6 @@
                 </div>
 
                 <div class="caixa-resposta-inline" id="caixa-${c.id}">
-                    <div style="display: flex; gap: 6px; margin-bottom: 6px; align-items: center; position: relative;">
-                        <button type="button" class="btn-toolbar" onclick="inserirSpoilerTagResposta(document.getElementById('${cardId}'))">⚠️ Spoiler</button>
-                        
-                        <div class="emoji-picker-wrapper">
-                            <button type="button" class="btn-toolbar" onclick="togglePopupEmoji(event, '${popupRespId}')">😊 +</button>
-                            <div class="emoji-picker-popup" id="${popupRespId}">
-                                <div class="emoji-grid">
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '🌸')">🌸</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '✨')">✨</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '💖')">💖</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '🥺')">🥺</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '😭')">😭</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '🔥')">🔥</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '💀')">💀</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '👀')">👀</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '❤️')">❤️</span>
-                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '⭐')">⭐</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
                     <div class="botoes-resposta-inline">
                         <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
@@ -1439,7 +1233,9 @@
             `;
             containerPai.appendChild(card);
 
+            // Renderiza recursivamente todas as respostas filhas (comentários de comentários)
             if (c.filhos && c.filhos.length > 0) {
+                // Ordena respostas do mais antigo para o mais recente dentro do ramo
                 c.filhos.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
                 c.filhos.forEach(filho => {
                     renderizarCardRecursivo(filho, true, card);
@@ -1456,8 +1252,9 @@
             const chaveLocal = `reacao_comentario_${id}`;
             let emojiAnterior = localStorage.getItem(chaveLocal);
 
-            if (emojiAnterior === tipoEmoji) return;
+            if (emojiAnterior === tipoEmoji) return; // Já votou nesse
 
+            // Busca os dados atuais do comentário no Supabase para garantir contagem correta
             const { data: comObj, error: errFetch } = await supabaseClient
                 .from('comentarios')
                 .select('reacoes')
@@ -1468,27 +1265,35 @@
 
             let reacoes = comObj.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
 
+            // Remove voto anterior se houver
             if (emojiAnterior && reacoes[emojiAnterior] !== undefined) {
                 reacoes[emojiAnterior] = Math.max(0, (reacoes[emojiAnterior] || 0) - 1);
             }
 
+            // Adiciona novo voto
             if (reacoes[tipoEmoji] !== undefined) {
                 reacoes[tipoEmoji] = (reacoes[tipoEmoji] || 0) + 1;
             }
 
+            // Atualiza tela instantaneamente
+            Object.keys(reacoes).forEach(k => {
+                let span = document.getElementById(`reac-${k}-${id}`);
+                if (span) span.textContent = reacoes[k];
+            });
+
             localStorage.setItem(chaveLocal, tipoEmoji);
 
+            // Salva no Supabase
             await supabaseClient
                 .from('comentarios')
                 .update({ reacoes: reacoes })
                 .eq('id', id);
-
-            carregarComentariosDoSupabase();
         }
 
         async function deletarComentario(id) {
             if (!confirm("Deseja realmente apagar este comentário e suas respostas?")) return;
 
+            // Função auxiliar para apagar recursivamente no banco
             async function apagarRecursivo(comentarioId) {
                 const { data: filhos } = await supabaseClient.from('comentarios').select('id').eq('parent_id', comentarioId);
                 if (filhos) {
@@ -1534,6 +1339,15 @@
             document.getElementById('imgStickerPreview').src = '';
             document.getElementById('previewSticker').classList.remove('ativo');
             document.getElementById('inputStickerFile').value = '';
+        }
+
+        function inserirSpoilerTag() {
+            const txt = document.getElementById('textoComentario');
+            let inicio = txt.selectionStart;
+            let fim = txt.selectionEnd;
+            let textoSelecionado = txt.value.substring(inicio, fim);
+            txt.value = txt.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + txt.value.substring(fim);
+            txt.focus();
         }
 
         function formatarTextoComentario(texto) {
