@@ -577,6 +577,7 @@
             align-items: center;
             gap: 12px;
             position: relative;
+            flex-wrap: wrap;
         }
         .btn-acao-comentario {
             background: transparent;
@@ -651,25 +652,48 @@
             background: #111;
             border: 1px solid var(--primary-pink);
             border-radius: 8px;
-            padding: 8px 10px;
-            gap: 8px;
+            padding: 10px;
+            gap: 6px;
             z-index: 100;
             box-shadow: 0 0 12px rgba(255, 153, 221, 0.5);
             margin-bottom: 6px;
             flex-wrap: wrap;
-            max-width: 260px;
+            max-width: 290px;
         }
         .tabela-emojis-popup.ativa { display: flex; }
         .tabela-emojis-popup span {
             cursor: pointer;
             font-size: 1.2rem;
-            padding: 3px 6px;
+            padding: 4px 6px;
             border-radius: 6px;
             transition: background 0.2s, transform 0.2s;
         }
         .tabela-emojis-popup span:hover {
             background: rgba(255, 153, 221, 0.3);
             transform: scale(1.2);
+        }
+
+        .container-reacoes-comentario {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .badge-reacao-comentario {
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 153, 221, 0.3);
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .badge-reacao-comentario:hover {
+            background: rgba(255, 153, 221, 0.2);
+            border-color: var(--primary-pink);
         }
 
         .btn-flor-topo {
@@ -1109,7 +1133,7 @@
                 mensagem: mensagem || '',
                 sticker: stickerBase64 || null,
                 avatar: avatarBase64Usuario,
-                curtidas: 0,
+                reacoes: {},
                 parent_id: null,
                 created_at: new Date().toISOString()
             };
@@ -1145,7 +1169,7 @@
                 mensagem: mensagem,
                 sticker: null,
                 avatar: avatarBase64Usuario,
-                curtidas: 0,
+                reacoes: {},
                 parent_id: parentId,
                 created_at: new Date().toISOString()
             };
@@ -1201,6 +1225,15 @@
             let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
             let cardId = `resp-input-${c.id}`;
 
+            let reacoesObj = c.reacoes || {};
+            let htmlReacoes = '';
+            for (let emoji in reacoesObj) {
+                let count = reacoesObj[emoji] || 0;
+                if (count > 0) {
+                    htmlReacoes += `<button class="badge-reacao-comentario" onclick="reagirEmoji(${c.id}, '${emoji}')">${emoji} <span>${count}</span></button>`;
+                }
+            }
+
             let card = document.createElement('div');
             card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
             card.id = `comentario-${c.id}`;
@@ -1213,14 +1246,16 @@
                     <div class="comentario-data">${dataFormatada}</div>
                 </div>
                 <div class="comentario-texto">${textoFormatado}</div>
+
+                <div class="container-reacoes-comentario" id="badges-reacoes-${c.id}">
+                    ${htmlReacoes}
+                </div>
                 
                 <div class="comentario-rodape">
                     <div class="acoes-esq">
-                        <button class="btn-acao-comentario" onclick="curtirComentario(${c.id})">
-                            ❤️ <span id="curtidas-${c.id}">${c.curtidas || 0}</span>
-                        </button>
-                        <button class="btn-acao-comentario" onclick="toggleTabelaEmojis(${c.id})">➕</button>
+                        <button class="btn-acao-comentario" onclick="toggleTabelaEmojis(${c.id})" title="Adicionar Reação">😀 Reagir</button>
                         <div class="tabela-emojis-popup" id="emojis-${c.id}">
+                            <span onclick="reagirEmoji(${c.id}, '❤️')">❤️</span>
                             <span onclick="reagirEmoji(${c.id}, '👍')">👍</span>
                             <span onclick="reagirEmoji(${c.id}, '🔥')">🔥</span>
                             <span onclick="reagirEmoji(${c.id}, '😂')">😂</span>
@@ -1231,6 +1266,10 @@
                             <span onclick="reagirEmoji(${c.id}, '😱')">😱</span>
                             <span onclick="reagirEmoji(${c.id}, '💀')">💀</span>
                             <span onclick="reagirEmoji(${c.id}, '👏')">👏</span>
+                            <span onclick="reagirEmoji(${c.id}, '🎉')">🎉</span>
+                            <span onclick="reagirEmoji(${c.id}, '👀')">👀</span>
+                            <span onclick="reagirEmoji(${c.id}, '💖')">💖</span>
+                            <span onclick="reagirEmoji(${c.id}, '✨')">✨</span>
                         </div>
                         <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
@@ -1259,25 +1298,52 @@
 
         async function reagirEmoji(id, emoji) {
             toggleTabelaEmojis(id);
-            await curtirComentario(id);
-        }
 
-        async function curtirComentario(id) {
-            const curtidoKey = `curtiu_comentario_${id}`;
-            if (localStorage.getItem(curtidoKey) === 'true') return;
+            const chaveUsuarioReacao = `reacao_comentario_${id}`;
+            let emojiAnterior = localStorage.getItem(chaveUsuarioReacao);
 
-            let el = document.getElementById(`curtidas-${id}`);
-            let atual = parseInt(el.textContent) || 0;
-            let novoValor = atual + 1;
-            el.textContent = novoValor;
-
-            const { error } = await supabaseClient
+            const { data: comentarioAtual, error: errFetch } = await supabaseClient
                 .from('comentarios')
-                .update({ curtidas: novoValor })
+                .select('reacoes')
+                .eq('id', id)
+                .single();
+
+            if (errFetch || !comentarioAtual) return;
+
+            let reacoes = comentarioAtual.reacoes || {};
+
+            if (emojiAnterior === emoji) {
+                return;
+            }
+
+            if (emojiAnterior && reacoes[emojiAnterior]) {
+                reacoes[emojiAnterior] = Math.max(0, reacoes[emojiAnterior] - 1);
+                if (reacoes[emojiAnterior] === 0) {
+                    delete reacoes[emojiAnterior];
+                }
+            }
+
+            reacoes[emoji] = (reacoes[emoji] || 0) + 1;
+
+            const { error: errUpdate } = await supabaseClient
+                .from('comentarios')
+                .update({ reacoes: reacoes })
                 .eq('id', id);
 
-            if (!error) {
-                localStorage.setItem(curtidoKey, 'true');
+            if (!errUpdate) {
+                localStorage.setItem(chaveUsuarioReacao, emoji);
+                
+                let container = document.getElementById(`badges-reacoes-${id}`);
+                if (container) {
+                    let htmlReacoes = '';
+                    for (let e in reacoes) {
+                        let count = reacoes[e] || 0;
+                        if (count > 0) {
+                            htmlReacoes += `<button class="badge-reacao-comentario" onclick="reagirEmoji(${id}, '${e}')">${e} <span>${count}</span></button>`;
+                        }
+                    }
+                    container.innerHTML = htmlReacoes;
+                }
             }
         }
 
