@@ -339,6 +339,52 @@
             border-radius: 12px;
             margin-bottom: 20px;
         }
+        .autor-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        .avatar-escolha-container {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid var(--primary-pink);
+            background: #000;
+            flex-shrink: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .avatar-escolha-container:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 10px var(--primary-pink);
+        }
+        .avatar-preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-overlay-texto {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ff99dd;
+            font-size: 0.5rem;
+            text-align: center;
+            padding: 1px 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .avatar-escolha-container:hover .avatar-overlay-texto {
+            opacity: 1;
+        }
+
         .form-comentario input, .form-comentario textarea {
             width: 100%;
             background: #000;
@@ -349,6 +395,10 @@
             margin-bottom: 10px;
             font-size: 0.85rem;
             outline: none;
+        }
+        .autor-container input[type="text"] {
+            flex: 1;
+            margin-bottom: 0 !important;
         }
         .form-comentario textarea { resize: vertical; min-height: 70px; }
         .form-comentario input:focus, .form-comentario textarea:focus {
@@ -440,9 +490,22 @@
         }
         .comentario-cabecalho-info {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .comentario-autor-grupo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .avatar-comentario-card {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--primary-pink);
+            background: #000;
         }
         .comentario-autor {
             font-size: 0.8rem;
@@ -624,7 +687,16 @@
 
         <div class="form-comentario">
             <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 10px;">Deixe seu comentário</div>
-            <input type="text" id="nomeComentario" placeholder="Seu apelido / nome...">
+            
+            <div class="autor-container">
+                <div class="avatar-escolha-container" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
+                    <img id="previewAvatarEscolhido" src="https://i.imgur.com/8X133bB.png" alt="Avatar" class="avatar-preview-img">
+                    <div class="avatar-overlay-texto">Trocar</div>
+                </div>
+                <input type="file" id="inputAvatarFile" accept="image/*" style="display: none;" onchange="processarAvatarArquivo(event)">
+                
+                <input type="text" id="nomeComentario" placeholder="Seu apelido / nome...">
+            </div>
             
             <div class="toolbar-comentario">
                 <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
@@ -664,6 +736,7 @@
         let obraGlobal = null;
         let idUnicoCapitulo = '';
         let stickerBase64 = '';
+        let avatarBase64Usuario = 'https://i.imgur.com/8X133bB.png';
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -912,17 +985,22 @@
                 textoFormatado += `<img src="${stickerUrl}" class="sticker-render" alt="Sticker">`;
             }
 
+            let avatarUrlCard = c.avatar || 'https://i.imgur.com/8X133bB.png';
+
             let card = document.createElement('div');
             card.className = 'comentario-card';
             card.id = `comentario-${c.id}`;
             card.innerHTML = `
                 <div class="comentario-cabecalho-info">
-                    <div class="comentario-autor">🌸 ${escapeHtml(c.nome)}</div>
+                    <div class="comentario-autor-grupo">
+                        <img src="${avatarUrlCard}" class="avatar-comentario-card" alt="Avatar">
+                        <div class="comentario-autor">${escapeHtml(c.nome)}</div>
+                    </div>
                     <div class="comentario-data">${dataFormatada}</div>
                 </div>
                 <div class="comentario-texto">${textoFormatado}</div>
                 <div class="comentario-rodape">
-                    <button class="btn-curtir-comentario" onclick="curtirComentario(${c.id})">
+                    <button class="btn-curtir-comentario" onclick="curtirComentario(${c.id}, this)">
                         ❤️ <span id="curtidas-${c.id}">${c.curtidas || 0}</span>
                     </button>
                     <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">
@@ -947,6 +1025,7 @@
                 nome: nome,
                 mensagem: mensagem || '',
                 sticker: stickerBase64 || null,
+                avatar: avatarBase64Usuario,
                 curtidas: 0,
                 created_at: new Date().toISOString()
             };
@@ -966,16 +1045,27 @@
             }
         }
 
-        async function curtirComentario(id) {
+        async function curtirComentario(id, botaoEl) {
+            const curtidoKey = `curtiu_comentario_${id}`;
+            
+            // Trava para o usuário não curtir o mesmo comentário infinitas vezes no navegador dele
+            if (localStorage.getItem(curtidoKey) === 'true') {
+                return; 
+            }
+
             let el = document.getElementById(`curtidas-${id}`);
             let atual = parseInt(el.textContent) || 0;
             let novoValor = atual + 1;
             el.textContent = novoValor;
 
-            await supabaseClient
+            const { error } = await supabaseClient
                 .from('comentarios')
                 .update({ curtidas: novoValor })
                 .eq('id', id);
+
+            if (!error) {
+                localStorage.setItem(curtidoKey, 'true');
+            }
         }
 
         async function deletarComentario(id) {
@@ -992,6 +1082,18 @@
             } else {
                 alert("Erro ao excluir o comentário.");
             }
+        }
+
+        function processarAvatarArquivo(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                avatarBase64Usuario = e.target.result;
+                document.getElementById('previewAvatarEscolhido').src = avatarBase64Usuario;
+            };
+            reader.readAsDataURL(arquivo);
         }
 
         function processarStickerArquivo(event) {
