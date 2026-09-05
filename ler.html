@@ -344,377 +344,6 @@
         .regras-conteudo ul { padding-left: 20px; }
         .regras-conteudo li { margin-bottom: 6px; }
 
-        .form-comentario {
-            background: #111;
-            border: 1px solid rgba(255, 153, 221, 0.2);
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        .autor-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 6px;
-        }
-        .avatar-escolha-container {
-            position: relative;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            overflow: hidden;
-            border: 2px solid var(--primary-pink);
-            background: #000;
-            flex-shrink: 0;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .avatar-escolha-container:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 10px var(--primary-pink);
-        }
-        .avatar-preview-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .avatar-overlay-texto {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            color: #ff99dd;
-            font-size: 0.5rem;
-            text-align: center;
-            padding: 1px 0;
-            opacity: 0;
-            transition: opacity 0.2s;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .avatar-escolha-container:hover .avatar-overlay-texto {
-            opacity: 1;
-        }
-
-        .avatar-legenda-aviso {
-            font-size: 0.7rem;
-            color: rgba(255, 153, 221, 0.7);
-            margin-bottom: 12px;
-            margin-left: 57px;
-            font-style: italic;
-        }
-
-        .form-comentario input, .form-comentario textarea {
-            width: 100%;
-            background: #000;
-            border: 1px solid rgba(255, 153, 221, 0.4);
-            color: #FF99DD;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            outline: none;
-        }
-        .autor-container input[type="text"] {
-            flex: 1;
-            margin-bottom: 0 !important;
-        }
-        .form-comentario textarea { resize: vertical; min-height: 70px; }
-        .form-comentario input:focus, .form-comentario textarea:focus {
-            border-color: #ffffff;
-            box-shadow: 0 0 8px rgba(255, 153, 221, 0.5);
-        }
-
-        .toolbar-comentario {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .btn-toolbar {
-            background: #000;
-            color: #FF99DD;
-            border: 1px solid rgba(255, 153, 221, 0.4);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
-        }
-        .btn-toolbar:hover {
-            background: rgba(255, 153, 221, 0.2);
-            border-color: #fff;
-            color: #fff;
-        }
-
-        .preview-sticker-container {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            background: #000;
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,153,221,0.3);
-            width: fit-content;
-        }
-        .preview-sticker-container.ativo { display: flex; }
-        .preview-sticker-container img {
-            width: 35px;
-            height: 35px;
-            object-fit: contain;
-        }
-        .btn-remover-sticker {
-            background: transparent;
-            border: none;
-            color: #ff6666;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .btn-enviar-comentario {
-            background: #000;
-            color: #FF99DD;
-            border: 2px solid var(--primary-pink);
-            padding: 8px 18px;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            float: right;
-        }
-        .btn-enviar-comentario:hover {
-            background: rgba(255, 153, 221, 0.2);
-            box-shadow: 0 0 10px rgba(255, 153, 221, 0.6);
-            color: #fff;
-        }
-        .limpar-float { clear: both; }
-
-        .lista-comentarios {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .comentario-card {
-            background: #111;
-            border: 1px solid rgba(255, 153, 221, 0.15);
-            padding: 12px 14px;
-            border-radius: 10px;
-            position: relative;
-        }
-        .comentario-card.resposta-card {
-            background: #0d0d0d;
-            margin-left: 24px;
-            margin-top: 8px;
-            border-left: 2px solid var(--primary-pink);
-        }
-        .comentario-cabecalho-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        .comentario-autor-grupo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .avatar-comentario-card {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--primary-pink);
-            background: #000;
-        }
-        .comentario-autor {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        .comentario-data {
-            font-size: 0.65rem;
-            color: rgba(255, 153, 221, 0.5);
-        }
-        .comentario-texto {
-            font-size: 0.8rem;
-            color: #cccccc;
-            word-break: break-word;
-            line-height: 1.4;
-        }
-        .comentario-texto img.sticker-render {
-            max-width: 65px;
-            max-height: 65px;
-            display: block;
-            margin-top: 6px;
-            object-fit: contain;
-            border-radius: 6px;
-        }
-
-        .spoiler {
-            background: rgba(255, 153, 221, 0.2);
-            color: transparent;
-            text-shadow: 0 0 8px rgba(255, 153, 221, 0.6);
-            cursor: pointer;
-            border-radius: 4px;
-            padding: 0 4px;
-            user-select: none;
-            transition: all 0.3s;
-        }
-        .spoiler.revelado {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            text-shadow: none;
-            user-select: text;
-        }
-
-        .comentario-rodape {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-            padding-top: 6px;
-            border-top: 1px solid rgba(255, 153, 221, 0.1);
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .acoes-esq {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-            flex-wrap: wrap;
-        }
-        .btn-acao-comentario {
-            background: transparent;
-            border: none;
-            color: #FF99DD;
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: transform 0.2s, color 0.2s;
-        }
-        .btn-acao-comentario:hover { transform: scale(1.1); color: #fff; }
-        
-        .btn-deletar-comentario {
-            background: transparent;
-            border: none;
-            color: rgba(255, 100, 100, 0.7);
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            gap: 3px;
-        }
-        .btn-deletar-comentario:hover { color: #ff4444; }
-        body.modo-autor .btn-deletar-comentario { display: inline-flex; }
-
-        .caixa-resposta-inline {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: #151515;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 153, 221, 0.3);
-        }
-        .caixa-resposta-inline.ativa { display: block; }
-        .caixa-resposta-inline textarea {
-            width: 100%;
-            background: #000;
-            border: 1px solid rgba(255, 153, 221, 0.4);
-            color: #FF99DD;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            resize: vertical;
-            min-height: 50px;
-            outline: none;
-            margin-bottom: 6px;
-        }
-        .botoes-resposta-inline {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-        }
-        .btn-enviar-resp {
-            background: #000;
-            color: #FF99DD;
-            border: 1px solid var(--primary-pink);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-enviar-resp:hover { background: rgba(255,153,221,0.2); color: #fff; }
-
-        .tabela-emojis-popup {
-            display: none;
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            background: #111;
-            border: 1px solid var(--primary-pink);
-            border-radius: 10px;
-            padding: 10px;
-            z-index: 100;
-            box-shadow: 0 0 15px rgba(255, 153, 221, 0.5);
-            margin-bottom: 8px;
-            width: 290px;
-            max-height: 180px;
-            overflow-y: auto;
-            display: none;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
-        .tabela-emojis-popup.ativa { display: grid; }
-        .tabela-emojis-popup span {
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 3px;
-            border-radius: 6px;
-            transition: background 0.2s, transform 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .tabela-emojis-popup span:hover {
-            background: rgba(255, 153, 221, 0.3);
-            transform: scale(1.2);
-        }
-
-        .container-reacoes-comentario {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 6px;
-        }
-        .badge-reacao-comentario {
-            background: #1a1a1a;
-            border: 1px solid rgba(255, 153, 221, 0.3);
-            border-radius: 12px;
-            padding: 2px 8px;
-            font-size: 0.75rem;
-            color: #fff;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-        }
-        .badge-reacao-comentario:hover {
-            background: rgba(255, 153, 221, 0.2);
-            border-color: var(--primary-pink);
-        }
-
         .btn-flor-topo {
             position: fixed;
             bottom: 20px;
@@ -803,7 +432,7 @@
     </div>
 
     <div class="secao-comentarios-container">
-        <div class="comentarios-contador-titulo" id="contadorComentariosTitulo">💬 Comentários (0)</div>
+        <div class="comentarios-contador-titulo">💬 Comentários</div>
 
         <div class="caixa-regras" id="caixaRegras">
             <div class="regras-cabecalho" id="btnToggleRegras">
@@ -812,48 +441,16 @@
             </div>
             <div class="regras-conteudo">
                 <ul>
+                    <li>Faça login com sua conta do GitHub para comentar.</li>
                     <li>Seja gentil e respeitoso com os tradutores e outros leitores.</li>
                     <li>Sem spoilers de capítulos futuros ou de outras obras.</li>
                     <li>Proibido qualquer tipo de ofensa, preconceito ou spam.</li>
-                    <li>Divirta-se comentando sobre o capítulo atual!</li>
                 </ul>
             </div>
         </div>
 
-        <div class="form-comentario">
-            <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 10px;">Deixe seu comentário</div>
-            
-            <div class="autor-container">
-                <div class="avatar-escolha-container" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
-                    <img id="previewAvatarEscolhido" src="https://files.catbox.moe/p5mdn7.png" alt="Avatar" class="avatar-preview-img">
-                    <div class="avatar-overlay-texto">Editar perfil</div>
-                </div>
-                <input type="file" id="inputAvatarFile" accept="image/*" style="display: none;" onchange="processarAvatarArquivo(event)">
-                
-                <input type="text" id="nomeComentario" placeholder="Seu apelido / nome...">
-            </div>
-            <div class="avatar-legenda-aviso">Clique na imagem acima para editar o perfil (foto e apelido)</div>
-            
-            <div class="toolbar-comentario">
-                <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
-                <button type="button" class="btn-toolbar" onclick="document.getElementById('inputStickerFile').click()">🌸 Escolher Sticker</button>
-                <button type="button" class="btn-toolbar" onclick="inserirSpoilerTag()">⚠️ Spoiler</button>
-            </div>
-
-            <div class="preview-sticker-container" id="previewSticker">
-                <img id="imgStickerPreview" src="" alt="Sticker">
-                <span style="font-size: 0.75rem; color: #fff;">Sticker anexado</span>
-                <button type="button" class="btn-remover-sticker" onclick="removerSticker()">✕ Remover</button>
-            </div>
-
-            <textarea id="textoComentario" placeholder="Escreva o que achou deste capítulo... (Use [spoiler]texto[/spoiler] para ocultar spoilers)"></textarea>
-            <button class="btn-enviar-comentario" onclick="enviarComentarioPrincipal()">Comentar</button>
-            <div class="limpar-float"></div>
-        </div>
-
-        <div class="lista-comentarios" id="listaComentarios">
-            <p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Carregando comentários...</p>
-        </div>
+        <!-- Área onde o Giscus será injetado automaticamente -->
+        <div id="giscus-container"></div>
     </div>
 
     <a href="#" class="btn-flor-topo" onclick="voltarAoTopo(event)" title="Voltar ao topo">
@@ -871,29 +468,9 @@
 
         let obraGlobal = null;
         let idUnicoCapitulo = '';
-        let stickerBase64 = '';
-        let avatarBase64Usuario = 'https://files.catbox.moe/p5mdn7.png';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedName = localStorage.getItem('nenascan_user_name');
-            const savedAvatar = localStorage.getItem('nenascan_user_avatar');
-            if (savedName) {
-                const inputNome = document.getElementById('nomeComentario');
-                if (inputNome) inputNome.value = savedName;
-            }
-            if (savedAvatar) {
-                avatarBase64Usuario = savedAvatar;
-                const prev = document.getElementById('previewAvatarEscolhido');
-                if (prev) prev.src = savedAvatar;
-            }
-        });
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-        }
-
-        if (urlParams.get('autor') === 'true') {
-            document.body.classList.add('modo-autor');
         }
 
         fetch('obras.json?v=' + new Date().getTime())
@@ -968,7 +545,7 @@
             idUnicoCapitulo = `${criarSlug(obraGlobal.titulo)}_${String(numCap).toLowerCase()}`;
 
             carregarReacoesDoSupabase();
-            carregarComentariosDoSupabase();
+            carregarGiscus(idUnicoCapitulo);
 
             const selectEl = document.getElementById('selectCapitulos');
             selectEl.innerHTML = `<option value="" disabled selected>Lista de Capítulos</option>`;
@@ -1019,6 +596,31 @@
                 btnProximo.href = '#';
                 btnProximo.classList.add('disabled');
             }
+        }
+
+        // Função para carregar o Giscus dinamicamente com base no capítulo atual
+        function carregarGiscus(termId) {
+            const container = document.getElementById('giscus-container');
+            container.innerHTML = ''; // Limpa anterior se houver troca de capítulo
+
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', 'flowersnenasscan/flowersnenasscan.github.io'); // Ajuste se necessário para o seu repositório exato
+            script.setAttribute('data-repo-id', 'R_kgDOP3... (substitua pelo seu ID do giscus)'); // Insira o ID gerado no giscus.app
+            script.setAttribute('data-category', 'Announcements'); // Categoria de discussões do seu repo
+            script.setAttribute('data-category-id', 'DIC_kwDOP3... (substitua pelo seu ID de categoria)'); 
+            script.setAttribute('data-mapping', 'specific');
+            script.setAttribute('data-term', termId);
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'bottom');
+            script.setAttribute('data-theme', 'transparent_dark'); // Tema escuro que combina bem com fundo preto
+            script.setAttribute('data-lang', 'pt');
+            script.crossOrigin = 'anonymous';
+            script.async = true;
+
+            container.appendChild(script);
         }
 
         async function carregarReacoesDoSupabase() {
@@ -1099,383 +701,11 @@
             }
         }
 
-        async function validarEObterPerfil(nomeInformado) {
-            nomeInformado = nomeInformado.trim();
-            const nomeSalvoLocal = localStorage.getItem('nenascan_user_name');
-
-            if (nomeSalvoLocal && nomeSalvoLocal.toLowerCase() === nomeInformado.toLowerCase()) {
-                return { valido: true, nomeFinal: nomeSalvoLocal };
-            }
-
-            const ultimaTroca = localStorage.getItem('nenascan_last_name_change');
-            if (ultimaTroca && nomeSalvoLocal) {
-                const diasPassados = (Date.now() - parseInt(ultimaTroca)) / (1000 * 60 * 60 * 24);
-                if (diasPassados < 30) {
-                    const diasRestantes = Math.ceil(30 - diasPassados);
-                    alert(`⚠️ Trava de segurança: Você só poderá alterar seu apelido novamente daqui a ${diasRestantes} dia(s).`);
-                    document.getElementById('nomeComentario').value = nomeSalvoLocal;
-                    return { valido: false };
-                }
-            }
-
-            localStorage.setItem('nenascan_user_name', nomeInformado);
-            localStorage.setItem('nenascan_last_name_change', Date.now().toString());
-            localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
-
-            return { valido: true, nomeFinal: nomeInformado };
-        }
-
-        async function enviarComentarioPrincipal() {
-            let nomeInput = document.getElementById('nomeComentario').value;
-            let mensagem = document.getElementById('textoComentario').value.trim();
-
-            if (!nomeInput || (!mensagem && !stickerBase64)) {
-                alert("Preencha seu apelido e escreva uma mensagem ou selecione uma figurinha!");
-                return;
-            }
-
-            let validacao = await validarEObterPerfil(nomeInput);
-            if (!validacao.valido) return;
-
-            let novoComentario = {
-                capitulo_id: String(idUnicoCapitulo).trim(),
-                nome: String(validacao.nomeFinal).trim(),
-                mensagem: String(mensagem || '').trim(),
-                sticker: stickerBase64 || null,
-                avatar: avatarBase64Usuario || 'https://files.catbox.moe/p5mdn7.png',
-                reacoes: {},
-                parent_id: null
-            };
-
-            const { error } = await supabaseClient
-                .from('comentarios')
-                .insert([novoComentario]);
-
-            if (!error) {
-                document.getElementById('textoComentario').value = '';
-                removerSticker();
-                carregarComentariosDoSupabase();
-            } else {
-                console.error("Erro Supabase:", error);
-                alert("Erro ao enviar comentário: " + (error.message || 'Erro desconhecido'));
-            }
-        }
-
-        async function enviarResposta(parentId, inputId) {
-            let nomeInput = document.getElementById('nomeComentario').value;
-            let mensagem = document.getElementById(inputId).value.trim();
-
-            if (!nomeInput || !mensagem) {
-                alert("Preencha seu apelido e digite a resposta!");
-                return;
-            }
-
-            let validacao = await validarEObterPerfil(nomeInput);
-            if (!validacao.valido) return;
-
-            let novaResposta = {
-                capitulo_id: String(idUnicoCapitulo).trim(),
-                nome: String(validacao.nomeFinal).trim(),
-                mensagem: String(mensagem).trim(),
-                sticker: null,
-                avatar: avatarBase64Usuario || 'https://files.catbox.moe/p5mdn7.png',
-                reacoes: {},
-                parent_id: parentId
-            };
-
-            const { error } = await supabaseClient
-                .from('comentarios')
-                .insert([novaResposta]);
-
-            if (!error) {
-                carregarComentariosDoSupabase();
-            } else {
-                console.error("Erro Supabase Resposta:", error);
-                alert("Erro ao enviar resposta: " + (error.message || 'Erro desconhecido'));
-            }
-        }
-
-        async function carregarComentariosDoSupabase() {
-            const lista = document.getElementById('listaComentarios');
-            const contadorTitulo = document.getElementById('contadorComentariosTitulo');
-            
-            const { data, error } = await supabaseClient
-                .from('comentarios')
-                .select('*')
-                .eq('capitulo_id', String(idUnicoCapitulo).trim())
-                .order('created_at', { ascending: true });
-
-            if (error || !data || data.length === 0) {
-                contadorTitulo.textContent = `💬 Comentários (0)`;
-                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário ainda. Seja o primeiro!</p>`;
-                return;
-            }
-
-            contadorTitulo.textContent = `💬 Comentários (${data.length})`;
-            lista.innerHTML = '';
-            
-            let principais = data.filter(c => !c.parent_id);
-            let respostas = data.filter(c => c.parent_id);
-
-            principais.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-            principais.forEach(c => {
-                renderizarCardComentario(c, false);
-                let filhas = respostas.filter(r => String(r.parent_id) === String(c.id));
-                filhas.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                filhas.forEach(f => renderizarCardComentario(f, true));
-            });
-        }
-
-        function renderizarCardComentario(c, isResposta) {
-            const lista = document.getElementById('listaComentarios');
-            let dataFormatada = c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Agora mesmo';
-            let textoFormatado = formatarTextoComentario(c.mensagem);
-            
-            if (c.sticker) {
-                textoFormatado += `<img src="${c.sticker}" class="sticker-render" alt="Sticker">`;
-            }
-
-            let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
-            let cardId = `resp-input-${c.id}`;
-
-            let reacoesObj = c.reacoes || {};
-            let htmlReacoes = '';
-            for (let emoji in reacoesObj) {
-                let count = reacoesObj[emoji] || 0;
-                if (count > 0) {
-                    htmlReacoes += `<button class="badge-reacao-comentario" onclick="reagirEmoji(${c.id}, '${emoji}')">${emoji} <span>${count}</span></button>`;
-                }
-            }
-
-            let card = document.createElement('div');
-            card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
-            card.id = `comentario-${c.id}`;
-            card.innerHTML = `
-                <div class="comentario-cabecalho-info">
-                    <div class="comentario-autor-grupo">
-                        <img src="${avatarUrlCard}" class="avatar-comentario-card" alt="Avatar">
-                        <div class="comentario-autor">${escapeHtml(c.nome)}</div>
-                    </div>
-                    <div class="comentario-data">${dataFormatada}</div>
-                </div>
-                <div class="comentario-texto">${textoFormatado}</div>
-
-                <div class="container-reacoes-comentario" id="badges-reacoes-${c.id}">
-                    ${htmlReacoes}
-                </div>
-                
-                <div class="comentario-rodape">
-                    <div class="acoes-esq">
-                        <button class="btn-acao-comentario" onclick="toggleTabelaEmojis(${c.id})" title="Adicionar Reação">😀 Reagir</button>
-                        <div class="tabela-emojis-popup" id="emojis-${c.id}">
-                            <span onclick="reagirEmoji(${c.id}, '😂')">😂</span>
-                            <span onclick="reagirEmoji(${c.id}, '😅')">😅</span>
-                            <span onclick="reagirEmoji(${c.id}, '😍')">😍</span>
-                            <span onclick="reagirEmoji(${c.id}, '🥰')">🥰</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤣')">🤣</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤩')">🤩</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤗')">🤗</span>
-                            <span onclick="reagirEmoji(${c.id}, '🙂')">🙂</span>
-                            <span onclick="reagirEmoji(${c.id}, '🙃')">🙃</span>
-                            <span onclick="reagirEmoji(${c.id}, '☺')">☺</span>
-                            <span onclick="reagirEmoji(${c.id}, '😇')">😇</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤭')">🤭</span>
-                            <span onclick="reagirEmoji(${c.id}, '🥳')">🥳</span>
-                            <span onclick="reagirEmoji(${c.id}, '😛')">😛</span>
-                            <span onclick="reagirEmoji(${c.id}, '😋')">😋</span>
-                            <span onclick="reagirEmoji(${c.id}, '🥲')">🥲</span>
-                            <span onclick="reagirEmoji(${c.id}, '😝')">😝</span>
-                            <span onclick="reagirEmoji(${c.id}, '😏')">😏</span>
-                            <span onclick="reagirEmoji(${c.id}, '😭')">😭</span>
-                            <span onclick="reagirEmoji(${c.id}, '🥺')">🥺</span>
-                            <span onclick="reagirEmoji(${c.id}, '😢')">😢</span>
-                            <span onclick="reagirEmoji(${c.id}, '🥵')">🥵</span>
-                            <span onclick="reagirEmoji(${c.id}, '😤')">😤</span>
-                            <span onclick="reagirEmoji(${c.id}, '😡')">😡</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤡')">🤡</span>
-                            <span onclick="reagirEmoji(${c.id}, '😱')">😱</span>
-                            <span onclick="reagirEmoji(${c.id}, '😰')">😰</span>
-                            <span onclick="reagirEmoji(${c.id}, '😳')">😳</span>
-                            <span onclick="reagirEmoji(${c.id}, '😓')">😓</span>
-                            <span onclick="reagirEmoji(${c.id}, '😈')">😈</span>
-                            <span onclick="reagirEmoji(${c.id}, '🔥')">🔥</span>
-                            <span onclick="reagirEmoji(${c.id}, '🌚')">🌚</span>
-                            <span onclick="reagirEmoji(${c.id}, '💦')">💦</span>
-                            <span onclick="reagirEmoji(${c.id}, '🌹')">🌹</span>
-                            <span onclick="reagirEmoji(${c.id}, '🙏')">🙏</span>
-                            <span onclick="reagirEmoji(${c.id}, '👏')">👏</span>
-                            <span onclick="reagirEmoji(${c.id}, '👍')">👍</span>
-                            <span onclick="reagirEmoji(${c.id}, '👎')">👎</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤞')">🤞</span>
-                            <span onclick="reagirEmoji(${c.id}, '🤟')">🤟</span>
-                            <span onclick="reagirEmoji(${c.id}, '💋')">💋</span>
-                            <span onclick="reagirEmoji(${c.id}, '👄')">👄</span>
-                            <span onclick="reagirEmoji(${c.id}, '👅')">👅</span>
-                            <span onclick="reagirEmoji(${c.id}, '👀')">👀</span>
-                            <span onclick="reagirEmoji(${c.id}, '💅')">💅</span>
-                            <span onclick="reagirEmoji(${c.id}, '🩷')">🩷</span>
-                            <span onclick="reagirEmoji(${c.id}, '🫣')">🫣</span>
-                            <span onclick="reagirEmoji(${c.id}, '🫢')">🫢</span>
-                            <span onclick="reagirEmoji(${c.id}, '🫦')">🫦</span>
-                            <span onclick="reagirEmoji(${c.id}, '❤️‍🔥')">❤️‍🔥</span>
-                            <span onclick="reagirEmoji(${c.id}, '❤️‍🩹')">❤️‍🩹</span>
-                            <span onclick="reagirEmoji(${c.id}, '🥹')">🥹</span>
-                            <span onclick="reagirEmoji(${c.id}, '❤')">❤</span>
-                            <span onclick="reagirEmoji(${c.id}, '💟')">💟</span>
-                            <span onclick="reagirEmoji(${c.id}, '💯')">💯</span>
-                            <span onclick="reagirEmoji(${c.id}, '👌')">👌</span>
-                            <span onclick="reagirEmoji(${c.id}, '🌸')">🌸</span>
-                            <span onclick="reagirEmoji(${c.id}, '🌈')">🌈</span>
-                        </div>
-                        <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
-                    </div>
-                    <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">🗑️ Apagar</button>
-                </div>
-
-                <div class="caixa-resposta-inline" id="caixa-${c.id}">
-                    <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
-                    <div class="botoes-resposta-inline">
-                        <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
-                    </div>
-                </div>
-            `;
-            lista.appendChild(card);
-        }
-
-        function toggleCaixaResposta(id) {
-            const caixa = document.getElementById(`caixa-${id}`);
-            if (caixa) caixa.classList.toggle('ativa');
-        }
-
-        function toggleTabelaEmojis(id) {
-            const popup = document.getElementById(`emojis-${id}`);
-            if (popup) popup.classList.toggle('ativa');
-        }
-
-        async function reagirEmoji(id, emoji) {
-            toggleTabelaEmojis(id);
-
-            const chaveUsuarioReacao = `reacao_comentario_${id}`;
-            let emojiAnterior = localStorage.getItem(chaveUsuarioReacao);
-
-            const { data: comentarioAtual, error: errFetch } = await supabaseClient
-                .from('comentarios')
-                .select('reacoes')
-                .eq('id', id)
-                .single();
-
-            if (errFetch || !comentarioAtual) return;
-
-            let reacoes = comentarioAtual.reacoes || {};
-
-            if (emojiAnterior === emoji) {
-                return;
-            }
-
-            if (emojiAnterior && reacoes[emojiAnterior]) {
-                reacoes[emojiAnterior] = Math.max(0, reacoes[emojiAnterior] - 1);
-                if (reacoes[emojiAnterior] === 0) {
-                    delete reacoes[emojiAnterior];
-                }
-            }
-
-            reacoes[emoji] = (reacoes[emoji] || 0) + 1;
-
-            const { error: errUpdate } = await supabaseClient
-                .from('comentarios')
-                .update({ reacoes: reacoes })
-                .eq('id', id);
-
-            if (!errUpdate) {
-                localStorage.setItem(chaveUsuarioReacao, emoji);
-                
-                let container = document.getElementById(`badges-reacoes-${id}`);
-                if (container) {
-                    let htmlReacoes = '';
-                    for (let e in reacoes) {
-                        let count = reacoes[e] || 0;
-                        if (count > 0) {
-                            htmlReacoes += `<button class="badge-reacao-comentario" onclick="reagirEmoji(${id}, '${e}')">${e} <span>${count}</span></button>`;
-                        }
-                    }
-                    container.innerHTML = htmlReacoes;
-                }
-            } else {
-                console.error("Erro ao atualizar reação:", errUpdate);
-            }
-        }
-
-        async function deletarComentario(id) {
-            if (!confirm("Deseja realmente apagar este comentário e suas respostas?")) return;
-
-            await supabaseClient.from('comentarios').delete().eq('parent_id', id);
-            const { error } = await supabaseClient.from('comentarios').delete().eq('id', id);
-
-            if (!error) {
-                carregarComentariosDoSupabase();
-            } else {
-                alert("Erro ao excluir o comentário.");
-            }
-        }
-
-        function processarAvatarArquivo(event) {
-            const arquivo = event.target.files[0];
-            if (!arquivo) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                avatarBase64Usuario = e.target.result;
-                document.getElementById('previewAvatarEscolhido').src = avatarBase64Usuario;
-                localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
-            };
-            reader.readAsDataURL(arquivo);
-        }
-
-        function processarStickerArquivo(event) {
-            const arquivo = event.target.files[0];
-            if (!arquivo) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                stickerBase64 = e.target.result;
-                document.getElementById('imgStickerPreview').src = stickerBase64;
-                document.getElementById('previewSticker').classList.add('ativo');
-            };
-            reader.readAsDataURL(arquivo);
-        }
-
-        function removerSticker() {
-            stickerBase64 = '';
-            document.getElementById('imgStickerPreview').src = '';
-            document.getElementById('previewSticker').classList.remove('ativo');
-            document.getElementById('inputStickerFile').value = '';
-        }
-
-        function inserirSpoilerTag() {
-            const txt = document.getElementById('textoComentario');
-            let inicio = txt.selectionStart;
-            let fim = txt.selectionEnd;
-            let textoSelecionado = txt.value.substring(inicio, fim);
-            txt.value = txt.value.substring(0, inicio) + `[spoiler]${textoSelecionado || 'conteúdo com spoiler'}[/spoiler]` + txt.value.substring(fim);
-            txt.focus();
-        }
-
-        function formatarTextoComentario(texto) {
-            let seguro = escapeHtml(texto);
-            seguro = seguro.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/g, '<span class="spoiler" onclick="this.classList.toggle(\'revelado\')">$1</span>');
-            return seguro;
-        }
-
         document.getElementById('btnToggleRegras').addEventListener('click', function() {
             const caixa = document.getElementById('caixaRegras');
             caixa.classList.toggle('ativa');
             document.getElementById('iconeSeta').textContent = caixa.classList.contains('ativa') ? '▲' : '▼';
         });
-
-        function escapeHtml(text) {
-            return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-        }
 
         function mudarCapitulo(slugCap) {
             if (!slugCap || !obraGlobal) return;
