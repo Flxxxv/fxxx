@@ -339,6 +339,32 @@
             border-radius: 12px;
             margin-bottom: 20px;
         }
+        
+        .dica-perfil-aviso {
+            font-size: 0.78rem;
+            color: rgba(255, 153, 221, 0.85);
+            background: rgba(255, 153, 221, 0.08);
+            border: 1px dashed rgba(255, 153, 221, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.3;
+        }
+        .dica-perfil-aviso span {
+            color: #ffffff;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        .dica-perfil-aviso span:hover {
+            color: var(--primary-pink);
+            text-shadow: 0 0 6px var(--primary-pink);
+        }
+
         .autor-container {
             display: flex;
             align-items: center;
@@ -490,7 +516,7 @@
         }
         .comentario-card.resposta-card {
             background: #0d0d0d;
-            margin-left: 24px;
+            margin-left: 20px;
             margin-top: 8px;
             border-left: 2px solid var(--primary-pink);
         }
@@ -567,7 +593,8 @@
         .acoes-esq {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .btn-acao-comentario {
             background: transparent;
@@ -581,6 +608,28 @@
             transition: transform 0.2s, color 0.2s;
         }
         .btn-acao-comentario:hover { transform: scale(1.1); color: #fff; }
+
+        .reacoes-comentario-grupo {
+            display: inline-flex;
+            gap: 6px;
+            background: rgba(0,0,0,0.4);
+            padding: 2px 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 153, 221, 0.2);
+        }
+        .btn-emoji-reacao {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            color: #fff;
+            transition: transform 0.2s;
+        }
+        .btn-emoji-reacao:hover { transform: scale(1.2); }
+        .contador-emoji { font-size: 0.65rem; color: var(--primary-pink); font-weight: bold; }
         
         .btn-deletar-comentario {
             background: transparent;
@@ -738,10 +787,14 @@
         </div>
 
         <div class="form-comentario">
-            <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 10px;">Deixe seu comentário</div>
+            <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 8px;">Deixe seu comentário</div>
             
+            <div class="dica-perfil-aviso">
+                ✨ Dica: <span onclick="focarEdicaoPerfil()">[Personalize seu apelido e avatar]</span> antes de enviar o comentário!
+            </div>
+
             <div class="autor-container">
-                <div class="avatar-escolha-container" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
+                <div class="avatar-escolha-container" id="containerAvatarPerfil" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
                     <img id="previewAvatarEscolhido" src="https://files.catbox.moe/p5mdn7.png" alt="Avatar" class="avatar-preview-img">
                     <div class="avatar-overlay-texto">Trocar</div>
                 </div>
@@ -790,7 +843,6 @@
         let stickerBase64 = '';
         let avatarBase64Usuario = 'https://files.catbox.moe/p5mdn7.png';
 
-        // Carrega identidade salva no navegador se existir
         window.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('nenascan_user_name');
             const savedAvatar = localStorage.getItem('nenascan_user_avatar');
@@ -804,6 +856,21 @@
                 if (prev) prev.src = savedAvatar;
             }
         });
+
+        function focarEdicaoPerfil() {
+            const inputNome = document.getElementById('nomeComentario');
+            const containerAvatar = document.getElementById('containerAvatarPerfil');
+            if (inputNome) {
+                inputNome.focus();
+                inputNome.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (containerAvatar) {
+                    containerAvatar.style.boxShadow = '0 0 15px #FF99DD';
+                    setTimeout(() => {
+                        containerAvatar.style.boxShadow = 'none';
+                    }, 1500);
+                }
+            }
+        }
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -1016,17 +1083,14 @@
             }
         }
 
-        // Validador de nome único + Trava de 30 dias para alteração
         async function validarEObterPerfil(nomeInformado) {
             nomeInformado = nomeInformado.trim();
             const nomeSalvoLocal = localStorage.getItem('nenascan_user_name');
 
-            // Se for exatamente o mesmo nome já salvo neste navegador, libera direto
             if (nomeSalvoLocal && nomeSalvoLocal.toLowerCase() === nomeInformado.toLowerCase()) {
                 return { valido: true, nomeFinal: nomeSalvoLocal };
             }
 
-            // Se mudou de nome, verifica trava de 30 dias
             const ultimaTroca = localStorage.getItem('nenascan_last_name_change');
             if (ultimaTroca && nomeSalvoLocal) {
                 const diasPassados = (Date.now() - parseInt(ultimaTroca)) / (1000 * 60 * 60 * 24);
@@ -1038,7 +1102,6 @@
                 }
             }
 
-            // Consulta no Supabase se o nome já está em uso por outra pessoa
             const { data: usuarioExistente, error } = await supabaseClient
                 .from('comentarios')
                 .select('avatar')
@@ -1050,7 +1113,6 @@
                 return { valido: false };
             }
 
-            // Nome livre e válido: atualiza salvamentos locais e data de troca
             localStorage.setItem('nenascan_user_name', nomeInformado);
             localStorage.setItem('nenascan_last_name_change', Date.now().toString());
             localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
@@ -1076,7 +1138,7 @@
                 mensagem: mensagem || '',
                 sticker: stickerBase64 || null,
                 avatar: avatarBase64Usuario,
-                curtidas: 0,
+                reacoes: { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 },
                 parent_id: null,
                 created_at: new Date().toISOString()
             };
@@ -1112,7 +1174,7 @@
                 mensagem: mensagem,
                 sticker: null,
                 avatar: avatarBase64Usuario,
-                curtidas: 0,
+                reacoes: { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 },
                 parent_id: parentId,
                 created_at: new Date().toISOString()
             };
@@ -1143,24 +1205,29 @@
 
             lista.innerHTML = '';
             
-            // Separa principais e respostas
-            let principais = data.filter(c => !c.parent_id);
-            let respostas = data.filter(c => c.parent_id);
+            let mapa = {};
+            data.forEach(item => {
+                item.filhos = [];
+                mapa[item.id] = item;
+            });
 
-            // Ordena principais do mais recente para o mais antigo
-            principais.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            let raizes = [];
+            data.forEach(item => {
+                if (item.parent_id && mapa[item.parent_id]) {
+                    mapa[item.parent_id].filhos.push(item);
+                } else {
+                    raizes.push(item);
+                }
+            });
 
-            principais.forEach(c => {
-                renderizarCardComentario(c, false);
-                // Filtra e exibe as respostas deste comentário
-                let filhas = respostas.filter(r => r.parent_id === c.id);
-                filhas.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                filhas.forEach(f => renderizarCardComentario(f, true));
+            raizes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+            raizes.forEach(raiz => {
+                renderizarCardRecursivo(raiz, false, lista);
             });
         }
 
-        function renderizarCardComentario(c, isResposta) {
-            const lista = document.getElementById('listaComentarios');
+        function renderizarCardRecursivo(c, isResposta, containerPai) {
             let dataFormatada = new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             let textoFormatado = formatarTextoComentario(c.mensagem);
             
@@ -1170,6 +1237,7 @@
 
             let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
             let cardId = `resp-input-${c.id}`;
+            let r = c.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
 
             let card = document.createElement('div');
             card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
@@ -1186,24 +1254,33 @@
                 
                 <div class="comentario-rodape">
                     <div class="acoes-esq">
-                        <button class="btn-acao-comentario" onclick="curtirComentario(${c.id})">
-                            ❤️ <span id="curtidas-${c.id}">${c.curtidas || 0}</span>
-                        </button>
-                        ${!isResposta ? `<button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>` : ''}
+                        <div class="reacoes-comentario-grupo">
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir com Coração">❤️ <span id="reac-coracao-${c.id}">${r.coracao || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'rindo')" title="Rindo">😂 <span id="reac-rindo-${c.id}">${r.rindo || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'surpreso')" title="Surpreso">😲 <span id="reac-surpreso-${c.id}">${r.surpreso || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'chorando')" title="Chorando">😢 <span id="reac-chorando-${c.id}">${r.chorando || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'fogo')" title="Fogo">🔥 <span id="reac-fogo-${c.id}">${r.fogo || 0}</span></button>
+                        </div>
+                        <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
                     <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">🗑️ Apagar</button>
                 </div>
 
-                ${!isResposta ? `
-                    <div class="caixa-resposta-inline" id="caixa-${c.id}">
-                        <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
-                        <div class="botoes-resposta-inline">
-                            <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
-                        </div>
+                <div class="caixa-resposta-inline" id="caixa-${c.id}">
+                    <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
+                    <div class="botoes-resposta-inline">
+                        <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
                     </div>
-                ` : ''}
+                </div>
             `;
-            lista.appendChild(card);
+            containerPai.appendChild(card);
+
+            if (c.filhos && c.filhos.length > 0) {
+                c.filhos.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                c.filhos.forEach(filho => {
+                    renderizarCardRecursivo(filho, true, card);
+                });
+            }
         }
 
         function toggleCaixaResposta(id) {
@@ -1211,37 +1288,58 @@
             if (caixa) caixa.classList.toggle('ativa');
         }
 
-        async function curtirComentario(id) {
-            const curtidoKey = `curtiu_comentario_${id}`;
-            if (localStorage.getItem(curtidoKey) === 'true') return;
+        async function reagirComentario(id, tipoEmoji) {
+            const chaveLocal = `reacao_comentario_${id}`;
+            let emojiAnterior = localStorage.getItem(chaveLocal);
 
-            let el = document.getElementById(`curtidas-${id}`);
-            let atual = parseInt(el.textContent) || 0;
-            let novoValor = atual + 1;
-            el.textContent = novoValor;
+            if (emojiAnterior === tipoEmoji) return;
 
-            const { error } = await supabaseClient
+            const { data: comObj, error: errFetch } = await supabaseClient
                 .from('comentarios')
-                .update({ curtidas: novoValor })
-                .eq('id', id);
+                .select('reacoes')
+                .eq('id', id)
+                .single();
 
-            if (!error) {
-                localStorage.setItem(curtidoKey, 'true');
+            if (errFetch || !comObj) return;
+
+            let reacoes = comObj.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
+
+            if (emojiAnterior && reacoes[emojiAnterior] !== undefined) {
+                reacoes[emojiAnterior] = Math.max(0, (reacoes[emojiAnterior] || 0) - 1);
             }
+
+            if (reacoes[tipoEmoji] !== undefined) {
+                reacoes[tipoEmoji] = (reacoes[tipoEmoji] || 0) + 1;
+            }
+
+            Object.keys(reacoes).forEach(k => {
+                let span = document.getElementById(`reac-${k}-${id}`);
+                if (span) span.textContent = reacoes[k];
+            });
+
+            localStorage.setItem(chaveLocal, tipoEmoji);
+
+            await supabaseClient
+                .from('comentarios')
+                .update({ reacoes: reacoes })
+                .eq('id', id);
         }
 
         async function deletarComentario(id) {
             if (!confirm("Deseja realmente apagar este comentário e suas respostas?")) return;
 
-            // Apaga respostas vinculadas e o principal
-            await supabaseClient.from('comentarios').delete().eq('parent_id', id);
-            const { error } = await supabaseClient.from('comentarios').delete().eq('id', id);
-
-            if (!error) {
-                carregarComentariosDoSupabase();
-            } else {
-                alert("Erro ao excluir o comentário.");
+            async function apagarRecursivo(comentarioId) {
+                const { data: filhos } = await supabaseClient.from('comentarios').select('id').eq('parent_id', comentarioId);
+                if (filhos) {
+                    for (let f of filhos) {
+                        await apagarRecursivo(f.id);
+                    }
+                }
+                await supabaseClient.from('comentarios').delete().eq('id', comentarioId);
             }
+
+            await apagarRecursivo(id);
+            carregarComentariosDoSupabase();
         }
 
         function processarAvatarArquivo(event) {
