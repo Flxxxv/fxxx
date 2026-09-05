@@ -1097,17 +1097,6 @@
                 }
             }
 
-            const { data: usuarioExistente, error } = await supabaseClient
-                .from('comentarios')
-                .select('avatar')
-                .ilike('nome', nomeInformado)
-                .limit(1);
-
-            if (!error && usuarioExistente && usuarioExistente.length > 0) {
-                alert(`⚠️ O apelido "${nomeInformado}" já está em uso por outro leitor. Escolha outro nome.`);
-                return { valido: false };
-            }
-
             localStorage.setItem('nenascan_user_name', nomeInformado);
             localStorage.setItem('nenascan_last_name_change', Date.now().toString());
             localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
@@ -1134,8 +1123,7 @@
                 sticker: stickerBase64 || null,
                 avatar: avatarBase64Usuario,
                 reacoes: {},
-                parent_id: null,
-                created_at: new Date().toISOString()
+                parent_id: null
             };
 
             const { error } = await supabaseClient
@@ -1147,7 +1135,8 @@
                 removerSticker();
                 carregarComentariosDoSupabase();
             } else {
-                alert("Erro ao enviar comentário. Tente novamente.");
+                console.error("Erro Supabase:", error);
+                alert("Erro ao enviar comentário: " + (error.message || 'Erro desconhecido'));
             }
         }
 
@@ -1170,8 +1159,7 @@
                 sticker: null,
                 avatar: avatarBase64Usuario,
                 reacoes: {},
-                parent_id: parentId,
-                created_at: new Date().toISOString()
+                parent_id: parentId
             };
 
             const { error } = await supabaseClient
@@ -1181,7 +1169,8 @@
             if (!error) {
                 carregarComentariosDoSupabase();
             } else {
-                alert("Erro ao enviar resposta.");
+                console.error("Erro Supabase Resposta:", error);
+                alert("Erro ao enviar resposta: " + (error.message || 'Erro desconhecido'));
             }
         }
 
@@ -1215,7 +1204,7 @@
 
         function renderizarCardComentario(c, isResposta) {
             const lista = document.getElementById('listaComentarios');
-            let dataFormatada = new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            let dataFormatada = c.created_at ? new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Agora mesmo';
             let textoFormatado = formatarTextoComentario(c.mensagem);
             
             if (c.sticker) {
@@ -1343,6 +1332,8 @@
                     }
                     container.innerHTML = htmlReacoes;
                 }
+            } else {
+                console.error("Erro ao atualizar reação:", errUpdate);
             }
         }
 
