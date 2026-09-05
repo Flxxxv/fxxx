@@ -343,7 +343,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .avatar-escolha-container {
             position: relative;
@@ -383,6 +383,14 @@
         }
         .avatar-escolha-container:hover .avatar-overlay-texto {
             opacity: 1;
+        }
+
+        .avatar-legenda-aviso {
+            font-size: 0.7rem;
+            color: rgba(255, 153, 221, 0.7);
+            margin-bottom: 12px;
+            margin-left: 57px;
+            font-style: italic;
         }
 
         .form-comentario input, .form-comentario textarea {
@@ -643,22 +651,25 @@
             background: #111;
             border: 1px solid var(--primary-pink);
             border-radius: 8px;
-            padding: 6px;
-            gap: 6px;
+            padding: 8px 10px;
+            gap: 8px;
             z-index: 100;
-            box-shadow: 0 0 10px rgba(255, 153, 221, 0.4);
-            margin-bottom: 5px;
+            box-shadow: 0 0 12px rgba(255, 153, 221, 0.5);
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            max-width: 260px;
         }
         .tabela-emojis-popup.ativa { display: flex; }
         .tabela-emojis-popup span {
             cursor: pointer;
-            font-size: 1.1rem;
-            padding: 2px 4px;
-            border-radius: 4px;
-            transition: background 0.2s;
+            font-size: 1.2rem;
+            padding: 3px 6px;
+            border-radius: 6px;
+            transition: background 0.2s, transform 0.2s;
         }
         .tabela-emojis-popup span:hover {
-            background: rgba(255, 153, 221, 0.2);
+            background: rgba(255, 153, 221, 0.3);
+            transform: scale(1.2);
         }
 
         .btn-flor-topo {
@@ -776,6 +787,7 @@
                 
                 <input type="text" id="nomeComentario" placeholder="Seu apelido / nome...">
             </div>
+            <div class="avatar-legenda-aviso">Clique na imagem acima para editar o perfil (foto e apelido)</div>
             
             <div class="toolbar-comentario">
                 <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
@@ -817,7 +829,6 @@
         let stickerBase64 = '';
         let avatarBase64Usuario = 'https://files.catbox.moe/p5mdn7.png';
 
-        // Carrega identidade salva no navegador se existir
         window.addEventListener('DOMContentLoaded', () => {
             const savedName = localStorage.getItem('nenascan_user_name');
             const savedAvatar = localStorage.getItem('nenascan_user_avatar');
@@ -1043,7 +1054,6 @@
             }
         }
 
-        // Validador de nome único + Trava de 30 dias para alteração
         async function validarEObterPerfil(nomeInformado) {
             nomeInformado = nomeInformado.trim();
             const nomeSalvoLocal = localStorage.getItem('nenascan_user_name');
@@ -1216,20 +1226,23 @@
                             <span onclick="reagirEmoji(${c.id}, '😂')">😂</span>
                             <span onclick="reagirEmoji(${c.id}, '🌸')">🌸</span>
                             <span onclick="reagirEmoji(${c.id}, '😢')">😢</span>
+                            <span onclick="reagirEmoji(${c.id}, '😍')">😍</span>
+                            <span onclick="reagirEmoji(${c.id}, '✨')">✨</span>
+                            <span onclick="reagirEmoji(${c.id}, '😱')">😱</span>
+                            <span onclick="reagirEmoji(${c.id}, '💀')">💀</span>
+                            <span onclick="reagirEmoji(${c.id}, '👏')">👏</span>
                         </div>
-                        ${!isResposta ? `<button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>` : ''}
+                        <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
                     <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">🗑️ Apagar</button>
                 </div>
 
-                ${!isResposta ? `
-                    <div class="caixa-resposta-inline" id="caixa-${c.id}">
-                        <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
-                        <div class="botoes-resposta-inline">
-                            <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
-                        </div>
+                <div class="caixa-resposta-inline" id="caixa-${c.id}">
+                    <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
+                    <div class="botoes-resposta-inline">
+                        <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
                     </div>
-                ` : ''}
+                </div>
             `;
             lista.appendChild(card);
         }
