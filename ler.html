@@ -568,6 +568,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            position: relative;
         }
         .btn-acao-comentario {
             background: transparent;
@@ -633,6 +634,32 @@
             font-weight: bold;
         }
         .btn-enviar-resp:hover { background: rgba(255,153,221,0.2); color: #fff; }
+
+        .tabela-emojis-popup {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: #111;
+            border: 1px solid var(--primary-pink);
+            border-radius: 8px;
+            padding: 6px;
+            gap: 6px;
+            z-index: 100;
+            box-shadow: 0 0 10px rgba(255, 153, 221, 0.4);
+            margin-bottom: 5px;
+        }
+        .tabela-emojis-popup.ativa { display: flex; }
+        .tabela-emojis-popup span {
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .tabela-emojis-popup span:hover {
+            background: rgba(255, 153, 221, 0.2);
+        }
 
         .btn-flor-topo {
             position: fixed;
@@ -743,7 +770,7 @@
             <div class="autor-container">
                 <div class="avatar-escolha-container" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
                     <img id="previewAvatarEscolhido" src="https://files.catbox.moe/p5mdn7.png" alt="Avatar" class="avatar-preview-img">
-                    <div class="avatar-overlay-texto">Trocar</div>
+                    <div class="avatar-overlay-texto">Editar perfil</div>
                 </div>
                 <input type="file" id="inputAvatarFile" accept="image/*" style="display: none;" onchange="processarAvatarArquivo(event)">
                 
@@ -1021,12 +1048,10 @@
             nomeInformado = nomeInformado.trim();
             const nomeSalvoLocal = localStorage.getItem('nenascan_user_name');
 
-            // Se for exatamente o mesmo nome já salvo neste navegador, libera direto
             if (nomeSalvoLocal && nomeSalvoLocal.toLowerCase() === nomeInformado.toLowerCase()) {
                 return { valido: true, nomeFinal: nomeSalvoLocal };
             }
 
-            // Se mudou de nome, verifica trava de 30 dias
             const ultimaTroca = localStorage.getItem('nenascan_last_name_change');
             if (ultimaTroca && nomeSalvoLocal) {
                 const diasPassados = (Date.now() - parseInt(ultimaTroca)) / (1000 * 60 * 60 * 24);
@@ -1038,7 +1063,6 @@
                 }
             }
 
-            // Consulta no Supabase se o nome já está em uso por outra pessoa
             const { data: usuarioExistente, error } = await supabaseClient
                 .from('comentarios')
                 .select('avatar')
@@ -1050,7 +1074,6 @@
                 return { valido: false };
             }
 
-            // Nome livre e válido: atualiza salvamentos locais e data de troca
             localStorage.setItem('nenascan_user_name', nomeInformado);
             localStorage.setItem('nenascan_last_name_change', Date.now().toString());
             localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
@@ -1143,16 +1166,13 @@
 
             lista.innerHTML = '';
             
-            // Separa principais e respostas
             let principais = data.filter(c => !c.parent_id);
             let respostas = data.filter(c => c.parent_id);
 
-            // Ordena principais do mais recente para o mais antigo
             principais.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
             principais.forEach(c => {
                 renderizarCardComentario(c, false);
-                // Filtra e exibe as respostas deste comentário
                 let filhas = respostas.filter(r => r.parent_id === c.id);
                 filhas.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
                 filhas.forEach(f => renderizarCardComentario(f, true));
@@ -1189,6 +1209,14 @@
                         <button class="btn-acao-comentario" onclick="curtirComentario(${c.id})">
                             ❤️ <span id="curtidas-${c.id}">${c.curtidas || 0}</span>
                         </button>
+                        <button class="btn-acao-comentario" onclick="toggleTabelaEmojis(${c.id})">➕</button>
+                        <div class="tabela-emojis-popup" id="emojis-${c.id}">
+                            <span onclick="reagirEmoji(${c.id}, '👍')">👍</span>
+                            <span onclick="reagirEmoji(${c.id}, '🔥')">🔥</span>
+                            <span onclick="reagirEmoji(${c.id}, '😂')">😂</span>
+                            <span onclick="reagirEmoji(${c.id}, '🌸')">🌸</span>
+                            <span onclick="reagirEmoji(${c.id}, '😢')">😢</span>
+                        </div>
                         ${!isResposta ? `<button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>` : ''}
                     </div>
                     <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">🗑️ Apagar</button>
@@ -1209,6 +1237,16 @@
         function toggleCaixaResposta(id) {
             const caixa = document.getElementById(`caixa-${id}`);
             if (caixa) caixa.classList.toggle('ativa');
+        }
+
+        function toggleTabelaEmojis(id) {
+            const popup = document.getElementById(`emojis-${id}`);
+            if (popup) popup.classList.toggle('ativa');
+        }
+
+        async function reagirEmoji(id, emoji) {
+            toggleTabelaEmojis(id);
+            await curtirComentario(id);
         }
 
         async function curtirComentario(id) {
@@ -1233,7 +1271,6 @@
         async function deletarComentario(id) {
             if (!confirm("Deseja realmente apagar este comentário e suas respostas?")) return;
 
-            // Apaga respostas vinculadas e o principal
             await supabaseClient.from('comentarios').delete().eq('parent_id', id);
             const { error } = await supabaseClient.from('comentarios').delete().eq('id', id);
 
