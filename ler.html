@@ -382,7 +382,6 @@
             color: #fff;
         }
 
-        /* PRÉ-VISUALIZAÇÃO DA FIGURINHA SELECIONADA */
         .preview-sticker-container {
             display: none;
             align-items: center;
@@ -880,7 +879,7 @@
         async function carregarComentariosDoSupabase() {
             const lista = document.getElementById('listaComentarios');
             const { data, error } = await supabaseClient
-                .from('Comentárioss')
+                .from('comentarios')
                 .select('*')
                 .eq('capitulo_id', idUnicoCapitulo)
                 .order('created_at', { ascending: false });
@@ -953,7 +952,7 @@
             };
 
             const { data, error } = await supabaseClient
-                .from('Comentárioss')
+                .from('comentarios')
                 .insert([novoComentario])
                 .select();
 
@@ -963,7 +962,7 @@
                 carregarComentariosDoSupabase();
             } else {
                 console.error("Erro Supabase:", error);
-                alert("Erro ao enviar comentário. Verifique se a tabela do Supabase possui as colunas 'sticker' e 'curtidas'.");
+                alert("Erro ao enviar comentário. Verifique a conexão.");
             }
         }
 
@@ -974,7 +973,7 @@
             el.textContent = novoValor;
 
             await supabaseClient
-                .from('Comentárioss')
+                .from('comentarios')
                 .update({ curtidas: novoValor })
                 .eq('id', id);
         }
@@ -983,7 +982,7 @@
             if (!confirm("Deseja realmente apagar este comentário?")) return;
 
             const { error } = await supabaseClient
-                .from('Comentárioss')
+                .from('comentarios')
                 .delete()
                 .eq('id', id);
 
