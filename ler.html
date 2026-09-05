@@ -472,12 +472,12 @@
             border: 1px solid var(--primary-pink);
             border-radius: 8px;
             padding: 8px;
-            z-index: 100;
+            z-index: 9999;
             box-shadow: 0 0 12px rgba(255, 153, 221, 0.4);
             width: 220px;
         }
         .emoji-picker-popup.ativo {
-            display: block;
+            display: block !important;
         }
         .emoji-grid {
             display: grid;
@@ -676,18 +676,6 @@
         .btn-emoji-reacao:hover { transform: scale(1.2); }
         .contador-emoji { font-size: 0.65rem; color: var(--primary-pink); font-weight: bold; }
 
-        .btn-mais-reacao {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 0.75rem;
-            color: #FF99DD;
-            padding: 0 4px;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-        .btn-mais-reacao:hover { transform: scale(1.15); color: #fff; }
-        
         .btn-deletar-comentario {
             background: transparent;
             border: none;
@@ -867,19 +855,19 @@
                 <button type="button" class="btn-toolbar" onclick="inserirSpoilerTagPrincipal()">⚠️ Spoiler</button>
                 
                 <div class="emoji-picker-wrapper">
-                    <button type="button" class="btn-toolbar emoji-toggle-btn">😊 +</button>
-                    <div class="emoji-picker-popup">
+                    <button type="button" class="btn-toolbar" onclick="togglePopupEmoji(event, 'popupEmojiPrincipal')">😊 +</button>
+                    <div class="emoji-picker-popup" id="popupEmojiPrincipal">
                         <div class="emoji-grid">
-                            <span class="emoji-option" data-emoji="🌸">🌸</span>
-                            <span class="emoji-option" data-emoji="✨">✨</span>
-                            <span class="emoji-option" data-emoji="💖">💖</span>
-                            <span class="emoji-option" data-emoji="🥺">🥺</span>
-                            <span class="emoji-option" data-emoji="😭">😭</span>
-                            <span class="emoji-option" data-emoji="🔥">🔥</span>
-                            <span class="emoji-option" data-emoji="💀">💀</span>
-                            <span class="emoji-option" data-emoji="👀">👀</span>
-                            <span class="emoji-option" data-emoji="❤️">❤️</span>
-                            <span class="emoji-option" data-emoji="⭐">⭐</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '🌸')">🌸</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '✨')">✨</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '💖')">💖</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '🥺')">🥺</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '😭')">😭</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '🔥')">🔥</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '💀')">💀</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '👀')">👀</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '❤️')">❤️</span>
+                            <span class="emoji-option" onclick="inserirEmojiNoCampo('textoComentario', '⭐')">⭐</span>
                         </div>
                     </div>
                 </div>
@@ -932,46 +920,8 @@
                 if (prev) prev.src = savedAvatar;
             }
 
-            // Delegação global segura para os popups de emojis (tanto na caixa principal quanto nas respostas aninhadas)
-            document.addEventListener('click', function(e) {
-                const toggleBtn = e.target.closest('.emoji-toggle-btn');
-                if (toggleBtn) {
-                    e.preventDefault();
-                    const wrapper = toggleBtn.closest('.emoji-picker-wrapper');
-                    const popup = wrapper.querySelector('.emoji-picker-popup');
-                    
-                    document.querySelectorAll('.emoji-picker-popup').forEach(p => {
-                        if (p !== popup) p.classList.remove('ativo');
-                    });
-
-                    popup.classList.toggle('ativo');
-                    return;
-                }
-
-                const emojiOpt = e.target.closest('.emoji-option');
-                if (emojiOpt) {
-                    e.preventDefault();
-                    const emoji = emojiOpt.getAttribute('data-emoji');
-                    const wrapper = emojiOpt.closest('.emoji-picker-wrapper');
-                    
-                    const formContainer = wrapper.closest('.form-comentario, .caixa-resposta-inline') || wrapper.parentElement;
-                    const commentBox = formContainer.querySelector('textarea');
-
-                    if (commentBox) {
-                        const startPos = commentBox.selectionStart || 0;
-                        const endPos = commentBox.selectionEnd || 0;
-                        const text = commentBox.value || '';
-
-                        commentBox.value = text.substring(0, startPos) + emoji + text.substring(endPos);
-                        commentBox.selectionStart = commentBox.selectionEnd = startPos + emoji.length;
-                        commentBox.focus();
-                    }
-
-                    const popup = wrapper.querySelector('.emoji-picker-popup');
-                    if (popup) popup.classList.remove('ativo');
-                    return;
-                }
-
+            // Fecha popups de emoji ao clicar fora
+            window.addEventListener('click', function(e) {
                 if (!e.target.closest('.emoji-picker-wrapper')) {
                     document.querySelectorAll('.emoji-picker-popup').forEach(p => {
                         p.classList.remove('ativo');
@@ -979,6 +929,33 @@
                 }
             });
         });
+
+        function togglePopupEmoji(e, popupId) {
+            e.stopPropagation();
+            // Fecha todos os outros popups abertos
+            document.querySelectorAll('.emoji-picker-popup').forEach(p => {
+                if (p.id !== popupId) p.classList.remove('ativo');
+            });
+            const popup = document.getElementById(popupId);
+            if (popup) {
+                popup.classList.toggle('ativo');
+            }
+        }
+
+        function inserirEmojiNoCampo(campoId, emoji) {
+            const campo = document.getElementById(campoId);
+            if (!campo) return;
+            const startPos = campo.selectionStart || 0;
+            const endPos = campo.selectionEnd || 0;
+            const text = campo.value || '';
+
+            campo.value = text.substring(0, startPos) + emoji + text.substring(endPos);
+            campo.selectionStart = campo.selectionEnd = startPos + emoji.length;
+            campo.focus();
+
+            // Fecha o popup após escolher
+            document.querySelectorAll('.emoji-picker-popup').forEach(p => p.classList.remove('ativo'));
+        }
 
         function inserirSpoilerTagPrincipal() {
             const txt = document.getElementById('textoComentario');
@@ -1379,6 +1356,7 @@
 
             let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
             let cardId = `resp-input-${c.id}`;
+            let popupRespId = `popup-resp-${c.id}`;
             let r = c.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
             let totalCoracao = r.coracao || 0;
 
@@ -1399,7 +1377,6 @@
                     <div class="acoes-esq">
                         <div class="reacoes-comentario-grupo">
                             <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir">❤️ <span id="reac-coracao-${c.id}">${totalCoracao}</span></button>
-                            <button class="btn-mais-reacao" onclick="abrirSeletorReacao(${c.id})" title="Mais reações">+</button>
                         </div>
                         <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
@@ -1407,22 +1384,23 @@
                 </div>
 
                 <div class="caixa-resposta-inline" id="caixa-${c.id}">
-                    <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+                    <div style="display: flex; gap: 6px; margin-bottom: 6px; align-items: center; position: relative;">
                         <button type="button" class="btn-toolbar" onclick="inserirSpoilerTagResposta(document.getElementById('${cardId}'))">⚠️ Spoiler</button>
+                        
                         <div class="emoji-picker-wrapper">
-                            <button type="button" class="btn-toolbar emoji-toggle-btn">😊 +</button>
-                            <div class="emoji-picker-popup">
+                            <button type="button" class="btn-toolbar" onclick="togglePopupEmoji(event, '${popupRespId}')">😊 +</button>
+                            <div class="emoji-picker-popup" id="${popupRespId}">
                                 <div class="emoji-grid">
-                                    <span class="emoji-option" data-emoji="🌸">🌸</span>
-                                    <span class="emoji-option" data-emoji="✨">✨</span>
-                                    <span class="emoji-option" data-emoji="💖">💖</span>
-                                    <span class="emoji-option" data-emoji="🥺">🥺</span>
-                                    <span class="emoji-option" data-emoji="😭">😭</span>
-                                    <span class="emoji-option" data-emoji="🔥">🔥</span>
-                                    <span class="emoji-option" data-emoji="💀">💀</span>
-                                    <span class="emoji-option" data-emoji="👀">👀</span>
-                                    <span class="emoji-option" data-emoji="❤️">❤️</span>
-                                    <span class="emoji-option" data-emoji="⭐">⭐</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '🌸')">🌸</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '✨')">✨</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '💖')">💖</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '🥺')">🥺</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '😭')">😭</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '🔥')">🔥</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '💀')">💀</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '👀')">👀</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '❤️')">❤️</span>
+                                    <span class="emoji-option" onclick="inserirEmojiNoCampo('${cardId}', '⭐')">⭐</span>
                                 </div>
                             </div>
                         </div>
@@ -1446,16 +1424,6 @@
         function toggleCaixaResposta(id) {
             const caixa = document.getElementById(`caixa-${id}`);
             if (caixa) caixa.classList.toggle('ativa');
-        }
-
-        function abrirSeletorReacao(id) {
-            let escolha = prompt("Escolha a reação:\n1 - ❤️ Coração\n2 - 😂 Rindo\n3 - 😲 Surpreso\n4 - 😢 Chorando\n5 - 🔥 Fogo");
-            if (!escolha) return;
-            const mapaIdx = { '1': 'coracao', '2': 'rindo', '3': 'surpreso', '4': 'chorando', '5': 'fogo' };
-            let tipoSelecionado = mapaIdx[escolha.trim()];
-            if (tipoSelecionado) {
-                reagirComentario(id, tipoSelecionado);
-            }
         }
 
         async function reagirComentario(id, tipoEmoji) {
@@ -1581,4 +1549,3 @@
     </script>
 </body>
 </html>
- 
