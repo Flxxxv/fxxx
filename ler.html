@@ -598,7 +598,7 @@
             }
         }
 
-        // Função para carregar o Giscus dinamicamente com base no capítulo atual
+        // Função para carregar o Giscus com o tema customizado preto e rosa
         function carregarGiscus(termId) {
             const container = document.getElementById('giscus-container');
             container.innerHTML = ''; // Limpa anterior se houver troca de capítulo
@@ -615,7 +615,7 @@
             script.setAttribute('data-reactions-enabled', '1');
             script.setAttribute('data-emit-metadata', '0');
             script.setAttribute('data-input-position', 'bottom');
-            script.setAttribute('data-theme', 'preferred_color_scheme');
+            script.setAttribute('data-theme', 'https://flowersnenasscan.github.io/giscus.css');
             script.setAttribute('data-lang', 'pt');
             script.crossOrigin = 'anonymous';
             script.async = true;
