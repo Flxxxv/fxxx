@@ -449,7 +449,7 @@
             </div>
         </div>
 
-        <!-- Área onde o Giscus será injetado automaticamente -->
+        <!-- Área onde o Giscus será injetado dinamicamente -->
         <div id="giscus-container"></div>
     </div>
 
@@ -605,17 +605,17 @@
 
             const script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
-            script.setAttribute('data-repo', 'flowersnenasscan/flowersnenasscan.github.io'); // Ajuste se necessário para o seu repositório exato
-            script.setAttribute('data-repo-id', 'R_kgDOP3... (substitua pelo seu ID do giscus)'); // Insira o ID gerado no giscus.app
-            script.setAttribute('data-category', 'Announcements'); // Categoria de discussões do seu repo
-            script.setAttribute('data-category-id', 'DIC_kwDOP3... (substitua pelo seu ID de categoria)'); 
+            script.setAttribute('data-repo', 'flowersnenasscan/flowersnenasscan.github.io');
+            script.setAttribute('data-repo-id', 'R_kgDOUHVQeg');
+            script.setAttribute('data-category', 'General');
+            script.setAttribute('data-category-id', 'DIC_kwDOUHVQes4DE8nJ');
             script.setAttribute('data-mapping', 'specific');
             script.setAttribute('data-term', termId);
             script.setAttribute('data-strict', '0');
             script.setAttribute('data-reactions-enabled', '1');
             script.setAttribute('data-emit-metadata', '0');
             script.setAttribute('data-input-position', 'bottom');
-            script.setAttribute('data-theme', 'transparent_dark'); // Tema escuro que combina bem com fundo preto
+            script.setAttribute('data-theme', 'preferred_color_scheme');
             script.setAttribute('data-lang', 'pt');
             script.crossOrigin = 'anonymous';
             script.async = true;
