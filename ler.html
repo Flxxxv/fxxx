@@ -438,6 +438,7 @@
             margin-bottom: 10px;
             flex-wrap: wrap;
             align-items: center;
+            position: relative;
         }
         .btn-toolbar {
             background: #000;
@@ -456,6 +457,43 @@
             background: rgba(255, 153, 221, 0.2);
             border-color: #fff;
             color: #fff;
+        }
+
+        /* Seletor de Emojis Flutuante */
+        .picker-emojis-container {
+            display: none;
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            background: #111;
+            border: 1px solid var(--primary-pink);
+            border-radius: 8px;
+            padding: 8px;
+            gap: 6px;
+            z-index: 100;
+            box-shadow: 0 0 12px rgba(255, 153, 221, 0.4);
+            flex-wrap: wrap;
+            max-width: 220px;
+        }
+        .picker-emojis-container.ativo {
+            display: flex;
+        }
+        .btn-emoji-opcao {
+            background: #000;
+            border: 1px solid rgba(255, 153, 221, 0.3);
+            border-radius: 6px;
+            font-size: 1.1rem;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .btn-emoji-opcao:hover {
+            transform: scale(1.2);
+            background: rgba(255, 153, 221, 0.2);
         }
 
         .preview-sticker-container {
@@ -790,7 +828,7 @@
             <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 8px;">Deixe seu comentário</div>
             
             <div class="dica-perfil-aviso">
-                ✨ Dica: <span onclick="focarEdicaoPerfil()">[Personalize seu apelido e avatar]</span> antes de enviar o comentário!
+                ✨ Dica: <span onclick="focarEdicaoPerfil()">editar perfil</span> antes de enviar o comentário!
             </div>
 
             <div class="autor-container">
@@ -807,6 +845,20 @@
                 <input type="file" id="inputStickerFile" accept="image/*" style="display: none;" onchange="processarStickerArquivo(event)">
                 <button type="button" class="btn-toolbar" onclick="document.getElementById('inputStickerFile').click()">🌸 Escolher Sticker</button>
                 <button type="button" class="btn-toolbar" onclick="inserirSpoilerTag()">⚠️ Spoiler</button>
+                <button type="button" class="btn-toolbar" onclick="togglePickerEmojis(event)">😊 +</button>
+
+                <div class="picker-emojis-container" id="pickerEmojis">
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('🌸')">🌸</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('✨')">✨</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('💖')">💖</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('🥺')">🥺</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('😭')">😭</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('🔥')">🔥</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('💀')">💀</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('👀')">👀</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('❤️')">❤️</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('✨')">⭐</button>
+                </div>
             </div>
 
             <div class="preview-sticker-container" id="previewSticker">
@@ -855,7 +907,38 @@
                 const prev = document.getElementById('previewAvatarEscolhido');
                 if (prev) prev.src = savedAvatar;
             }
+
+            document.addEventListener('click', (e) => {
+                const picker = document.getElementById('pickerEmojis');
+                const btnMais = e.target.closest('button');
+                if (picker && picker.classList.contains('ativo')) {
+                    if (!picker.contains(e.target) && (!btnMais || !btnMais.getAttribute('onclick')?.includes('togglePickerEmojis'))) {
+                        picker.classList.remove('ativo');
+                    }
+                }
+            });
         });
+
+        function togglePickerEmojis(e) {
+            e.stopPropagation();
+            const picker = document.getElementById('pickerEmojis');
+            if (picker) {
+                picker.classList.toggle('ativo');
+            }
+        }
+
+        function inserirEmojiNoTexto(emoji) {
+            const txt = document.getElementById('textoComentario');
+            if (!txt) return;
+            let inicio = txt.selectionStart;
+            let fim = txt.selectionEnd;
+            txt.value = txt.value.substring(0, inicio) + emoji + txt.value.substring(fim);
+            txt.focus();
+            txt.selectionStart = txt.selectionEnd = inicio + emoji.length;
+            
+            const picker = document.getElementById('pickerEmojis');
+            if (picker) picker.classList.remove('ativo');
+        }
 
         function focarEdicaoPerfil() {
             const inputNome = document.getElementById('nomeComentario');
