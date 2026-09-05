@@ -459,7 +459,6 @@
             color: #fff;
         }
 
-        /* Seletor de Emojis Flutuante */
         .picker-emojis-container {
             display: none;
             position: absolute;
@@ -654,6 +653,7 @@
             padding: 2px 6px;
             border-radius: 12px;
             border: 1px solid rgba(255, 153, 221, 0.2);
+            align-items: center;
         }
         .btn-emoji-reacao {
             background: transparent;
@@ -668,6 +668,18 @@
         }
         .btn-emoji-reacao:hover { transform: scale(1.2); }
         .contador-emoji { font-size: 0.65rem; color: var(--primary-pink); font-weight: bold; }
+
+        .btn-mais-reacao {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: #FF99DD;
+            padding: 0 4px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn-mais-reacao:hover { transform: scale(1.15); color: #fff; }
         
         .btn-deletar-comentario {
             background: transparent;
@@ -828,7 +840,7 @@
             <div class="titulo-secao" style="font-size: 0.95rem; text-align: left; margin-bottom: 8px;">Deixe seu comentário</div>
             
             <div class="dica-perfil-aviso">
-                ✨ Dica: <span onclick="focarEdicaoPerfil()">editar perfil</span> antes de enviar o comentário!
+                <span onclick="focarEdicaoPerfil()">Edite seu perfil</span>
             </div>
 
             <div class="autor-container">
@@ -857,7 +869,7 @@
                     <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('💀')">💀</button>
                     <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('👀')">👀</button>
                     <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('❤️')">❤️</button>
-                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('✨')">⭐</button>
+                    <button type="button" class="btn-emoji-opcao" onclick="inserirEmojiNoTexto('⭐')">⭐</button>
                 </div>
             </div>
 
@@ -1321,6 +1333,7 @@
             let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
             let cardId = `resp-input-${c.id}`;
             let r = c.reacoes || { coracao: 0, rindo: 0, surpreso: 0, chorando: 0, fogo: 0 };
+            let totalCoracao = r.coracao || 0;
 
             let card = document.createElement('div');
             card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
@@ -1338,11 +1351,8 @@
                 <div class="comentario-rodape">
                     <div class="acoes-esq">
                         <div class="reacoes-comentario-grupo">
-                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir com Coração">❤️ <span id="reac-coracao-${c.id}">${r.coracao || 0}</span></button>
-                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'rindo')" title="Rindo">😂 <span id="reac-rindo-${c.id}">${r.rindo || 0}</span></button>
-                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'surpreso')" title="Surpreso">😲 <span id="reac-surpreso-${c.id}">${r.surpreso || 0}</span></button>
-                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'chorando')" title="Chorando">😢 <span id="reac-chorando-${c.id}">${r.chorando || 0}</span></button>
-                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'fogo')" title="Fogo">🔥 <span id="reac-fogo-${c.id}">${r.fogo || 0}</span></button>
+                            <button class="btn-emoji-reacao" onclick="reagirComentario(${c.id}, 'coracao')" title="Curtir">❤️ <span id="reac-coracao-${c.id}">${totalCoracao}</span></button>
+                            <button class="btn-mais-reacao" onclick="abrirSeletorReacao(${c.id})" title="Mais reações">+</button>
                         </div>
                         <button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>
                     </div>
@@ -1371,6 +1381,17 @@
             if (caixa) caixa.classList.toggle('ativa');
         }
 
+        function abrirSeletorReacao(id) {
+            const tipos = ['coracao', 'rindo', 'surpreso', 'chorando', 'fogo'];
+            let escolha = prompt("Escolha a reação:\n1 - ❤️ Coração\n2 - 😂 Rindo\n3 - 😲 Surpreso\n4 - 😢 Chorando\n5 - 🔥 Fogo");
+            if (!escolha) return;
+            const mapaIdx = { '1': 'coracao', '2': 'rindo', '3': 'surpreso', '4': 'chorando', '5': 'fogo' };
+            let tipoSelecionado = mapaIdx[escolha.trim()];
+            if (tipoSelecionado) {
+                reagirComentario(id, tipoSelecionado);
+            }
+        }
+
         async function reagirComentario(id, tipoEmoji) {
             const chaveLocal = `reacao_comentario_${id}`;
             let emojiAnterior = localStorage.getItem(chaveLocal);
@@ -1395,10 +1416,8 @@
                 reacoes[tipoEmoji] = (reacoes[tipoEmoji] || 0) + 1;
             }
 
-            Object.keys(reacoes).forEach(k => {
-                let span = document.getElementById(`reac-${k}-${id}`);
-                if (span) span.textContent = reacoes[k];
-            });
+            let spanCoracao = document.getElementById(`reac-coracao-${id}`);
+            if (spanCoracao) spanCoracao.textContent = reacoes.coracao || 0;
 
             localStorage.setItem(chaveLocal, tipoEmoji);
 
