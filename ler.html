@@ -594,7 +594,6 @@
             align-items: center;
         }
 
-        /* Seletor de reações para comentários */
         .container-reacoes-comentario {
             position: relative;
             display: inline-block;
@@ -812,8 +811,8 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const urlParams = new URLSearchParams(window.location.search);
-        const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || '').trim();
-        const capSlugUrl = decodeURIComponent(urlParams.get('cap') || '').trim().toLowerCase();
+        const obraSlugUrl = decodeURIComponent(urlParams.get('obra') || urlParams.get('nome') || '').trim();
+        const capSlugUrl = decodeURIComponent(urlParams.get('cap') || urlParams.get('capitulo') || '').trim().toLowerCase();
 
         let obraGlobal = null;
         let idUnicoCapitulo = '';
@@ -843,11 +842,12 @@
         fetch('obras.json?v=' + new Date().getTime())
             .then(res => res.json())
             .then(obras => {
-                obraGlobal = obras.find(o => 
-                    criarSlug(o.titulo) === obraSlugUrl.toLowerCase() || 
-                    String(o.id).trim() === obraSlugUrl || 
-                    String(o.titulo).trim().toLowerCase() === obraSlugUrl.toLowerCase()
-                );
+                obraGlobal = obras.find(o => {
+                    const slugId = String(o.id || '').trim().toLowerCase();
+                    const slugTit = criarSlug(o.titulo);
+                    const slugParam = obraSlugUrl.toLowerCase();
+                    return slugId === slugParam || slugTit === slugParam || String(o.titulo || '').trim().toLowerCase() === slugParam;
+                });
 
                 if (!obraGlobal) {
                     document.getElementById('paginasContainer').innerHTML = `
@@ -886,8 +886,9 @@
 
             if (capSlugUrl) {
                 indexAtual = capitulos.findIndex(c => {
-                    let num = typeof c === 'object' ? c.numero : c;
-                    return String(num).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-') === capSlugUrl;
+                    let num = typeof c === 'object' ? String(c.numero) : String(c);
+                    let slugC = num.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-');
+                    return slugC === capSlugUrl || num.toLowerCase() === capSlugUrl;
                 });
                 if (indexAtual !== -1) {
                     capAtual = capitulos[indexAtual];
@@ -1063,7 +1064,6 @@
 
             lista.innerHTML = '';
             
-            // Organiza principais e respostas
             let principais = data.filter(c => !c.resposta_para);
             let respostas = data.filter(c => c.resposta_para);
 
@@ -1138,7 +1138,7 @@
         async function reagirComentario(idComentario, emoji) {
             togglePopupReacoes(idComentario);
             const chaveLocal = `reacao_comentario_${idComentario}`;
-            if (localStorage.getItem(chaveLocal)) return; // Já reagiu
+            if (localStorage.getItem(chaveLocal)) return;
 
             const colunaSupabase = `curtidas_${emoji}`;
             
