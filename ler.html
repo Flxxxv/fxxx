@@ -488,6 +488,12 @@
             border-radius: 10px;
             position: relative;
         }
+        .comentario-card.resposta-card {
+            background: #0d0d0d;
+            margin-left: 24px;
+            margin-top: 8px;
+            border-left: 2px solid var(--primary-pink);
+        }
         .comentario-cabecalho-info {
             display: flex;
             align-items: center;
@@ -555,8 +561,15 @@
             margin-top: 8px;
             padding-top: 6px;
             border-top: 1px solid rgba(255, 153, 221, 0.1);
+            flex-wrap: wrap;
+            gap: 6px;
         }
-        .btn-curtir-comentario {
+        .acoes-esq {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-acao-comentario {
             background: transparent;
             border: none;
             color: #FF99DD;
@@ -565,9 +578,9 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            transition: transform 0.2s;
+            transition: transform 0.2s, color 0.2s;
         }
-        .btn-curtir-comentario:hover { transform: scale(1.1); color: #fff; }
+        .btn-acao-comentario:hover { transform: scale(1.1); color: #fff; }
         
         .btn-deletar-comentario {
             background: transparent;
@@ -581,6 +594,45 @@
         }
         .btn-deletar-comentario:hover { color: #ff4444; }
         body.modo-autor .btn-deletar-comentario { display: inline-flex; }
+
+        .caixa-resposta-inline {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #151515;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 153, 221, 0.3);
+        }
+        .caixa-resposta-inline.ativa { display: block; }
+        .caixa-resposta-inline textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid rgba(255, 153, 221, 0.4);
+            color: #FF99DD;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            resize: vertical;
+            min-height: 50px;
+            outline: none;
+            margin-bottom: 6px;
+        }
+        .botoes-resposta-inline {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+        .btn-enviar-resp {
+            background: #000;
+            color: #FF99DD;
+            border: 1px solid var(--primary-pink);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-enviar-resp:hover { background: rgba(255,153,221,0.2); color: #fff; }
 
         .btn-flor-topo {
             position: fixed;
@@ -690,7 +742,7 @@
             
             <div class="autor-container">
                 <div class="avatar-escolha-container" onclick="document.getElementById('inputAvatarFile').click()" title="Clique para trocar sua foto de perfil">
-                    <img id="previewAvatarEscolhido" src="https://i.imgur.com/8X133bB.png" alt="Avatar" class="avatar-preview-img">
+                    <img id="previewAvatarEscolhido" src="https://files.catbox.moe/p5mdn7.png" alt="Avatar" class="avatar-preview-img">
                     <div class="avatar-overlay-texto">Trocar</div>
                 </div>
                 <input type="file" id="inputAvatarFile" accept="image/*" style="display: none;" onchange="processarAvatarArquivo(event)">
@@ -711,7 +763,7 @@
             </div>
 
             <textarea id="textoComentario" placeholder="Escreva o que achou deste capítulo... (Use [spoiler]texto[/spoiler] para ocultar spoilers)"></textarea>
-            <button class="btn-enviar-comentario" onclick="enviarComentario()">Comentar</button>
+            <button class="btn-enviar-comentario" onclick="enviarComentarioPrincipal()">Comentar</button>
             <div class="limpar-float"></div>
         </div>
 
@@ -736,7 +788,22 @@
         let obraGlobal = null;
         let idUnicoCapitulo = '';
         let stickerBase64 = '';
-        let avatarBase64Usuario = 'https://i.imgur.com/8X133bB.png';
+        let avatarBase64Usuario = 'https://files.catbox.moe/p5mdn7.png';
+
+        // Carrega identidade salva no navegador se existir
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedName = localStorage.getItem('nenascan_user_name');
+            const savedAvatar = localStorage.getItem('nenascan_user_avatar');
+            if (savedName) {
+                const inputNome = document.getElementById('nomeComentario');
+                if (inputNome) inputNome.value = savedName;
+            }
+            if (savedAvatar) {
+                avatarBase64Usuario = savedAvatar;
+                const prev = document.getElementById('previewAvatarEscolhido');
+                if (prev) prev.src = savedAvatar;
+            }
+        });
 
         function criarSlug(texto) {
             return String(texto || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-').replace(/[^\w-]/g, '');
@@ -949,46 +1016,163 @@
             }
         }
 
+        // Validador de nome único + Trava de 30 dias para alteração
+        async function validarEObterPerfil(nomeInformado) {
+            nomeInformado = nomeInformado.trim();
+            const nomeSalvoLocal = localStorage.getItem('nenascan_user_name');
+
+            // Se for exatamente o mesmo nome já salvo neste navegador, libera direto
+            if (nomeSalvoLocal && nomeSalvoLocal.toLowerCase() === nomeInformado.toLowerCase()) {
+                return { valido: true, nomeFinal: nomeSalvoLocal };
+            }
+
+            // Se mudou de nome, verifica trava de 30 dias
+            const ultimaTroca = localStorage.getItem('nenascan_last_name_change');
+            if (ultimaTroca && nomeSalvoLocal) {
+                const diasPassados = (Date.now() - parseInt(ultimaTroca)) / (1000 * 60 * 60 * 24);
+                if (diasPassados < 30) {
+                    const diasRestantes = Math.ceil(30 - diasPassados);
+                    alert(`⚠️ Trava de segurança: Você só poderá alterar seu apelido novamente daqui a ${diasRestantes} dia(s).`);
+                    document.getElementById('nomeComentario').value = nomeSalvoLocal;
+                    return { valido: false };
+                }
+            }
+
+            // Consulta no Supabase se o nome já está em uso por outra pessoa
+            const { data: usuarioExistente, error } = await supabaseClient
+                .from('comentarios')
+                .select('avatar')
+                .ilike('nome', nomeInformado)
+                .limit(1);
+
+            if (!error && usuarioExistente && usuarioExistente.length > 0) {
+                alert(`⚠️ O apelido "${nomeInformado}" já está em uso por outro leitor. Escolha outro nome.`);
+                return { valido: false };
+            }
+
+            // Nome livre e válido: atualiza salvamentos locais e data de troca
+            localStorage.setItem('nenascan_user_name', nomeInformado);
+            localStorage.setItem('nenascan_last_name_change', Date.now().toString());
+            localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
+
+            return { valido: true, nomeFinal: nomeInformado };
+        }
+
+        async function enviarComentarioPrincipal() {
+            let nomeInput = document.getElementById('nomeComentario').value;
+            let mensagem = document.getElementById('textoComentario').value.trim();
+
+            if (!nomeInput || (!mensagem && !stickerBase64)) {
+                alert("Preencha seu apelido e escreva uma mensagem ou selecione uma figurinha!");
+                return;
+            }
+
+            let validacao = await validarEObterPerfil(nomeInput);
+            if (!validacao.valido) return;
+
+            let novoComentario = {
+                capitulo_id: idUnicoCapitulo,
+                nome: validacao.nomeFinal,
+                mensagem: mensagem || '',
+                sticker: stickerBase64 || null,
+                avatar: avatarBase64Usuario,
+                curtidas: 0,
+                parent_id: null,
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await supabaseClient
+                .from('comentarios')
+                .insert([novoComentario]);
+
+            if (!error) {
+                document.getElementById('textoComentario').value = '';
+                removerSticker();
+                carregarComentariosDoSupabase();
+            } else {
+                alert("Erro ao enviar comentário. Tente novamente.");
+            }
+        }
+
+        async function enviarResposta(parentId, inputId) {
+            let nomeInput = document.getElementById('nomeComentario').value;
+            let mensagem = document.getElementById(inputId).value.trim();
+
+            if (!nomeInput || !mensagem) {
+                alert("Preencha seu apelido e digite a resposta!");
+                return;
+            }
+
+            let validacao = await validarEObterPerfil(nomeInput);
+            if (!validacao.valido) return;
+
+            let novaResposta = {
+                capitulo_id: idUnicoCapitulo,
+                nome: validacao.nomeFinal,
+                mensagem: mensagem,
+                sticker: null,
+                avatar: avatarBase64Usuario,
+                curtidas: 0,
+                parent_id: parentId,
+                created_at: new Date().toISOString()
+            };
+
+            const { error } = await supabaseClient
+                .from('comentarios')
+                .insert([novaResposta]);
+
+            if (!error) {
+                carregarComentariosDoSupabase();
+            } else {
+                alert("Erro ao enviar resposta.");
+            }
+        }
+
         async function carregarComentariosDoSupabase() {
             const lista = document.getElementById('listaComentarios');
             const { data, error } = await supabaseClient
                 .from('comentarios')
                 .select('*')
                 .eq('capitulo_id', idUnicoCapitulo)
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: true });
 
-            if (error) {
-                lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Erro ao carregar comentários.</p>`;
-                return;
-            }
-
-            if (!data || data.length === 0) {
+            if (error || !data || data.length === 0) {
                 lista.innerHTML = `<p style="text-align: center; color: rgba(255,153,221,0.6); font-size: 0.8rem; padding: 10px;">Nenhum comentário ainda. Seja o primeiro!</p>`;
                 return;
             }
 
             lista.innerHTML = '';
-            data.forEach(c => renderizarComentarioCard(c));
+            
+            // Separa principais e respostas
+            let principais = data.filter(c => !c.parent_id);
+            let respostas = data.filter(c => c.parent_id);
+
+            // Ordena principais do mais recente para o mais antigo
+            principais.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+            principais.forEach(c => {
+                renderizarCardComentario(c, false);
+                // Filtra e exibe as respostas deste comentário
+                let filhas = respostas.filter(r => r.parent_id === c.id);
+                filhas.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                filhas.forEach(f => renderizarCardComentario(f, true));
+            });
         }
 
-        function renderizarComentarioCard(c) {
+        function renderizarCardComentario(c, isResposta) {
             const lista = document.getElementById('listaComentarios');
-            if (lista.innerHTML.includes('Nenhum comentário') || lista.innerHTML.includes('Carregando comentários')) {
-                lista.innerHTML = '';
-            }
-
             let dataFormatada = new Date(c.created_at).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             let textoFormatado = formatarTextoComentario(c.mensagem);
             
-            let stickerUrl = c.sticker || '';
-            if (stickerUrl) {
-                textoFormatado += `<img src="${stickerUrl}" class="sticker-render" alt="Sticker">`;
+            if (c.sticker) {
+                textoFormatado += `<img src="${c.sticker}" class="sticker-render" alt="Sticker">`;
             }
 
-            let avatarUrlCard = c.avatar || 'https://i.imgur.com/8X133bB.png';
+            let avatarUrlCard = c.avatar || 'https://files.catbox.moe/p5mdn7.png';
+            let cardId = `resp-input-${c.id}`;
 
             let card = document.createElement('div');
-            card.className = 'comentario-card';
+            card.className = isResposta ? 'comentario-card resposta-card' : 'comentario-card';
             card.id = `comentario-${c.id}`;
             card.innerHTML = `
                 <div class="comentario-cabecalho-info">
@@ -999,58 +1183,37 @@
                     <div class="comentario-data">${dataFormatada}</div>
                 </div>
                 <div class="comentario-texto">${textoFormatado}</div>
+                
                 <div class="comentario-rodape">
-                    <button class="btn-curtir-comentario" onclick="curtirComentario(${c.id}, this)">
-                        ❤️ <span id="curtidas-${c.id}">${c.curtidas || 0}</span>
-                    </button>
-                    <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">
-                        🗑️ Apagar
-                    </button>
+                    <div class="acoes-esq">
+                        <button class="btn-acao-comentario" onclick="curtirComentario(${c.id})">
+                            ❤️ <span id="curtidas-${c.id}">${c.curtidas || 0}</span>
+                        </button>
+                        ${!isResposta ? `<button class="btn-acao-comentario" onclick="toggleCaixaResposta('${c.id}')">💬 Responder</button>` : ''}
+                    </div>
+                    <button class="btn-deletar-comentario" onclick="deletarComentario(${c.id})">🗑️ Apagar</button>
                 </div>
+
+                ${!isResposta ? `
+                    <div class="caixa-resposta-inline" id="caixa-${c.id}">
+                        <textarea id="${cardId}" placeholder="Escreva sua resposta..."></textarea>
+                        <div class="botoes-resposta-inline">
+                            <button class="btn-enviar-resp" onclick="enviarResposta(${c.id}, '${cardId}')">Enviar Resposta</button>
+                        </div>
+                    </div>
+                ` : ''}
             `;
             lista.appendChild(card);
         }
 
-        async function enviarComentario() {
-            let nome = document.getElementById('nomeComentario').value.trim();
-            let mensagem = document.getElementById('textoComentario').value.trim();
-
-            if (!nome || (!mensagem && !stickerBase64)) {
-                alert("Preencha seu apelido e escreva uma mensagem ou selecione uma figurinha!");
-                return;
-            }
-
-            let novoComentario = {
-                capitulo_id: idUnicoCapitulo,
-                nome: nome,
-                mensagem: mensagem || '',
-                sticker: stickerBase64 || null,
-                avatar: avatarBase64Usuario,
-                curtidas: 0,
-                created_at: new Date().toISOString()
-            };
-
-            const { data, error } = await supabaseClient
-                .from('comentarios')
-                .insert([novoComentario])
-                .select();
-
-            if (!error && data) {
-                document.getElementById('textoComentario').value = '';
-                removerSticker();
-                carregarComentariosDoSupabase();
-            } else {
-                console.error("Erro Supabase:", error);
-                alert("Erro ao enviar comentário. Verifique a conexão.");
-            }
+        function toggleCaixaResposta(id) {
+            const caixa = document.getElementById(`caixa-${id}`);
+            if (caixa) caixa.classList.toggle('ativa');
         }
 
-        async function curtirComentario(id, botaoEl) {
+        async function curtirComentario(id) {
             const curtidoKey = `curtiu_comentario_${id}`;
-            
-            if (localStorage.getItem(curtidoKey) === 'true') {
-                return; 
-            }
+            if (localStorage.getItem(curtidoKey) === 'true') return;
 
             let el = document.getElementById(`curtidas-${id}`);
             let atual = parseInt(el.textContent) || 0;
@@ -1068,16 +1231,14 @@
         }
 
         async function deletarComentario(id) {
-            if (!confirm("Deseja realmente apagar este comentário?")) return;
+            if (!confirm("Deseja realmente apagar este comentário e suas respostas?")) return;
 
-            const { error } = await supabaseClient
-                .from('comentarios')
-                .delete()
-                .eq('id', id);
+            // Apaga respostas vinculadas e o principal
+            await supabaseClient.from('comentarios').delete().eq('parent_id', id);
+            const { error } = await supabaseClient.from('comentarios').delete().eq('id', id);
 
             if (!error) {
-                let card = document.getElementById(`comentario-${id}`);
-                if (card) card.remove();
+                carregarComentariosDoSupabase();
             } else {
                 alert("Erro ao excluir o comentário.");
             }
@@ -1091,6 +1252,7 @@
             reader.onload = function(e) {
                 avatarBase64Usuario = e.target.result;
                 document.getElementById('previewAvatarEscolhido').src = avatarBase64Usuario;
+                localStorage.setItem('nenascan_user_avatar', avatarBase64Usuario);
             };
             reader.readAsDataURL(arquivo);
         }
